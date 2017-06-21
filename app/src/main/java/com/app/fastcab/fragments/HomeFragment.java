@@ -1,6 +1,7 @@
 package com.app.fastcab.fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
@@ -40,14 +42,23 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.jota.autocompletelocation.AutoCompleteLocation;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import Modules.DirectionFinder;
+import Modules.DirectionFinderListener;
+import Modules.Route;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+
 
 
 public class HomeFragment extends BaseFragment implements
@@ -55,12 +66,17 @@ public class HomeFragment extends BaseFragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLongClickListener {
+        GoogleMap.OnMapLongClickListener,
+        DirectionFinderListener{
 
     GoogleMap googleMap;
     GoogleApiClient googleApiClient;
     double latitude;
     double longitude;
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+    private ProgressDialog progressDialog;
 
 
     SupportMapFragment map;
@@ -137,14 +153,27 @@ public class HomeFragment extends BaseFragment implements
         map.getMapAsync(this);
 
 
+
         googleApiClient = new GoogleApiClient.Builder(getMainActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
 
                 .addApi(LocationServices.API)
                 .build();
+        sendRequest();
+
+    }
+
+    private void sendRequest() {
+        String origin = "24.839506, 67.081954";
+        String destination = "24.852908, 67.032515";
 
 
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -162,6 +191,7 @@ public class HomeFragment extends BaseFragment implements
         googleMap = googlemap;
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
+
     }
 
     @Override
@@ -233,6 +263,7 @@ public class HomeFragment extends BaseFragment implements
     }
 
     private void moveMap() {
+
 
         googleMap.clear();
         LatLng latLng = new LatLng(latitude, longitude);
@@ -328,4 +359,63 @@ public class HomeFragment extends BaseFragment implements
     }
 
 
+    @Override
+    public void onDirectionFinderStart() {
+
+       // progressDialog = ProgressDialog.show(this, "Please wait.","Finding direction..!", true);
+
+        if (originMarkers != null) {
+            for (Marker marker : originMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (destinationMarkers != null) {
+            for (Marker marker : destinationMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (polylinePaths != null) {
+            for (Polyline polyline:polylinePaths ) {
+                polyline.remove();
+            }
+        }
+
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+
+
+        polylinePaths = new ArrayList<>();
+        originMarkers = new ArrayList<>();
+        destinationMarkers = new ArrayList<>();
+
+        for (Route route : routes) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+           // ((TextView) findViewById(R.id.tvDuration)).setText(route.duration.text);
+           // ((TextView) findViewById(R.id.tvDistance)).setText(route.distance.text);
+
+            originMarkers.add(googleMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
+                    .title(route.startAddress)
+                    .position(route.startLocation)));
+            destinationMarkers.add(googleMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
+                    .title(route.endAddress)
+                    .position(route.endLocation)));
+
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLACK).
+                    width(15);
+
+            for (int i = 0; i < route.points.size(); i++)
+                polylineOptions.add(route.points.get(i));
+
+            polylinePaths.add(googleMap.addPolyline(polylineOptions));
+        }
+
+    }
 }
