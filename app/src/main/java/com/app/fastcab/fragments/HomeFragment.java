@@ -17,11 +17,11 @@ import android.widget.Button;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
-import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.jota.autocompletelocation.AutoCompleteLocation;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,10 +38,14 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 
-public class HomeFragment extends BaseFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerDragListener, GoogleMap.OnMapLongClickListener {
+public class HomeFragment extends BaseFragment implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerDragListener,
+        GoogleMap.OnMapLongClickListener {
 
     GoogleMap googleMap;
     GoogleApiClient googleApiClient;
@@ -48,19 +53,17 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
     double longitude;
 
 
-    @BindView(R.id.map)
-    SupportMapFragment  map;
+    SupportMapFragment map;
     @BindView(R.id.edt_pickup)
-    AnyEditTextView edtPickup;
+    AutoCompleteLocation edtPickup;
     @BindView(R.id.input_layout_pickup)
     TextInputLayout inputLayoutPickup;
     @BindView(R.id.edt_destination)
-    AnyEditTextView edtDestination;
+    AutoCompleteLocation edtDestination;
     @BindView(R.id.input_layout_destination)
     TextInputLayout inputLayoutDestination;
     @BindView(R.id.btn_submit)
     Button btnSubmit;
-
 
 
     public static HomeFragment newInstance() {
@@ -79,18 +82,47 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-       ButterKnife.bind(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setListeners();
+        edtDestination.clearFocus();
+        edtPickup.clearFocus();
+        initMap();
+    }
 
+    private void setListeners() {
+        edtDestination.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
+            @Override
+            public void onTextClear() {
+
+            }
+
+            @Override
+            public void onItemSelected(Place selectedPlace) {
+
+            }
+        });
+        edtPickup.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
+            @Override
+            public void onTextClear() {
+
+            }
+
+            @Override
+            public void onItemSelected(Place selectedPlace) {
+
+            }
+        });
     }
 
     private void initMap() {
-
+        map = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
 
         map.getMapAsync(this);
 
@@ -98,7 +130,6 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
         googleApiClient = new GoogleApiClient.Builder(getMainActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
-
 
                 .addApi(LocationServices.API)
                 .build();
@@ -121,6 +152,7 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
     }
+
     @Override
     public void onStart() {
         googleApiClient.connect();
@@ -132,9 +164,10 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
         googleApiClient.disconnect();
         super.onStop();
     }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        getCurrentLocation();
     }
 
     @Override
@@ -148,11 +181,11 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
             List<Address> addresses;
             geocoder = new Geocoder(getMainActivity(), Locale.getDefault());
             addresses = geocoder.getFromLocation(lat, lng, 1);
-            if(addresses.size()>0){
+            if (addresses.size() > 0) {
                 String address = addresses.get(0).getAddressLine(0);
                 String country = addresses.get(0).getCountryName();
                 return address + ", " + country;
-            }else{
+            } else {
 
                 return "Address Not Available";
             }
@@ -164,6 +197,7 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
 
         return null;
     }
+
     //Getting current location
     private void getCurrentLocation() {
         googleMap.clear();
@@ -180,12 +214,13 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
 
             if (Address != null) {
 
-               // txtCurrentAddress.setText(Address);
+                 edtPickup.setText(Address);
             }
 
             moveMap();
         }
     }
+
     private void moveMap() {
 
         googleMap.clear();
@@ -204,6 +239,7 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -229,7 +265,7 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
 
         if (Address != null) {
 
-           // txtCurrentAddress.setText(Address);
+            edtPickup.setText(Address);
         }
 
         moveMap();
@@ -248,9 +284,11 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
         String Address = getCurrentAddress(latLng.latitude, latLng.longitude);
 
         if (Address != null) {
-            //txtCurrentAddress.setText(Address);
+            edtPickup.setText(Address);
         }
 
         moveMap();
     }
+
+
 }

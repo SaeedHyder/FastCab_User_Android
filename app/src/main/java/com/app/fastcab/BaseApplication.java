@@ -2,6 +2,7 @@ package com.app.fastcab;
 
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -19,6 +20,7 @@ public class BaseApplication extends Application {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		Fabric.with(this, new Crashlytics());
+		MultiDex.install(this);
 		initImageLoader();
 	}
 	

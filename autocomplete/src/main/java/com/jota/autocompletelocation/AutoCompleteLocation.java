@@ -14,7 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.AppIndex;
+//import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -66,7 +66,7 @@ public class AutoCompleteLocation extends AutoCompleteTextView {
 
     mCloseIcon = context.getResources().getDrawable(R.drawable.ic_close);
     mGoogleApiClient = new GoogleApiClient.Builder(context).addApi(Places.GEO_DATA_API)
-        .addApi(AppIndex.API)
+        //.addApi(AppIndex.API)
         .build();
   }
 

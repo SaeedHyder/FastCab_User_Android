@@ -34,7 +34,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 dependencies {
@@ -83,5 +85,10 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:10.2.6'
     compile 'com.android.support:design:25.3.1'
 
+    //Multidex
+    compile 'com.android.support:multidex:1.0.1'
+
+    //DatePicker
+    compile 'co.infinum:materialdatetimepicker-support:3.2.0'
 
 }

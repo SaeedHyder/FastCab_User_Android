@@ -93,7 +93,7 @@ public class LoginFragment extends BaseFragment  {
 
             @Override
             public void onClick(View widget) {
-                Toast.makeText(getActivity(), "Clicked Event", Toast.LENGTH_SHORT).show();
+                getDockActivity().replaceDockableFragment(SignUpFragment.newInstance(),SignUpFragment.class.getSimpleName());
             }
         });
 

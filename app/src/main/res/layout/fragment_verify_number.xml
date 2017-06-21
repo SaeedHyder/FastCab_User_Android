@@ -68,16 +68,16 @@
         android:layout_alignParentStart="true" />
     <com.app.fastcab.ui.views.AnyTextView
         android:id="@+id/txtResetPass"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="right"
+        android:layout_gravity="center"
        android:layout_below="@+id/btn_submit"
         android:alpha="0.7"
-        android:gravity="start"
+        android:gravity="center"
         android:layout_marginTop="@dimen/x15"
         android:text="@string/we_ll_text_you_a_code_to_confirm_your_number"
         android:textColor="@color/white"
-        android:textSize="@dimen/x16"
+        android:textSize="@dimen/x14"
         app:typeface="Roboto-Regular.ttf" />
 </RelativeLayout>

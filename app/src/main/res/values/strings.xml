@@ -107,5 +107,22 @@
     <string name="where_to">Where to...</string>
     <string name="pickup_location">Pickup Location</string>
     <string name="confirm">Confirm</string>
+    <string name="API_KEY">AIzaSyBwD4E_JR99kKFXGaIRzq5p5caDw_KJvRU</string>
+
+    <string name="enter_username">Enter UserName</string>
+    <string name="enter_currentAddress">Enter Current Address</string>
+    <string name="enter_zipCode">Enter Zip Code</string>
+    <string name="enter_dob">Enter Date Of Birth</string>
+    <string name="passwordLength">Password should be more than 6</string>
+
+    <string name="numberLength">Number should be more than 11</string>
+
+    <string name="enter_email">Enter Valid Email</string>
+    <string name="to_accept"> to accept </string>
+    <string name="terms_and_condition"> \"Terms and Condition\"</string>
+    <string name="i_have_read_the_term_and_conditions">I have read the term and conditions</string>
+    <string name="terms_conditons">Terms and Conditions</string>
+    <string name="connection_lost">No Internet Found</string>
+
 
 </resources>
