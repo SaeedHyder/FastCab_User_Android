@@ -1,11 +1,18 @@
 package com.app.fastcab.fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -14,9 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -142,6 +152,7 @@ public class HomeFragment extends BaseFragment implements
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
         titleBar.showMenuButton();
+        titleBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         titleBar.setSubHeading("Home");
 
     }
@@ -227,7 +238,8 @@ public class HomeFragment extends BaseFragment implements
         LatLng latLng = new LatLng(latitude, longitude);
         googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher))
+                //.title("asdasd")
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher,"asdsdasd")))
                 .draggable(true)
                 .title(""));
 
@@ -239,7 +251,32 @@ public class HomeFragment extends BaseFragment implements
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
     }
+    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId,String title) {
 
+        View customMarkerView = ((LayoutInflater) getMainActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
+        ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.img_icon);
+        TextView textView = (TextView)customMarkerView.findViewById(R.id.txt_locationText) ;
+        textView.setText(title);
+        markerImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIHelper.showShortToastInCenter(getDockActivity(),"Clicked Here");
+            }
+        });
+        markerImageView.setImageResource(resId);
+        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
+        customMarkerView.buildDrawingCache();
+        Bitmap returnedBitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        Drawable drawable = customMarkerView.getBackground();
+        if (drawable != null)
+            drawable.draw(canvas);
+        customMarkerView.draw(canvas);
+        return returnedBitmap;
+    }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
