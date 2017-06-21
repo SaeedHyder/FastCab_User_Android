@@ -124,6 +124,8 @@
     <string name="terms_conditons">Terms and Conditions</string>
     <string name="connection_lost">No Internet Found</string>
     <string name="set_pickup_location">SET PICKUP LOCATION</string>
+    <string name="ride_later">Ride Later</string>
+    <string name="ride_now">Ride Now</string>
 
 
 </resources>

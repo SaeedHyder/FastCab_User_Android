@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
-import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,7 +54,7 @@ public class HomeFragment extends BaseFragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLongClickListener {
+        GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
 
     GoogleMap googleMap;
     GoogleApiClient googleApiClient;
@@ -72,8 +71,10 @@ public class HomeFragment extends BaseFragment implements
     AutoCompleteLocation edtDestination;
     @BindView(R.id.input_layout_destination)
     TextInputLayout inputLayoutDestination;
-    @BindView(R.id.btn_submit)
-    Button btnSubmit;
+    @BindView(R.id.btn_ridenow)
+    Button btnridenow;
+    @BindView(R.id.btn_ridelater)
+    Button btnRidelater;
 
 
     public static HomeFragment newInstance() {
@@ -114,7 +115,12 @@ public class HomeFragment extends BaseFragment implements
 
             @Override
             public void onItemSelected(Place selectedPlace) {
+                if (selectedPlace != null)
+                    moveMap(selectedPlace.getLatLng());
+                if (selectedPlace != null && !edtPickup.getText().toString().equals("")) {
 
+                    InitRideSelection(edtPickup.getText().toString());
+                }
             }
         });
         edtPickup.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
@@ -125,9 +131,23 @@ public class HomeFragment extends BaseFragment implements
 
             @Override
             public void onItemSelected(Place selectedPlace) {
-
+                if (selectedPlace != null)
+                    moveMap(selectedPlace.getLatLng());
+                if (selectedPlace != null && !edtDestination.getText().toString().equals("")) {
+                    InitRideSelection(getCurrentAddress(selectedPlace.getLatLng().latitude, selectedPlace.getLatLng().longitude));
+                }
             }
         });
+    }
+
+    private void InitRideSelection(String address) {
+        inputLayoutPickup.setHint("Pickup Location");
+        inputLayoutPickup.setHint("Destination Location");
+
+        edtPickup.setVisibility(View.VISIBLE);
+        btnridenow.setVisibility(View.VISIBLE);
+        btnRidelater.setVisibility(View.VISIBLE);
+        edtPickup.setText(address);
     }
 
     private void initMap() {
@@ -162,6 +182,7 @@ public class HomeFragment extends BaseFragment implements
         googleMap = googlemap;
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
+        googleMap.setOnMarkerClickListener(this);
     }
 
     @Override
@@ -225,21 +246,21 @@ public class HomeFragment extends BaseFragment implements
 
             if (Address != null) {
 
-                 edtPickup.setText(Address);
+                edtPickup.setText(Address);
             }
 
-            moveMap();
+            moveMap(new LatLng(latitude, longitude));
         }
     }
 
-    private void moveMap() {
+    private void moveMap(LatLng latLng) {
 
         googleMap.clear();
-        LatLng latLng = new LatLng(latitude, longitude);
+        // LatLng latLng = new LatLng(latitude, longitude);
         googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 //.title("asdasd")
-                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher,"asdsdasd")))
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
                 .draggable(true)
                 .title(""));
 
@@ -251,18 +272,13 @@ public class HomeFragment extends BaseFragment implements
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
     }
-    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId,String title) {
+
+    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String title) {
 
         View customMarkerView = ((LayoutInflater) getMainActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
         ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.img_icon);
-        TextView textView = (TextView)customMarkerView.findViewById(R.id.txt_locationText) ;
+        TextView textView = (TextView) customMarkerView.findViewById(R.id.txt_locationText);
         textView.setText(title);
-        markerImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UIHelper.showShortToastInCenter(getDockActivity(),"Clicked Here");
-            }
-        });
         markerImageView.setImageResource(resId);
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
@@ -277,6 +293,7 @@ public class HomeFragment extends BaseFragment implements
         customMarkerView.draw(canvas);
         return returnedBitmap;
     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -305,7 +322,7 @@ public class HomeFragment extends BaseFragment implements
             edtPickup.setText(Address);
         }
 
-        moveMap();
+        moveMap(marker.getPosition());
     }
 
     @Override
@@ -324,7 +341,18 @@ public class HomeFragment extends BaseFragment implements
             edtPickup.setText(Address);
         }
 
-        moveMap();
+        moveMap(latLng);
+    }
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        if (marker != null && !edtDestination.getText().toString().equals("")) {
+            InitRideSelection(getCurrentAddress(marker.getPosition().latitude, marker.getPosition().longitude));
+        }
+
+        return false;
     }
 
 

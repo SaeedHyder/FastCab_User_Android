@@ -41,7 +41,7 @@
     <color name="blue_chat">#4896CA</color>
     <color name="sidemenu">#62A6D8</color>
     <color name="button_color">#37949c</color>
-
+    <color name="button_dark_color">#0c3644</color>
     <color name="facebook_button_color">#3b5998</color>
 
 </resources>

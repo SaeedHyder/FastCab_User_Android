@@ -27,7 +27,7 @@
             android:layout_marginRight="@dimen/x20"
             android:background="@color/white"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/iv_pickIcon"
@@ -40,6 +40,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_pickup"
+                android:gravity="center_vertical"
+                android:textColorHint="@color/grey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -61,8 +63,15 @@
                     app:background_layout="@android:color/transparent"
                     app:hint_text="@string/pickup_location" />
             </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
 
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:alpha="0.4"
+            android:layout_marginLeft="@dimen/x67"
+            android:layout_marginRight="@dimen/x20"
+            android:background="@drawable/line" />
         <LinearLayout
             android:id="@+id/ll_destination"
             android:layout_width="match_parent"
@@ -85,6 +94,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_destination"
+                android:gravity="center_vertical"
+                android:textColorHint="@color/grey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -109,7 +120,22 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_submit"
+        android:id="@+id/btn_ridenow"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/x40"
+        android:layout_above="@+id/btn_ridelater"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginTop="@dimen/x15"
+        android:background="@color/button_color"
+        android:text="@string/ride_now"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+    <Button
+        android:id="@+id/btn_ridelater"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/x40"
         android:layout_alignParentBottom="true"
@@ -120,8 +146,8 @@
         android:layout_marginLeft="@dimen/x20"
         android:layout_marginRight="@dimen/x20"
         android:layout_marginTop="@dimen/x15"
-        android:background="@color/button_color"
-        android:text="@string/confirm"
+        android:background="@color/button_dark_color"
+        android:text="@string/ride_later"
         android:textColor="@color/white"
         android:visibility="gone" />
 </RelativeLayout>
