@@ -62,6 +62,7 @@ public class HomeFragment extends BaseFragment implements OnMapReadyCallback, Go
     Button btnSubmit;
 
 
+
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
