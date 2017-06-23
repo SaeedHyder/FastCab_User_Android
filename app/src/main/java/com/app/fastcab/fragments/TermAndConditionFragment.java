@@ -28,8 +28,8 @@ public class TermAndConditionFragment extends BaseFragment {
 
     @BindView(R.id.chk_read)
     CheckBox chkRead;
-    @BindView(R.id.chk_read1)
-    CheckBox chkRead1;
+   // @BindView(R.id.chk_read1)
+   // CheckBox chkRead1;
     Unbinder unbinder;
 
 

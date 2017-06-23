@@ -67,7 +67,6 @@
                 android:id="@+id/iv_messenger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight=""
                 android:layout_marginRight="@dimen/x15"
                 android:src="@drawable/messenger_icon"/>
 
