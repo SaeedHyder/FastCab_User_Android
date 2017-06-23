@@ -2,19 +2,14 @@ package com.app.fastcab.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
@@ -110,6 +105,8 @@ public class LoginFragment extends BaseFragment  {
             case R.id.loginButton:
                 if (isvalidated()){
                     prefHelper.setLoginStatus(true);
+                    //Intent intent=new Intent(getMainActivity(), MapsActivity.class);
+                    //startActivity(intent);
                     getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragmnet");
                 }
                 break;

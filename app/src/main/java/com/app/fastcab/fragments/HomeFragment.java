@@ -1,6 +1,7 @@
 package com.app.fastcab.fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -22,29 +23,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.interfaces.OnSettingActivateListener;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.jota.autocompletelocation.AutoCompleteLocation;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import Modules.DirectionFinder;
+import Modules.DirectionFinderListener;
+import Modules.Route;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -54,14 +66,20 @@ public class HomeFragment extends BaseFragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnMarkerClickListener,
+        DirectionFinderListener,
+        OnSettingActivateListener {
 
+    private static final String ORIGIN = "origin";
+    private static final String DESTINATION = "destination";
     GoogleMap googleMap;
     GoogleApiClient googleApiClient;
+
     double latitude;
     double longitude;
-
-
+    @BindView(R.id.ll_pickup)
+    LinearLayout llPickup;
     SupportMapFragment map;
     @BindView(R.id.edt_pickup)
     AutoCompleteLocation edtPickup;
@@ -75,7 +93,14 @@ public class HomeFragment extends BaseFragment implements
     Button btnridenow;
     @BindView(R.id.btn_ridelater)
     Button btnRidelater;
-
+    private LatLng origin;
+    private LatLng destination;
+    private MarkerOptions originMarker;
+    private MarkerOptions destinationMarker;
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+    private ProgressDialog progressDialog;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -92,7 +117,9 @@ public class HomeFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        getMainActivity().setOnSettingActivateListener(this);
+        originMarker = new MarkerOptions().position(new LatLng(0, 0));
+        destinationMarker = new MarkerOptions().position(new LatLng(0, 0));
         ButterKnife.bind(this, view);
         return view;
     }
@@ -104,6 +131,7 @@ public class HomeFragment extends BaseFragment implements
         edtDestination.clearFocus();
         edtPickup.clearFocus();
         initMap();
+
     }
 
     private void setListeners() {
@@ -115,12 +143,16 @@ public class HomeFragment extends BaseFragment implements
 
             @Override
             public void onItemSelected(Place selectedPlace) {
-                if (selectedPlace != null)
-                    moveMap(selectedPlace.getLatLng());
-                if (selectedPlace != null && !edtPickup.getText().toString().equals("")) {
-
-                    InitRideSelection(edtPickup.getText().toString());
+                if (origin == null) {
+                    getCurrentLocation();
                 }
+                if (selectedPlace != null) {
+                    destination = selectedPlace.getLatLng();
+                    setdestinationMarkerOption(destination);
+                    InitRideSelection();
+                }
+
+
             }
         });
         edtPickup.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
@@ -131,23 +163,41 @@ public class HomeFragment extends BaseFragment implements
 
             @Override
             public void onItemSelected(Place selectedPlace) {
-                if (selectedPlace != null)
-                    moveMap(selectedPlace.getLatLng());
-                if (selectedPlace != null && !edtDestination.getText().toString().equals("")) {
-                    InitRideSelection(getCurrentAddress(selectedPlace.getLatLng().latitude, selectedPlace.getLatLng().longitude));
+                if (selectedPlace != null) {
+                    origin = selectedPlace.getLatLng();
+                    setoriginMarkerOption(origin);
+                    setRoute();
+
                 }
+
             }
         });
     }
 
-    private void InitRideSelection(String address) {
+    private void InitRideSelection() {
+        setRoute();
         inputLayoutPickup.setHint("Pickup Location");
-        inputLayoutPickup.setHint("Destination Location");
-
-        edtPickup.setVisibility(View.VISIBLE);
+        inputLayoutDestination.setHint("Destination Location");
+        llPickup.setVisibility(View.VISIBLE);
         btnridenow.setVisibility(View.VISIBLE);
         btnRidelater.setVisibility(View.VISIBLE);
-        edtPickup.setText(address);
+        //edtPickup.setText(address);
+    }
+
+    private void setoriginMarkerOption(LatLng latLng) {
+        originMarker.position(latLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
+                .draggable(true)
+                .title("");
+        moveMap(latLng);
+    }
+
+    private void setdestinationMarkerOption(LatLng latLng) {
+        destinationMarker.position(latLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
+                .draggable(true)
+                .title("");
+        moveMap(latLng);
     }
 
     private void initMap() {
@@ -167,6 +217,14 @@ public class HomeFragment extends BaseFragment implements
 
     }
 
+    private void sendRequest(String origin, String destination) {
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
@@ -182,7 +240,8 @@ public class HomeFragment extends BaseFragment implements
         googleMap = googlemap;
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
-        googleMap.setOnMarkerClickListener(this);
+        googlemap.setOnMarkerClickListener(this);
+
     }
 
     @Override
@@ -199,13 +258,15 @@ public class HomeFragment extends BaseFragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        getCurrentLocation();
+        if (origin == null)
+            getCurrentLocation();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
 
     }
+
 
     private String getCurrentAddress(double lat, double lng) {
         try {
@@ -232,7 +293,8 @@ public class HomeFragment extends BaseFragment implements
 
     //Getting current location
     private void getCurrentLocation() {
-        googleMap.clear();
+        if (googleMap != null)
+            googleMap.clear();
         if (ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
@@ -242,30 +304,74 @@ public class HomeFragment extends BaseFragment implements
             //Getting longitude and latitude
             longitude = location.getLongitude();
             latitude = location.getLatitude();
+            // origin = new LatLng(latitude, longitude);
             String Address = getCurrentAddress(latitude, longitude);
 
             if (Address != null) {
 
-                edtPickup.setText(Address);
+                //  edtPickup.setText(Address);
             }
-
-            moveMap(new LatLng(latitude, longitude));
+            setoriginMarkerOption(new LatLng(latitude, longitude));
+            // moveMap(new LatLng(latitude, longitude));
         }
+
     }
 
-    private void moveMap(LatLng latLng) {
-
-        googleMap.clear();
-        // LatLng latLng = new LatLng(latitude, longitude);
+    private void addMarker(LatLng latlng) {
         googleMap.addMarker(new MarkerOptions()
-                .position(latLng)
+                .position(latlng)
                 //.title("asdasd")
                 .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
                 .draggable(true)
                 .title(""));
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+    }
+
+    private void clearMap() {
+        googleMap.clear();
+    }
+
+    private void moveMap(LatLng latLng) {
+
+
+        googleMap.clear();
+        // LatLng latLng = new LatLng(latitude, longitude);
+
+
+        if (destination != null) {
+            googleMap.addMarker(originMarker).setTag(ORIGIN);
+            googleMap.addMarker(destinationMarker).setTag(DESTINATION);
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(originMarker.getPosition());
+            builder.include(destination);
+            LatLngBounds bounds = builder.build();
+
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, -3);
+            googleMap.animateCamera(CameraUpdateFactory.zoomBy(0));
+           /* googleMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    CameraUpdate zout = CameraUpdateFactory.zoomBy(-1);
+
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });*/
+        } else {
+            googleMap.addMarker(originMarker).setTag(ORIGIN);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        }
+
         googleMap.getUiSettings().setZoomControlsEnabled(false);
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -273,6 +379,17 @@ public class HomeFragment extends BaseFragment implements
 
     }
 
+    /*private void getorigin() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (origin == null)
+                    getCurrentLocation();
+            }
+        }, 100);
+    }
+*/
     private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String title) {
 
         View customMarkerView = ((LayoutInflater) getMainActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
@@ -309,6 +426,14 @@ public class HomeFragment extends BaseFragment implements
 
     }
 
+    private void setRoute() {
+        if (origin != null && destination != null) {
+            String origin_string = String.valueOf(origin.latitude) + "," + String.valueOf(origin.longitude);
+            String destination_string = String.valueOf(destination.latitude) + "," + String.valueOf(destination.longitude);
+            sendRequest(origin_string, destination_string);
+        }
+    }
+
     @Override
     public void onMarkerDragEnd(Marker marker) {
         latitude = marker.getPosition().latitude;
@@ -316,23 +441,32 @@ public class HomeFragment extends BaseFragment implements
 
         //move to current position
         String Address = getCurrentAddress(latitude, longitude);
+        setRoute();
 
-        if (Address != null) {
+        if (java.util.Objects.equals(marker.getTag(), ORIGIN)) {
+            origin = marker.getPosition();
+            setoriginMarkerOption(origin);
+            setRoute();
+            edtPickup.setText(Address != null ? Address : "");
 
-            edtPickup.setText(Address);
+        }
+        if (java.util.Objects.equals(marker.getTag(), DESTINATION)) {
+            destination = marker.getPosition();
+            setdestinationMarkerOption(destination);
+            setRoute();
+            edtDestination.setText(Address != null ? Address : "");
         }
 
-        moveMap(marker.getPosition());
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        googleMap.clear();
+        //  googleMap.clear();
 
         /*googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.user_pin))
                 .draggable(true));*/
 
-        latitude = latLng.latitude;
+       /* latitude = latLng.latitude;
         longitude = latLng.longitude;
 
         String Address = getCurrentAddress(latLng.latitude, latLng.longitude);
@@ -341,19 +475,89 @@ public class HomeFragment extends BaseFragment implements
             edtPickup.setText(Address);
         }
 
-        moveMap(latLng);
+        moveMap(latLng);*/
     }
 
 
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        if (marker != null && !edtDestination.getText().toString().equals("")) {
-            InitRideSelection(getCurrentAddress(marker.getPosition().latitude, marker.getPosition().longitude));
+        if (marker != null && (java.util.Objects.equals(marker.getTag(), ORIGIN))) {
+            origin = marker.getPosition();
+            edtPickup.setText(getCurrentAddress(marker.getPosition().latitude, marker.getPosition().longitude));
+            setRoute();
         }
 
         return false;
     }
 
 
+    @Override
+    public void onDirectionFinderStart() {
+
+        // progressDialog = ProgressDialog.show(this, "Please wait.","Finding direction..!", true);
+
+        if (originMarkers != null) {
+            for (Marker marker : originMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (destinationMarkers != null) {
+            for (Marker marker : destinationMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (polylinePaths != null) {
+            for (Polyline polyline : polylinePaths) {
+                polyline.remove();
+            }
+        }
+
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+
+
+        polylinePaths = new ArrayList<>();
+        originMarkers = new ArrayList<>();
+        destinationMarkers = new ArrayList<>();
+
+        for (Route route : routes) {
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLACK).
+                    width(15);
+
+            for (int i = 0; i < route.points.size(); i++)
+                polylineOptions.add(route.points.get(i));
+            moveMap(null);
+            polylinePaths.add(googleMap.addPolyline(polylineOptions));
+
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (origin == null) {
+            getCurrentLocation();
+            getMainActivity().statusCheck();
+
+        }
+
+    }
+
+    @Override
+    public void onLocationActivateListener() {
+        getCurrentLocation();
+    }
+
+    @Override
+    public void onNetworkActivateListener() {
+        getCurrentLocation();
+    }
 }

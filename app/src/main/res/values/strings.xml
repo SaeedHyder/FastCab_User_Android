@@ -126,6 +126,20 @@
     <string name="set_pickup_location">SET PICKUP LOCATION</string>
     <string name="ride_later">Ride Later</string>
     <string name="ride_now">Ride Now</string>
+    <string name="internet_not_connected">Internet not Available</string>
+    <string name="gps_question">Location is turned of Do you want to enable it ?</string>
+    <string name="gps_yes">Yes</string>
+    <string name="gps_no">No</string>
+    <string name="wifi_question">No Network found  Do you want to enable Wifi ?</string>
+    <string name="popular">Popular</string>
+    <string name="fares_are_high_due_to_high_demand">Fares are high due to high demand</string>
+    <string name="done">Done</string>
+    <string name="estimated_fare">Estimated Fare</string>
+    <string name="capacity">Capacity</string>
+    <string name="smaller_smater_cheaper_rides">Smaller, smater, cheaper rides</string>
+    <string name="finding_your_ride">Finding Your Ride</string>
+    <string name="connecting_with_nearest_driver">Connecting with nearest driver...</string>
+    <string name="cancel_ride">Cancel RIde</string>
 
 
 </resources>
