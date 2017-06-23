@@ -4,6 +4,7 @@
     android:id="@+id/scrollview_bigdaddy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
    >
 
     <ImageView
@@ -15,7 +16,7 @@
         android:layout_marginTop="@dimen/x20"
         android:layout_marginBottom="@dimen/x20"
         android:contentDescription=""
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/logo" />
 
     <LinearLayout
         android:id="@+id/ll_phone"
@@ -33,7 +34,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/x27"
             android:contentDescription=""
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/mobilenumber" />
 
         <com.app.fastcab.ui.views.AnyEditTextView
             android:id="@+id/edtphone"
@@ -75,7 +76,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/x27"
             android:contentDescription="asd"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/pwd" />
 
         <com.app.fastcab.ui.views.AnyEditTextView
             android:id="@+id/edtpassword"
@@ -163,7 +164,7 @@
             android:layout_toStartOf="@+id/txtFacebookLogin"
             android:layout_marginRight="@dimen/x10"
             android:contentDescription="asd"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/fb" />
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txtFacebookLogin"

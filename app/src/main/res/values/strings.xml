@@ -157,7 +157,11 @@
     <string name="destination_location">Destination location</string>
     <string name="drive_with_fastcab">Drive with FastCab</string>
     <string name="fastcab">FastCab</string>
-
+    <string name="Contact_Us">Contact Us</string>
+    <string name="are_you_sure_you_want_to_cancel_ride">Are you sure you want to cancel ride?</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="logout">Logout</string>
+    <string name="request_for_cancellation">Request For Cancellation</string>
 
 
 </resources>

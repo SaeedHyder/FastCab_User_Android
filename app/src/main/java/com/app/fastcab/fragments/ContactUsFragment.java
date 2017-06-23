@@ -3,15 +3,15 @@ package com.app.fastcab.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
-import com.app.fastcab.ui.views.AnyTextView;
-import com.app.fastcab.ui.views.PinEntryEditText;
+import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.TitleBar;
 
 import butterknife.BindView;
@@ -21,30 +21,22 @@ import butterknife.ButterKnife;
  * Created by saeedhyder on 6/23/2017.
  */
 
-public class InviteAndEarnFragment extends BaseFragment implements View.OnClickListener {
+public class ContactUsFragment extends BaseFragment implements View.OnClickListener {
 
-    @BindView(R.id.carLogo)
-    ImageView carLogo;
-    @BindView(R.id.txt_pin_entry)
-    PinEntryEditText txtPinEntry;
-    @BindView(R.id.txt_share)
-    AnyTextView txtShare;
-    @BindView(R.id.iv_messenger)
-    ImageView ivMessenger;
-    @BindView(R.id.iv_whatsup)
-    ImageView ivWhatsup;
-    @BindView(R.id.ll_socialIcons)
-    LinearLayout llSocialIcons;
-    @BindView(R.id.ll_invite)
-    LinearLayout llInvite;
+    @BindView(R.id.edtContactUs)
+    AnyEditTextView edtContactUs;
+    @BindView(R.id.SubmitButton)
+    Button SubmitButton;
+    @BindView(R.id.ll_contactUs)
+    LinearLayout llContactUs;
 
-    public static InviteAndEarnFragment newInstance() {
-        return new InviteAndEarnFragment();
+    public static ContactUsFragment newInstance() {
+        return new ContactUsFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_invite, container, false);
+        View view = inflater.inflate(R.layout.fragment_contact_us, container, false);
 
         ButterKnife.bind(this, view);
         return view;
@@ -58,6 +50,20 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
     }
 
     private void setListners() {
+
+        edtContactUs.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                switch (event.getAction() & MotionEvent.ACTION_MASK){
+                    case MotionEvent.ACTION_UP:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -73,7 +79,7 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
         titleBar.showBackButton();
-        titleBar.setSubHeading(getString(R.string.Invite_and_earn));
+        titleBar.setSubHeading(getString(R.string.Contact_Us));
     }
 
 
