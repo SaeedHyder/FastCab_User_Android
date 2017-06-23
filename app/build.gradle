@@ -45,7 +45,11 @@ android {
         javaMaxHeapSize "4g"
     }
 }
-
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -57,6 +61,7 @@ dependencies {
     compile('com.andreabaccega:android-form-edittext:1.2.1@aar') {
         exclude module: 'design'
     }
+
     compile project(':commons-lang3-3.1')
     compile project(path: ':autocomplete')
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
@@ -99,5 +104,8 @@ dependencies {
     compile 'co.infinum:materialdatetimepicker-support:3.2.0'
     //Show Hide Password
     compile 'com.github.scottyab:showhidepasswordedittext:0.8'
+
+
+
 
 }

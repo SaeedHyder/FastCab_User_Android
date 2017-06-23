@@ -9,58 +9,153 @@
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-       />
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x75"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_finding_ride"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/x20"
+
+            android:alpha="0.7"
+            android:gravity="center_horizontal"
+            android:text="@string/finding_your_ride"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:typeface="Roboto-Regular.ttf" />
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_finding_ride"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/x5"
+            android:gravity="center"
+            android:text="@string/connecting_with_nearest_driver"
+            app:typeface="Roboto-Regular.ttf" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/x20"
-        android:orientation="vertical" android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_pickup"
+            android:id="@+id/ll_destination_selected"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x60"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
             android:background="@color/white"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/iv_pickIcon"
-                android:layout_width="@dimen/x20"
-                android:layout_height="@dimen/x20"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/x15"
-                android:contentDescription=""
-                android:src="@drawable/ic_launcher" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_pickup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.jota.autocompletelocation.AutoCompleteLocation
-                    android:id="@+id/edt_pickup"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x10"
+                android:layout_gravity="center_vertical">
+                <ImageView
+                    android:layout_width="@dimen/x20"
+                    android:layout_height="@dimen/x20"
+                    android:layout_alignTop="@+id/txt_pickup"
+                    android:layout_alignBottom="@+id/txt_locationText"
+                    android:scaleType="centerInside"
+                    android:layout_marginRight="@dimen/x15"
+                    android:src="@drawable/ic_launcher"
+                    android:id="@+id/imageView" />
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_pickup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/x12"
-                    android:layout_marginRight="@dimen/x20"
-                    android:layout_marginTop="@dimen/x2"
-                    android:background="@android:color/transparent"
-                    android:gravity="start|center_vertical"
-                    android:hint="@string/pickup_location"
-                    android:imeOptions="actionDone"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textSize="@dimen/x14"
-                    app:background_layout="@android:color/transparent"
-                    app:hint_text="@string/pickup_location" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_gravity="right"
+                    android:alpha="0.5"
+                    android:gravity="start"
+                    android:layout_marginTop="@dimen/x10"
+                    android:text="@string/pickup_location"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/x12"
+                    app:typeface="Roboto-Regular.ttf"
+
+                    android:layout_toEndOf="@+id/imageView" />
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_locationText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_below="@+id/txt_pickup"
+                    android:gravity="start"
+                    android:textSize="@dimen/x12"
+                    android:layout_marginTop="@dimen/x5"
+                    android:text="Al Masaken Al iqtisadeyah,Qesm Masaken Al iqti.."
+                    android:textColor="@color/black"
+                    android:alpha="0.8"
+                    app:typeface="Roboto-Regular.ttf"
+                    android:layout_toEndOf="@+id/imageView" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x1"
+                android:layout_marginLeft="@dimen/x50"
+                android:alpha="0.4"
+                android:background="@drawable/line" /> <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/x10"
+            android:layout_gravity="center_vertical">
+            <ImageView
+                android:layout_width="@dimen/x20"
+                android:layout_height="@dimen/x20"
+                android:layout_alignTop="@+id/txt_destination"
+                android:layout_alignBottom="@+id/txt_deslocationText"
+                android:scaleType="centerInside"
+                android:layout_marginRight="@dimen/x15"
+                android:src="@drawable/ic_launcher"
+                android:id="@+id/imageView_des" />
+            <com.app.fastcab.ui.views.AnyTextView
+                android:id="@+id/txt_destination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:alpha="0.5"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/x10"
+                android:text="@string/pickup_location"
+                android:textColor="@color/black"
+                android:textSize="@dimen/x12"
+                app:typeface="Roboto-Regular.ttf"
+                android:layout_toEndOf="@+id/imageView_des" />
+            <com.app.fastcab.ui.views.AnyTextView
+                android:id="@+id/txt_deslocationText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_below="@+id/txt_destination"
+                android:gravity="start"
+                android:textSize="@dimen/x12"
+                android:layout_marginTop="@dimen/x5"
+                android:text="Al Masaken Al iqtisadeyah,Qesm Masaken Al iqti.."
+                android:textColor="@color/black"
+                android:alpha="0.8"
+                app:typeface="Roboto-Regular.ttf"
+                android:layout_toEndOf="@+id/imageView_des" />
+        </RelativeLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +167,8 @@
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
             android:background="@color/white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/iv_destinationIcon"
@@ -83,33 +179,42 @@
                 android:contentDescription=""
                 android:src="@drawable/ic_launcher" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_destination"
+            <com.app.fastcab.ui.views.AnyTextView
+                android:id="@+id/txt_destination_where"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.jota.autocompletelocation.AutoCompleteLocation
-                    android:id="@+id/edt_destination"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/x12"
-                    android:layout_marginRight="@dimen/x20"
-                    android:layout_marginTop="@dimen/x2"
-                    android:background="@android:color/transparent"
-                    android:gravity="start|center_vertical"
-                    android:imeOptions="actionDone"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textSize="@dimen/x14"
-                    app:background_layout="@android:color/transparent"
-                    app:hint_text="@string/where_to" />
-            </android.support.design.widget.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x12"
+                android:layout_marginRight="@dimen/x20"
+                android:layout_marginTop="@dimen/x2"
+                android:gravity="start|center_vertical"
+                android:hint="@string/where_to"
+                android:maxLines="1"
+                android:singleLine="true"
+                app:typeface="Roboto-Regular.ttf"
+                android:textSize="@dimen/x18" />
         </LinearLayout>
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_submit"
+        android:id="@+id/btn_ridenow"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/x40"
+        android:layout_above="@+id/btn_ridelater"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginTop="@dimen/x15"
+        android:background="@color/button_color"
+        android:text="@string/ride_now"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btn_ridelater"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/x40"
         android:layout_alignParentBottom="true"
@@ -120,8 +225,23 @@
         android:layout_marginLeft="@dimen/x20"
         android:layout_marginRight="@dimen/x20"
         android:layout_marginTop="@dimen/x15"
+        android:background="@color/button_dark_color"
+        android:text="@string/ride_later"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+    <Button
+        android:id="@+id/btn_cancel_ride"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/x40"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginBottom="@dimen/x25"
         android:background="@color/button_color"
-        android:text="@string/confirm"
+        android:text="@string/cancel_ride"
         android:textColor="@color/white"
         android:visibility="gone" />
 </RelativeLayout>

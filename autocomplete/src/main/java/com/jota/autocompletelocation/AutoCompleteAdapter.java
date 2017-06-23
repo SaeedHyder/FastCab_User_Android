@@ -7,6 +7,7 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -33,11 +34,12 @@ public class AutoCompleteAdapter extends ArrayAdapter<AutocompletePrediction>
   private AutocompleteFilter mPlaceFilter;
 
   public AutoCompleteAdapter(Context context, GoogleApiClient googleApiClient, LatLngBounds bounds,
-      AutocompleteFilter filter) {
+                             AutocompleteFilter filter) {
     super(context, android.R.layout.simple_expandable_list_item_2, android.R.id.text1);
     mGoogleApiClient = googleApiClient;
     mBounds = bounds;
     mPlaceFilter = filter;
+
   }
 
   public void setBounds(LatLngBounds bounds) {
@@ -63,7 +65,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<AutocompletePrediction>
     return row;
   }
 
-  @Override public Filter getFilter() {
+  @Override
+  public Filter getFilter() {
     return new Filter() {
       @Override protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults results = new FilterResults();
