@@ -3,6 +3,7 @@ package com.app.fastcab.fragments;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,7 +17,6 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +27,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.fastcab.R;
+import com.app.fastcab.activities.PickupSelectionactivity;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.OnSettingActivateListener;
+import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,19 +48,20 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.jota.autocompletelocation.AutoCompleteLocation;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import Modules.DirectionFinder;
 import Modules.DirectionFinderListener;
 import Modules.Route;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class HomeFragment extends BaseFragment implements
@@ -78,21 +81,27 @@ public class HomeFragment extends BaseFragment implements
 
     double latitude;
     double longitude;
-    @BindView(R.id.ll_pickup)
-    LinearLayout llPickup;
     SupportMapFragment map;
-    @BindView(R.id.edt_pickup)
-    AutoCompleteLocation edtPickup;
-    @BindView(R.id.input_layout_pickup)
-    TextInputLayout inputLayoutPickup;
-    @BindView(R.id.edt_destination)
-    AutoCompleteLocation edtDestination;
-    @BindView(R.id.input_layout_destination)
-    TextInputLayout inputLayoutDestination;
+    @BindView(R.id.txt_finding_ride)
+    AnyTextView txtFindingRide;
+    @BindView(R.id.txt_capacity)
+    AnyTextView txtCapacity;
+    @BindView(R.id.txt_locationText)
+    AnyTextView txtLocationText;
+    @BindView(R.id.txt_deslocationText)
+    AnyTextView txtDeslocationText;
+    @BindView(R.id.ll_destination_selected)
+    LinearLayout llDestinationSelected;
+    @BindView(R.id.txt_destination_where)
+    AnyTextView txtDestinationWhere;
     @BindView(R.id.btn_ridenow)
-    Button btnridenow;
+    Button btnRidenow;
     @BindView(R.id.btn_ridelater)
     Button btnRidelater;
+    @BindView(R.id.btn_cancel_ride)
+    Button btnCancelRide;
+    @BindView(R.id.txt_destination)
+    AnyTextView txtDestination;
     private LatLng origin;
     private LatLng destination;
     private MarkerOptions originMarker;
@@ -127,59 +136,55 @@ public class HomeFragment extends BaseFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setListeners();
-        edtDestination.clearFocus();
-        edtPickup.clearFocus();
         initMap();
-
     }
 
-    private void setListeners() {
-        edtDestination.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
-            @Override
-            public void onTextClear() {
-
-            }
-
-            @Override
-            public void onItemSelected(Place selectedPlace) {
-                if (origin == null) {
-                    getCurrentLocation();
-                }
-                if (selectedPlace != null) {
-                    destination = selectedPlace.getLatLng();
-                    setdestinationMarkerOption(destination);
-                    InitRideSelection();
-                }
 
 
-            }
-        });
-        edtPickup.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
-            @Override
-            public void onTextClear() {
+    /* private void setListeners() {
+         edtDestination.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
+             @Override
+             public void onTextClear() {
 
-            }
+             }
 
-            @Override
-            public void onItemSelected(Place selectedPlace) {
-                if (selectedPlace != null) {
-                    origin = selectedPlace.getLatLng();
-                    setoriginMarkerOption(origin);
-                    setRoute();
+             @Override
+             public void onItemSelected(Place selectedPlace) {
+                 if (origin == null) {
+                     getCurrentLocation();
+                 }
+                 if (selectedPlace != null) {
+                     destination = selectedPlace.getLatLng();
+                     setdestinationMarkerOption(destination);
+                     InitRideSelection();
+                 }
 
-                }
 
-            }
-        });
-    }
+             }
+         });
+         edtPickup.setAutoCompleteTextListener(new AutoCompleteLocation.AutoCompleteLocationListener() {
+             @Override
+             public void onTextClear() {
 
-    private void InitRideSelection() {
+             }
+
+             @Override
+             public void onItemSelected(Place selectedPlace) {
+                 if (selectedPlace != null) {
+                     origin = selectedPlace.getLatLng();
+                     setoriginMarkerOption(origin);
+                     setRoute();
+
+                 }
+
+             }
+         });
+     }
+ */
+    private void InitRideSelection(int i) {
         setRoute();
-        inputLayoutPickup.setHint("Pickup Location");
-        inputLayoutDestination.setHint("Destination Location");
-        llPickup.setVisibility(View.VISIBLE);
-        btnridenow.setVisibility(View.VISIBLE);
+        txtDestinationWhere.setVisibility(View.GONE);
+        llDestinationSelected.setVisibility(View.VISIBLE);
         btnRidelater.setVisibility(View.VISIBLE);
         //edtPickup.setText(address);
     }
@@ -443,18 +448,18 @@ public class HomeFragment extends BaseFragment implements
         String Address = getCurrentAddress(latitude, longitude);
         setRoute();
 
-        if (java.util.Objects.equals(marker.getTag(), ORIGIN)) {
+        if (Objects.equals(marker.getTag(), ORIGIN)) {
             origin = marker.getPosition();
             setoriginMarkerOption(origin);
             setRoute();
-            edtPickup.setText(Address != null ? Address : "");
+          //  edtPickup.setText(Address != null ? Address : "");
 
         }
-        if (java.util.Objects.equals(marker.getTag(), DESTINATION)) {
+        if (Objects.equals(marker.getTag(), DESTINATION)) {
             destination = marker.getPosition();
             setdestinationMarkerOption(destination);
             setRoute();
-            edtDestination.setText(Address != null ? Address : "");
+          //  edtDestination.setText(Address != null ? Address : "");
         }
 
     }
@@ -482,9 +487,10 @@ public class HomeFragment extends BaseFragment implements
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        if (marker != null && (java.util.Objects.equals(marker.getTag(), ORIGIN))) {
+        if (marker != null && (Objects.equals(marker.getTag(), ORIGIN))) {
             origin = marker.getPosition();
-            edtPickup.setText(getCurrentAddress(marker.getPosition().latitude, marker.getPosition().longitude));
+            StartPickupActivity();
+            //edtPickup.setText(getCurrentAddress(marker.getPosition().latitude, marker.getPosition().longitude));
             setRoute();
         }
 
@@ -559,5 +565,34 @@ public class HomeFragment extends BaseFragment implements
     @Override
     public void onNetworkActivateListener() {
         getCurrentLocation();
+    }
+
+    private void StartPickupActivity(){
+        Intent i = new Intent(getActivity(), PickupSelectionactivity.class);
+        startActivityForResult(i,12);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UIHelper.showShortToastInCenter(getDockActivity(),"request code"+requestCode);
+    }
+
+    @OnClick({R.id.ll_destination_selected, R.id.txt_destination_where, R.id.btn_ridenow, R.id.btn_ridelater, R.id.btn_cancel_ride})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ll_destination_selected:
+                StartPickupActivity();
+                break;
+            case R.id.txt_destination_where:
+                StartPickupActivity();
+                break;
+            case R.id.btn_ridenow:
+                break;
+            case R.id.btn_ridelater:
+                break;
+            case R.id.btn_cancel_ride:
+                break;
+        }
     }
 }

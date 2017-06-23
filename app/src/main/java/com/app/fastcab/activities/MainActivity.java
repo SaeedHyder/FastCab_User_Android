@@ -232,7 +232,8 @@ public class MainActivity extends DockActivity implements OnClickListener {
             resideMenu = new ResideMenu(this);
             resideMenu.attachToActivity(this);
             resideMenu.setMenuListener(getMenuListener());
-            resideMenu.setScaleValue(0.52f);
+            resideMenu.setScaleValue(0.60f);
+
 
             setMenuItemDirection(direction);
         }

@@ -140,6 +140,9 @@
     <string name="finding_your_ride">Finding Your Ride</string>
     <string name="connecting_with_nearest_driver">Connecting with nearest driver...</string>
     <string name="cancel_ride">Cancel RIde</string>
+    <string name="destination_location">Destination location</string>
+    <string name="drive_with_fastcab">Drive with FastCab</string>
+    <string name="fastcab">FastCab</string>
 
 
 </resources>
