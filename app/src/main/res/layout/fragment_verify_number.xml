@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@drawable/bg"
     android:padding="@dimen/x20">
     <ImageView
         android:id="@+id/iv_LogoIcon"
@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/x20"
         android:layout_marginTop="@dimen/x10"
         android:contentDescription="@string/api_key"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/logo" />
 
     <LinearLayout
         android:id="@+id/ll_email"
@@ -31,7 +31,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/x15"
             android:contentDescription="@string/api_key"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/phonev" />
 
         <com.app.fastcab.ui.views.AnyEditTextView
             android:id="@+id/edtphone"
@@ -66,6 +66,7 @@
         android:textColor="@color/white"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true" />
+
     <com.app.fastcab.ui.views.AnyTextView
         android:id="@+id/txtResetPass"
         android:layout_width="match_parent"

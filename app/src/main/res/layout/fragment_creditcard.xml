@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+  <LinearLayout
+      android:id="@+id/ll_creditCardFields"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/x20"
+      android:layout_marginRight="@dimen/x20"
+      android:orientation="vertical">
+
+  <LinearLayout
+      android:id="@+id/ll_CreditCardNum"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/x50"
+      android:layout_marginTop="@dimen/x20"
+      android:background="@color/white"
+      android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_CreditCardNum"
+        android:layout_width="@dimen/x20"
+        android:layout_height="@dimen/x20"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x10"
+        android:contentDescription=""
+        android:src="@drawable/credit" />
+
+    <com.app.fastcab.ui.views.AnyEditTextView
+        android:id="@+id/edtCreditCardNum"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x12"
+        android:layout_marginRight="@dimen/x20"
+        android:hint="Credit Card Number"
+        android:background="@android:color/transparent"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="30"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/dark_grey"
+        android:textSize="@dimen/x14"
+        app:typeface="Roboto-Regular.ttf" />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/ll_ExpirationDate"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/x50"
+      android:layout_marginTop="@dimen/x12"
+      android:background="@color/white"
+      android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_ExpirationDate"
+        android:layout_width="@dimen/x20"
+        android:layout_height="@dimen/x20"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x10"
+        android:contentDescription=""
+        android:src="@drawable/expiration" />
+
+    <com.app.fastcab.ui.views.AnyEditTextView
+        android:id="@+id/edtExpirationDate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x12"
+        android:layout_marginRight="@dimen/x20"
+        android:hint="Expiration Date"
+        android:background="@android:color/transparent"
+        android:imeOptions="actionNext"
+        android:inputType="date"
+        android:maxLength="30"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/dark_grey"
+        android:textSize="@dimen/x14"
+        app:typeface="Roboto-Regular.ttf" />
+
+  </LinearLayout>
+
+
+  <LinearLayout
+      android:id="@+id/ll_CVV"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/x50"
+      android:layout_marginTop="@dimen/x12"
+      android:background="@color/white"
+      android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_ll_CVV"
+        android:layout_width="@dimen/x20"
+        android:layout_height="@dimen/x20"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x10"
+        android:contentDescription=""
+        android:src="@drawable/cvv" />
+
+    <com.app.fastcab.ui.views.AnyEditTextView
+        android:id="@+id/edt_CVV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x12"
+        android:layout_marginRight="@dimen/x20"
+        android:hint="CVV"
+        android:background="@android:color/transparent"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="15"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/dark_grey"
+        android:textSize="@dimen/x14"
+        app:typeface="Roboto-Regular.ttf" />
+
+  </LinearLayout>
+  <LinearLayout
+      android:id="@+id/ll_NameOnCard"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/x50"
+      android:layout_marginTop="@dimen/x12"
+      android:background="@color/white"
+      android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_NameOnCard"
+        android:layout_width="@dimen/x20"
+        android:layout_height="@dimen/x20"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x10"
+        android:contentDescription=""
+        android:src="@drawable/name" />
+
+    <com.app.fastcab.ui.views.AnyEditTextView
+        android:id="@+id/edtNameOnCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/x12"
+        android:layout_marginRight="@dimen/x20"
+        android:background="@android:color/transparent"
+        android:imeOptions="actionNext"
+        android:hint="Name Appearing On Card"
+        android:inputType="textPersonName"
+        android:maxLength="30"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/dark_grey"
+        android:textSize="@dimen/x14"
+        app:typeface="Roboto-Regular.ttf" />
+
+  </LinearLayout>
+  </LinearLayout>
+
+  <Button
+      android:id="@+id/UpdateButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/x20"
+      android:layout_marginRight="@dimen/x20"
+      android:layout_marginTop="@dimen/x10"
+      android:background="@color/button_color"
+      android:text="@string/update"
+      android:textColor="@color/white" />
+
+
+</LinearLayout>

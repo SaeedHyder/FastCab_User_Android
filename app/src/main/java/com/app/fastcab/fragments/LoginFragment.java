@@ -18,6 +18,7 @@ import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
+import com.google.firebase.messaging.RemoteMessage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -107,7 +108,7 @@ public class LoginFragment extends BaseFragment  {
                     prefHelper.setLoginStatus(true);
                     //Intent intent=new Intent(getMainActivity(), MapsActivity.class);
                     //startActivity(intent);
-                    getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragmnet");
+                    getDockActivity().replaceDockableFragment(SettingFragment.newInstance(), "HomeFragmnet");
                 }
                 break;
             case R.id.txtResetPass:

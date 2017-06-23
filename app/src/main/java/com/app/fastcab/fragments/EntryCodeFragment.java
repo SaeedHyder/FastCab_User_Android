@@ -11,6 +11,7 @@ import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.PinEntryEditText;
+import com.app.fastcab.ui.views.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,5 +68,11 @@ public class EntryCodeFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
-
+    @Override
+    public void setTitleBar(TitleBar titleBar) {
+        super.setTitleBar(titleBar);
+        titleBar.hideButtons();
+        titleBar.showBackButton();
+        titleBar.setSubHeading(getString(R.string.verification_code));
+    }
 }

@@ -42,7 +42,7 @@ public class DialogHelper {
         AnyTextView textView = (AnyTextView) dialog.findViewById(ID);
         textView.setText(Text);
     }
-/*
+
     public Dialog initJobRefusalDialog(int layoutID, View.OnClickListener onclicklistener) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -61,17 +61,28 @@ public class DialogHelper {
         return this.dialog;
     }
 
-    public Dialog initCancelJobDialog(int layoutID, View.OnClickListener onokclicklistener, View.OnClickListener oncancelclicklistener) {
+   public Dialog promoCode(int layoutID, View.OnClickListener onokclicklistener, View.OnClickListener oncancelclicklistener) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.dialog.setContentView(layoutID);
-        Button okbutton = (Button) dialog.findViewById(R.id.btn_ok);
+        Button okbutton = (Button) dialog.findViewById(R.id.btn_cancel);
         okbutton.setOnClickListener(onokclicklistener);
-        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancle);
+        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_submit);
         cancelbutton.setOnClickListener(oncancelclicklistener);
         return this.dialog;
     }
 
+    public Dialog cancelRide(int layoutID, View.OnClickListener onokclicklistener, View.OnClickListener oncancelclicklistener) {
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        this.dialog.setContentView(layoutID);
+        Button okbutton = (Button) dialog.findViewById(R.id.btn_No);
+        okbutton.setOnClickListener(onokclicklistener);
+        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_yes);
+        cancelbutton.setOnClickListener(oncancelclicklistener);
+        return this.dialog;
+    }
+/*
     public Dialog initRequestSendDialog(int layoutID, View.OnClickListener onclicklistener) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -128,6 +139,7 @@ public class DialogHelper {
         KeyboardHide.hideSoftKeyboard(dialog.getContext(), editTextView);
         return editTextView.getText().toString();
     }*/
+
     public void showDialog(){
 
         dialog.show();
