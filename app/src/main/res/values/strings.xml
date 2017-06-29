@@ -162,6 +162,24 @@
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
     <string name="logout">Logout</string>
     <string name="request_for_cancellation">Request For Cancellation</string>
+    <string name="rides">Rides</string>
+    <string name="miles">Miles</string>
+    <string name="rating">Rating</string>
+    <string name="Ride_Feedback">Ride Feedback</string>
+    <string name="driving">Driving</string>
+    <string name="comfort">Comfort</string>
+    <string name="navigation">Navigation</string>
+    <string name="car_quality">Car Quality</string>
+    <string name="what_could_be_improved">What could be improved?</string>
+    <string name="others_specify">Others Specify</string>
+    <string name="type_your_message_here">Type your message here....</string>
+    <string name="comment">Comment...</string>
+    <string name="rate_app">Rate App</string>
+    <string name="rate">Rate</string>
+    <string name="rate_driver">Rate Driver</string>
+    <string name="submit_rating">Submit Rating</string>
+    <string name="promo_code">Promo Code</string>
+    <string name="request_go">Request Go</string>
 
 
 </resources>

@@ -27,6 +27,151 @@
             app:typeface="Roboto-Regular.ttf"
             />
 
+        <LinearLayout
+            android:id="@+id/ll_rect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginRight="@dimen/x20"
+            android:background="@drawable/black_border"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_rating"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+            <com.app.fastcab.ui.views.CustomRatingBar
+                android:id="@+id/rbAddRating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/x20"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:layout_marginBottom="@dimen/x10"
+                android:visibility="visible"
+                app:maxStars="5"
+                android:isIndicator="true"
+                app:starOff="@drawable/star_unfilled"
+                app:starOn="@drawable/star_filled"
+                app:starPadding="@dimen/x2"
+                app:stars="3" />
+
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_ratingName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x15"
+                    android:layout_marginTop="@dimen/x11"
+                    android:alpha="0.5"
+                    android:gravity="center"
+                    android:text="@string/rating"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/x16"
+                    app:typeface="Roboto-Regular.ttf" />
+
+            </LinearLayout>
+
+
+
+            <View
+                android:id="@+id/txt_line"
+                android:layout_width="@dimen/x1"
+                android:layout_height="match_parent"
+                android:background="@drawable/horizontal_line"/>
+
+        <LinearLayout
+            android:id="@+id/ll_rides"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.app.fastcab.ui.views.AnyTextView
+                android:id="@+id/txt_rides"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x15"
+                android:layout_marginBottom="@dimen/x10"
+                android:text="12"
+                android:gravity="center"
+                android:textColor="@color/button_color"
+                android:textSize="@dimen/x25"
+                app:typeface="Roboto-Regular.ttf"
+                />
+
+            <com.app.fastcab.ui.views.AnyTextView
+                android:id="@+id/txt_ridesName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x15"
+                android:text="@string/rides"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:alpha="0.5"
+                android:textSize="@dimen/x16"
+                app:typeface="Roboto-Regular.ttf"
+                />
+
+
+
+        </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/x1"
+                android:layout_height="match_parent"
+                android:background="@drawable/horizontal_line"/>
+
+            <LinearLayout
+                android:id="@+id/ll_miles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_miles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="22.5"
+                    android:layout_marginTop="@dimen/x15"
+                    android:layout_marginBottom="@dimen/x10"
+                    android:gravity="center"
+                    android:textColor="@color/button_color"
+                    android:textSize="@dimen/x25"
+                    app:typeface="Roboto-Regular.ttf"
+                    />
+
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_milesName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/miles"
+                    android:gravity="center"
+                    android:layout_marginBottom="@dimen/x15"
+                    android:textColor="@color/black"
+                    android:alpha="0.5"
+                    android:textSize="@dimen/x16"
+                    app:typeface="Roboto-Regular.ttf"
+                    />
+
+
+
+            </LinearLayout>
+
+
+
+
+
+
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/ll_gender"
