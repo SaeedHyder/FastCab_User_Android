@@ -3,13 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/black">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/map"
-        class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -62,7 +58,7 @@
             android:layout_marginRight="@dimen/x20"
             android:background="@color/white"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -73,7 +69,7 @@
                     android:layout_width="@dimen/x20"
                     android:layout_height="@dimen/x20"
                     android:layout_alignTop="@+id/txt_pickup"
-                    android:layout_alignBottom="@+id/txt_locationText"
+                    android:layout_alignBottom="@+id/txt_pick_text"
                     android:scaleType="centerInside"
                     android:layout_marginRight="@dimen/x15"
                     android:src="@drawable/ic_launcher"
@@ -93,7 +89,7 @@
 
                     android:layout_toEndOf="@+id/imageView" />
                 <com.app.fastcab.ui.views.AnyTextView
-                    android:id="@+id/txt_locationText"
+                    android:id="@+id/txt_pick_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -113,7 +109,7 @@
                 android:layout_height="@dimen/x1"
                 android:layout_marginLeft="@dimen/x50"
                 android:alpha="0.4"
-                android:background="@drawable/line" /> <RelativeLayout
+                android:background="@drawable/line_verticle" /> <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/x10"
@@ -158,42 +154,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_destination"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/x60"
-            android:layout_below="@+id/ll_pickup"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/x20"
-            android:layout_marginRight="@dimen/x20"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:visibility="visible">
 
-            <ImageView
-                android:id="@+id/iv_destinationIcon"
-                android:layout_width="@dimen/x20"
-                android:layout_height="@dimen/x20"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/x15"
-                android:contentDescription=""
-                android:src="@drawable/ic_launcher" />
-
-            <com.app.fastcab.ui.views.AnyTextView
-                android:id="@+id/txt_destination_where"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/x12"
-                android:layout_marginRight="@dimen/x20"
-                android:layout_marginTop="@dimen/x2"
-                android:gravity="start|center_vertical"
-                android:hint="@string/where_to"
-                android:maxLines="1"
-                android:singleLine="true"
-                app:typeface="Roboto-Regular.ttf"
-                android:textSize="@dimen/x18" />
-        </LinearLayout>
 
     </LinearLayout>
 

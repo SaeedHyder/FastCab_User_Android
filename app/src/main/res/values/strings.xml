@@ -157,7 +157,7 @@
     <string name="destination_location">Destination location</string>
     <string name="drive_with_fastcab">Drive with FastCab</string>
     <string name="fastcab">FastCab</string>
-
+    <string name="set_location_on_map">Set Location on Map</string>
 
 
 </resources>

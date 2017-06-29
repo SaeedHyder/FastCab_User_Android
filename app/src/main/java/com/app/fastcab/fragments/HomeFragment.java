@@ -42,6 +42,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -86,7 +87,7 @@ public class HomeFragment extends BaseFragment implements
     AnyTextView txtFindingRide;
     @BindView(R.id.txt_capacity)
     AnyTextView txtCapacity;
-    @BindView(R.id.txt_locationText)
+    @BindView(R.id.txt_pick_text)
     AnyTextView txtLocationText;
     @BindView(R.id.txt_deslocationText)
     AnyTextView txtDeslocationText;
@@ -137,6 +138,7 @@ public class HomeFragment extends BaseFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initMap();
+
     }
 
 
@@ -191,7 +193,7 @@ public class HomeFragment extends BaseFragment implements
 
     private void setoriginMarkerOption(LatLng latLng) {
         originMarker.position(latLng)
-                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location, "asdsdasd")))
                 .draggable(true)
                 .title("");
         moveMap(latLng);
@@ -199,7 +201,7 @@ public class HomeFragment extends BaseFragment implements
 
     private void setdestinationMarkerOption(LatLng latLng) {
         destinationMarker.position(latLng)
-                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location, "asdsdasd")))
                 .draggable(true)
                 .title("");
         moveMap(latLng);
@@ -246,6 +248,12 @@ public class HomeFragment extends BaseFragment implements
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
         googlemap.setOnMarkerClickListener(this);
+        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                UIHelper.showShortToastInCenter(getDockActivity(),cameraPosition.target.toString());
+            }
+        });
 
     }
 
@@ -322,25 +330,7 @@ public class HomeFragment extends BaseFragment implements
 
     }
 
-    private void addMarker(LatLng latlng) {
-        googleMap.addMarker(new MarkerOptions()
-                .position(latlng)
-                //.title("asdasd")
-                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
-                .draggable(true)
-                .title(""));
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        googleMap.getUiSettings().setZoomControlsEnabled(false);
-        googleMap.getUiSettings().setZoomGesturesEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
-    }
-
-    private void clearMap() {
-        googleMap.clear();
-    }
 
     private void moveMap(LatLng latLng) {
 
@@ -357,7 +347,7 @@ public class HomeFragment extends BaseFragment implements
             builder.include(destination);
             LatLngBounds bounds = builder.build();
 
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, -3);
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
             googleMap.animateCamera(CameraUpdateFactory.zoomBy(0));
            /* googleMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
                 @Override
@@ -394,12 +384,30 @@ public class HomeFragment extends BaseFragment implements
             }
         }, 100);
     }
-*/
+*/ private void addMarker(LatLng latlng) {
+        googleMap.addMarker(new MarkerOptions()
+                .position(latlng)
+                //.title("asdasd")
+                .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_launcher, "asdsdasd")))
+                .draggable(true)
+                .title(""));
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+    }
+
+    private void clearMap() {
+        googleMap.clear();
+    }
     private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String title) {
 
         View customMarkerView = ((LayoutInflater) getMainActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
         ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.img_icon);
-        TextView textView = (TextView) customMarkerView.findViewById(R.id.txt_locationText);
+        TextView textView = (TextView) customMarkerView.findViewById(R.id.txt_pick_text);
         textView.setText(title);
         markerImageView.setImageResource(resId);
         customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);

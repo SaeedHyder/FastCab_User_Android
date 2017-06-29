@@ -14,7 +14,7 @@
             android:layout_width="@dimen/x20"
             android:layout_height="@dimen/x20"
             android:layout_alignTop="@+id/txt_pickup"
-            android:layout_alignBottom="@+id/txt_locationText"
+            android:layout_alignBottom="@+id/txt_pick_text"
             android:scaleType="centerInside"
             android:layout_marginRight="@dimen/x15"
             android:src="@drawable/ic_launcher"
@@ -33,7 +33,7 @@
             app:typeface="Roboto-Regular.ttf"
             android:layout_toEndOf="@+id/imageView" />
         <com.app.fastcab.ui.views.AnyTextView
-            android:id="@+id/txt_locationText"
+            android:id="@+id/txt_pick_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"

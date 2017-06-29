@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/x1"
         android:alpha="0.4"
-        android:background="@drawable/line" />
+        android:background="@drawable/line_verticle" />
 
     <ListView
         android:id="@+id/sideoptions"
@@ -59,7 +59,7 @@
         android:layout_height="@dimen/x1"
         android:layout_below="@+id/ll_driver"
         android:alpha="0.4"
-        android:background="@drawable/line" />
+        android:background="@drawable/line_verticle" />
 
     <com.app.fastcab.ui.views.AnyTextView
         android:id="@+id/txt_driveoption"

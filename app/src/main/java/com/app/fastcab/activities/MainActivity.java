@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.HomeFragment;
+import com.app.fastcab.fragments.HomeMapFragment;
 import com.app.fastcab.fragments.LoginFragment;
 import com.app.fastcab.fragments.SideMenuFragment;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
@@ -71,7 +72,7 @@ public class MainActivity extends DockActivity implements OnClickListener {
 
         sideMenuType = SideMenuChooser.RESIDE_MENU.getValue();
         sideMenuDirection = SideMenuDirection.LEFT.getValue();
-
+        isConnected(getApplicationContext());
         settingSideMenu(sideMenuType, sideMenuDirection);
 
         titleBar.setMenuButtonListener(new OnClickListener() {
@@ -200,6 +201,7 @@ public class MainActivity extends DockActivity implements OnClickListener {
         }
 
         if (requestCode == WifiResultCode) {
+
             settingActivateListener.onNetworkActivateListener();
 
         }
@@ -266,7 +268,7 @@ public class MainActivity extends DockActivity implements OnClickListener {
     public void initFragment() {
         getSupportFragmentManager().addOnBackStackChangedListener(getListener());
         if (prefHelper.isLogin()) {
-            replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment");
+            replaceDockableFragment(HomeMapFragment.newInstance(), "HomeFragment");
         } else {
             replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
         }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.app.fastcab.R;
 import com.app.fastcab.activities.DockActivity;
+import com.app.fastcab.interfaces.OnReceivePlaceListener;
 import com.app.fastcab.ui.viewbinders.abstracts.ViewBinder;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -42,9 +43,11 @@ public class AutoCompleteListAdapter extends ArrayAdapter<AutocompletePrediction
     private AutocompleteFilter mPlaceFilter;
     private DockActivity context;
     protected ViewBinder<AutocompletePrediction> viewBinder;
+    private OnReceivePlaceListener placeListener;
     public AutoCompleteListAdapter(DockActivity context, GoogleApiClient googleApiClient, LatLngBounds bounds,
-                                   AutocompleteFilter filter,ViewBinder<AutocompletePrediction> viewBinder) {
+                                   AutocompleteFilter filter,ViewBinder<AutocompletePrediction> viewBinder,OnReceivePlaceListener onReceivePlaceListener) {
         super(context,R.layout.row_item_autocomplete);
+        this.placeListener = onReceivePlaceListener;
         this.context = context;
         mGoogleApiClient = googleApiClient;
         mBounds = bounds;
@@ -121,6 +124,7 @@ public class AutoCompleteListAdapter extends ArrayAdapter<AutocompletePrediction
                 if (results != null && results.count > 0) {
                     mResultList = (ArrayList<AutocompletePrediction>) results.values;
                     notifyDataSetChanged();
+                    placeListener.OnPlaceReceive();
                 } else {
                     notifyDataSetInvalidated();
                 }
@@ -147,8 +151,8 @@ public class AutoCompleteListAdapter extends ArrayAdapter<AutocompletePrediction
 
             final Status status = autocompletePredictions.getStatus();
             if (!status.isSuccess()) {
-                Toast.makeText(getContext(), "Error contacting to Server: ",
-                        Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getContext(), "Error contacting to Server: ",
+                        Toast.LENGTH_SHORT).show();*/
         /*Toast.makeText(getContext(), "Error contacting to Server: " + status.toString(),
             Toast.LENGTH_SHORT).show();*/
                 autocompletePredictions.release();
