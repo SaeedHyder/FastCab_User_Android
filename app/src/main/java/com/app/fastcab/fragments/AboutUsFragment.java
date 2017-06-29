@@ -16,22 +16,17 @@ import com.app.fastcab.ui.views.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
- * Created on 5/23/2017.
+ * Created by saeedhyder on 6/23/2017.
  */
 
-public class TermAndConditionFragment extends BaseFragment {
-    @BindView(R.id.txt_term_condition)
-    TextView txtTermCondition;
+public class AboutUsFragment extends BaseFragment {
 
+    @BindView(R.id.txt_aboutUs)
+    TextView txtAboutUs;
     @BindView(R.id.chk_read)
     CheckBox chkRead;
-   // @BindView(R.id.chk_read1)
-   // CheckBox chkRead1;
-
-
 
     public static TermAndConditionFragment newInstance() {
         return new TermAndConditionFragment();
@@ -40,8 +35,8 @@ public class TermAndConditionFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_term_condition, container, false);
-     ButterKnife.bind(this, view);
+        View view = inflater.inflate(R.layout.fragment_about_us, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -76,7 +71,7 @@ public class TermAndConditionFragment extends BaseFragment {
 
     private void bindTextview() {
 
-        txtTermCondition.setText(" ");
+        txtAboutUs.setText(" ");
      /*   Call<ResponseWrapper<StaticPageEnt>> call = webService.getTermandAbout(prefHelper.getUserId(),"term");
         call.enqueue(new Callback<ResponseWrapper<StaticPageEnt>>() {
             @Override
@@ -101,10 +96,9 @@ public class TermAndConditionFragment extends BaseFragment {
     private void settitle(String response) {
         getMainActivity().titleBar.setSubHeading(getString(R.string.terms_conditons));
         getMainActivity().titleBar.invalidate();
-        txtTermCondition.setText(response);
-        txtTermCondition.setMovementMethod(new ScrollingMovementMethod());
+        txtAboutUs.setText(response);
+        txtAboutUs.setMovementMethod(new ScrollingMovementMethod());
     }
-
 
 
 }

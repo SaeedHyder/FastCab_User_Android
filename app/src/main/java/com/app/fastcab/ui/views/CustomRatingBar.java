@@ -1,6 +1,7 @@
 package com.app.fastcab.ui.views;
 
 import android.annotation.TargetApi;
+import android.widget.ImageView;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -37,9 +38,9 @@ public class CustomRatingBar extends LinearLayout {
 
     private int mMaxStars = 5;
     private float mCurrentScore = 2.5f;
-    private int mStarOnResource = R.drawable.ic_launcher;
-    private int mStarOffResource = R.drawable.ic_launcher;
-    private int mStarHalfResource = R.drawable.ic_launcher;
+    private int mStarOnResource = R.drawable.star_filled;
+    private int mStarOffResource = R.drawable.star_unfilled;
+    private int mStarHalfResource = R.drawable.star_filled;
     private ImageView[] mStarsViews;
     private float mStarPadding;
     private IRatingBarCallbacks onScoreChanged;

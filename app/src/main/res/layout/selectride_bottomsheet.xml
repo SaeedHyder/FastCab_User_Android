@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/textLayout"
+        android:layout_width="@dimen/x350"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_heading1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Popular"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x20"
+            app:typeface="Roboto-Regular.ttf" />
+
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_heading2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x5"
+            android:gravity="center"
+            android:text="Fares are high due to high demand"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x14"
+            android:alpha="0.6"
+            app:typeface="Roboto-Regular.ttf" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_carCategories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/x20"
+        android:orientation="horizontal"
+        android:layout_alignBottom="@+id/textLayout"
+        >
+
+        <LinearLayout
+            android:id="@+id/ll_economy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_economy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_economyCar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/economy"
+                android:background="@drawable/circle_unactive"
+                android:layout_centerInParent="true"
+
+                 />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ll_economyActive"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="visible">
+
+
+
+            <ImageView
+                android:id="@+id/iv_economyCarActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_blue"
+                android:src="@drawable/economy_active"
+                android:layout_marginRight="@dimen/x4"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                 />
+
+        </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_business"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:id="@+id/rl_business"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+
+
+                <ImageView
+                    android:id="@+id/iv_businessCar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/business_unactive"
+                    android:background="@drawable/circle_unactive"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ll_businessActive"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="visible">
+
+
+
+                <ImageView
+                    android:id="@+id/iv_businessCarActive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/business_active"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/circle_blue"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_vip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:id="@+id/rl_vip"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+
+                <ImageView
+                    android:id="@+id/iv_vipCar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vip_unactive"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_unactive" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ll_vipActive"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="visible">
+
+
+                <ImageView
+                    android:id="@+id/iv_vipCarActive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vip_active"
+                    android:background="@drawable/circle_blue"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_promoCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x25"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/promo_code"
+            android:gravity="center"
+            android:drawablePadding="@dimen/x8"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/promo_code"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/SubmitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x16"
+        android:layout_marginRight="@dimen/x16"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginTop="@dimen/x20"
+        android:layout_gravity="bottom"
+        android:background="@color/button_color"
+        android:text="@string/request_go"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x16"/>
+
+</LinearLayout>

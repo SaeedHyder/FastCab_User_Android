@@ -5,46 +5,26 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
-import com.app.fastcab.ui.views.AnyTextView;
-import com.app.fastcab.ui.views.PinEntryEditText;
 import com.app.fastcab.ui.views.TitleBar;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by saeedhyder on 6/23/2017.
  */
 
-public class InviteAndEarnFragment extends BaseFragment implements View.OnClickListener {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
-    @BindView(R.id.carLogo)
-    ImageView carLogo;
-    @BindView(R.id.txt_pin_entry)
-    PinEntryEditText txtPinEntry;
-    @BindView(R.id.txt_share)
-    AnyTextView txtShare;
-    @BindView(R.id.iv_messenger)
-    ImageView ivMessenger;
-    @BindView(R.id.iv_whatsup)
-    ImageView ivWhatsup;
-    @BindView(R.id.ll_socialIcons)
-    LinearLayout llSocialIcons;
-    @BindView(R.id.ll_invite)
-    LinearLayout llInvite;
-
-    public static InviteAndEarnFragment newInstance() {
-        return new InviteAndEarnFragment();
+    public static ProfileFragment newInstance() {
+        return new ProfileFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_invite, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         ButterKnife.bind(this, view);
         return view;
@@ -63,8 +43,10 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-
+        switch (v.getId()){
+            case R.id.btn_submit:
+                getDockActivity().replaceDockableFragment(HomeFragment.newInstance(),HomeFragment.class.getSimpleName());
+                break;
         }
     }
 
@@ -73,8 +55,6 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
         titleBar.showBackButton();
-        titleBar.setSubHeading(getString(R.string.Invite_and_earn));
+        titleBar.setSubHeading("Profile");
     }
-
-
 }

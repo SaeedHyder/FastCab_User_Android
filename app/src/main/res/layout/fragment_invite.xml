@@ -40,7 +40,7 @@
             android:textIsSelectable="false"
             android:textSize="20sp"
             android:visibility="visible"
-            app:pinLineColors="@color/transparent" />
+            app:pinLineColors="@color/gray_dark" />
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_share"
@@ -53,7 +53,8 @@
             android:layout_gravity="center"
             android:textSize="@dimen/x18"
             android:gravity="center"
-            android:alpha="0.8"/>
+            android:alpha="0.6"
+            app:typeface="Roboto-Regular.ttf"/>
 
         <LinearLayout
             android:id="@+id/ll_socialIcons"
