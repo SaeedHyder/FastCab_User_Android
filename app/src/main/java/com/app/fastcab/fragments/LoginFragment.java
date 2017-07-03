@@ -1,10 +1,15 @@
 package com.app.fastcab.fragments;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +23,17 @@ import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
-import com.google.firebase.messaging.RemoteMessage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class LoginFragment extends BaseFragment  {
+public class LoginFragment extends BaseFragment {
 
 
     @BindView(R.id.edtphone)
-    AnyEditTextView edtphone;
+    AnyEditTextView edtEmail;
     @BindView(R.id.edtpassword)
     AnyEditTextView edtpassword;
     @BindView(R.id.loginButton)
@@ -72,12 +76,12 @@ public class LoginFragment extends BaseFragment  {
         // TODO Auto-generated method stub
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
-        setSignupSpan(getResources().getString(R.string.new_user_create_account),getString(R.string.create_account),txtSignup);
+        setSignupSpan(getResources().getString(R.string.new_user_create_account), getString(R.string.create_account), txtSignup);
         return view;
 
     }
 
-    private void setSignupSpan(String text,String spanText,AnyTextView txtview) {
+    private void setSignupSpan(String text, String spanText, AnyTextView txtview) {
         SpannableStringBuilder stringBuilder = ClickableSpanHelper.initSpan(text);
         ClickableSpanHelper.setSpan(stringBuilder, text, spanText, new ClickableSpan() {
             @Override
@@ -89,30 +93,29 @@ public class LoginFragment extends BaseFragment  {
 
             @Override
             public void onClick(View widget) {
-                getDockActivity().replaceDockableFragment(SignUpFragment.newInstance(),SignUpFragment.class.getSimpleName());
+                getDockActivity().replaceDockableFragment(SignUpFragment.newInstance(), SignUpFragment.class.getSimpleName());
             }
         });
+        ClickableSpanHelper.setColor(stringBuilder,text,getResources().getString(R.string.new_user_text),"#e6ffffff");
 
         ClickableSpanHelper.setClickableSpan(txtview, stringBuilder);
     }
-
-
-
 
 
     @OnClick({R.id.loginButton, R.id.txtResetPass, R.id.ll_loginfacebook})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.loginButton:
-                if (isvalidated()){
+                if (isvalidated()) {
                     prefHelper.setLoginStatus(true);
                     //Intent intent=new Intent(getMainActivity(), MapsActivity.class);
                     //startActivity(intent);
-                    getDockActivity().replaceDockableFragment(SubmitRatingFragment.newInstance(), "HomeFragmnet");
+                    getDockActivity().popBackStackTillEntry(0);
+                    getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
                 }
                 break;
             case R.id.txtResetPass:
-               getDockActivity().replaceDockableFragment(ForgotPassowordFragment.newInstance(),"ForgotPassowordFragment");
+                getDockActivity().replaceDockableFragment(ForgotPassowordFragment.newInstance(), "ForgotPassowordFragment");
                 break;
             case R.id.ll_loginfacebook:
                 UIHelper.showShortToastInCenter(getDockActivity(), "Will be implemented in Beta");
@@ -127,11 +130,9 @@ public class LoginFragment extends BaseFragment  {
         } else if (edtpassword.getText().toString().length() < 6) {
             edtpassword.setError(getString(R.string.enter_valid_password));
             return false;
-        } else if (edtphone.getText().toString().isEmpty()) {
-            edtphone.setError(getString(R.string.enter_phone));
-            return false;
-        } else if (edtphone.getText().toString().length() < 10 || edtphone.getText().toString().length() > 16) {
-            edtphone.setError(getString(R.string.enter_valid_number_error));
+        } else if (edtEmail.getText() == null || (edtEmail.getText().toString().isEmpty()) ||
+                (!Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches())) {
+            edtEmail.setError(getString(R.string.valid_email));
             return false;
         } else {
             return true;

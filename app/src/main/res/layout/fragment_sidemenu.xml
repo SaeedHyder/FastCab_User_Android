@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/text_color"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:id="@+id/img_driver"
             android:layout_width="@dimen/x40"
             android:layout_height="@dimen/x40"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/img_holder" />
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_drivername"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/x1"
         android:alpha="0.4"
-        android:background="@drawable/line_verticle" />
+        android:background="@drawable/line" />
 
     <ListView
         android:id="@+id/sideoptions"
@@ -59,18 +59,17 @@
         android:layout_height="@dimen/x1"
         android:layout_below="@+id/ll_driver"
         android:alpha="0.4"
-        android:background="@drawable/line_verticle" />
+        android:background="@drawable/line" />
 
     <com.app.fastcab.ui.views.AnyTextView
         android:id="@+id/txt_driveoption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_gravity="left"
+        android:layout_gravity="left|bottom"
         android:layout_marginRight="@dimen/x20"
         android:layout_marginLeft="@dimen/x20"
         android:layout_marginTop="@dimen/x10"
-        android:layout_marginBottom="@dimen/x10"
+
         android:gravity="start"
         android:text="@string/drive_with_fastcab"
         android:textColor="@color/white"

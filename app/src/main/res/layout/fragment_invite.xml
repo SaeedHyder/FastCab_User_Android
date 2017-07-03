@@ -13,7 +13,7 @@
        android:layout_marginTop="@dimen/x70"
         android:orientation="vertical">
 
-        e<ImageView
+        <ImageView
             android:id="@+id/carLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +29,8 @@
             android:background="@null"
             android:cursorVisible="false"
             android:digits="1234567890"
-            android:inputType="number"
+            android:inputType="none"
+            android:text="1317"
             android:textColor="@color/button_color"
             android:layout_below="@+id/txtverify_message"
             android:maxLength="4"
@@ -38,9 +39,10 @@
             android:layout_marginBottom="@dimen/x20"
             android:imeOptions="actionDone"
             android:textIsSelectable="false"
+            android:editable="false"
             android:textSize="20sp"
             android:visibility="visible"
-            app:pinLineColors="@color/gray_dark" />
+            app:pinLineColors="@color/transparent" />
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_share"

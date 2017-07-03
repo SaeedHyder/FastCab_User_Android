@@ -28,7 +28,7 @@ public class ForgotPassowordFragment extends BaseFragment {
         return new ForgotPassowordFragment();
     }
     @BindView(R.id.edtphone)
-    AnyEditTextView edtphone;
+    AnyEditTextView edtEmail;
     @BindView(R.id.btn_submit)
     Button SubmitButton;
 
@@ -54,9 +54,9 @@ public class ForgotPassowordFragment extends BaseFragment {
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
-        titleBar.setSubHeading(getResources().getString(R.string.forgot_password_heading));
+        titleBar.hideButtons();
         titleBar.showBackButton();
-
+        titleBar.setSubHeading(getResources().getString(R.string.forgot_password_heading));
     }
 
     @OnClick(R.id.btn_submit)
@@ -77,13 +77,11 @@ public class ForgotPassowordFragment extends BaseFragment {
     }
 
     private boolean validated() {
-         if (edtphone.getText().toString().isEmpty()) {
-            edtphone.setError(getString(R.string.enter_phone));
+        if (edtEmail.getText() == null || (edtEmail.getText().toString().isEmpty()) ||
+                (!Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches())) {
+            edtEmail.setError(getString(R.string.valid_email));
             return false;
-        } else if (edtphone.getText().toString().length() < 10 || edtphone.getText().toString().length() > 16) {
-            edtphone.setError(getString(R.string.enter_valid_number_error));
-            return false;
-        } else {
+        }  else {
             return true;
         }
     }

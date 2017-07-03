@@ -31,13 +31,48 @@
             android:id="@+id/img_icon"
             android:layout_width="@dimen/x20"
             android:layout_height="@dimen/x35"
+            android:scaleType="centerInside"
             android:layout_below="@+id/txt_locationtype"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@null"
             android:src="@drawable/set_pickup_location" />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/container_finding_ride"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x75"
+        android:background="@color/white"
+        android:visibility="gone">
 
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_finding_ride"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/x20"
+
+            android:alpha="0.7"
+            android:gravity="center_horizontal"
+            android:text="@string/finding_your_ride"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:typeface="Roboto-Regular.ttf" />
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_finding_ride"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/x5"
+            android:gravity="center"
+            android:text="@string/connecting_with_nearest_driver"
+            app:typeface="Roboto-Regular.ttf" />
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -39,7 +39,7 @@
             android:layout_marginRight="@dimen/x20"
             android:layout_marginTop="@dimen/x30"
             android:layout_marginBottom="@dimen/x9"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="Are you sure you want to cancel ride?"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -54,14 +54,25 @@
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
             android:layout_marginBottom="@dimen/x9"
-            android:gravity="center"
-            android:text="If you cancel 5 minutes before requesting.\na fee may apply,for details visit\nfastcab.com"
+            android:gravity="center_horizontal"
+            android:text="@string/if_you_cancel_5_minutes_before_requesting_na_fee_may_apply_for_details_visit"
             android:textColor="@color/black"
-            android:textSize="@dimen/x16"
+            android:textSize="@dimen/x15"
             android:alpha="0.7"
             app:typeface="Roboto-Regular.ttf" />
 
-
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginRight="@dimen/x20"
+            android:layout_marginBottom="@dimen/x9"
+            android:gravity="center_horizontal"
+            android:text="@string/fastcap_com"
+            android:textColor="#528bdf"
+            android:textSize="@dimen/x15"
+            app:typeface="Roboto-Regular.ttf" />
 
 
 

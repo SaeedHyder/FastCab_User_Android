@@ -34,8 +34,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.gson.Gson;
-import com.jota.autocompletelocation.AutoCompleteLocation;
-import com.jota.autocompletelocation.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +71,7 @@ public class PickupSelectionactivity extends DockActivity implements
     private GoogleApiClient mGoogleApiClient;
     private LocationEnt origin;
     private LocationEnt destination;
-   private String currentFocus = "";
+    private String currentFocus = "";
 
     /**** Method for Setting the Height of the ListView dynamically.
      **** Hack to fix the issue of not showing all the items of the ListView
@@ -135,38 +133,44 @@ public class PickupSelectionactivity extends DockActivity implements
         headerMain.showBackButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendResult();
+                sendEmptyResult(true);
             }
         });
     }
-    private void sendResult(){
+
+    private void sendResult() {
         Intent i = new Intent();
         Bundle args = new Bundle();
-        args.putString("origin",new Gson().toJson(origin));
-        args.putString("destination",new Gson().toJson(destination));
-        i.putExtra("route",args);
+        args.putString("origin", new Gson().toJson(origin));
+        args.putString("destination", new Gson().toJson(destination));
+        i.putExtra("route", args);
         setResult(RESULT_OK, i);
         finish();
     }
-    private void sendResult(Boolean setFromMap){
+    private void sendEmptyResult(Boolean setEmpty) {
+
+        finish();
+    }
+
+    private void sendResult(Boolean setFromMap) {
         Intent i = new Intent();
         Bundle args = new Bundle();
-        args.putString("origin",new Gson().toJson(origin));
-        args.putString("destination",new Gson().toJson(destination));
-        args.putBoolean("setonMap",setFromMap);
-        i.putExtra("route",args);
+        args.putString("origin", new Gson().toJson(origin));
+        args.putString("destination", new Gson().toJson(destination));
+        args.putBoolean("setonMap", setFromMap);
+        i.putExtra("route", args);
         setResult(RESULT_OK, i);
         finish();
     }
 
     private void setListeners() {
         edtPickup.clearFocus();
-       // edtDestination.clearFocus();
+        // edtDestination.clearFocus();
         edtDestination.setTag("des");
         edtPickup.setTag("org");
         edtPickup.setOnFocusChangeListener(this);
         edtDestination.setOnFocusChangeListener(this);
-        if(edtDestination.requestFocus()) {
+        if (edtDestination.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         maplayout.setOnClickListener(new View.OnClickListener() {
@@ -223,7 +227,7 @@ public class PickupSelectionactivity extends DockActivity implements
         recentPlaces.setTextFilterEnabled(true);
 
     }
-
+   
     @Override
     protected void onPause() {
         super.onPause();
@@ -286,22 +290,20 @@ public class PickupSelectionactivity extends DockActivity implements
     @Override
     public void onBackPressed() {
 
-        sendResult();
+        sendEmptyResult(true);
     }
-
-
 
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
             if (v.getTag().equals("des")) {
-                if (edtPickup.getText().toString().equals("")){
+                if (edtPickup.getText().toString().equals("")) {
                     edtPickup.setText(origin.getAddress());
                 }
                 maplayout.setVisibility(View.VISIBLE);
                 inputLayoutDestination.setBackgroundColor(getResources().getColor(R.color.edit_text_color));
-            }else {
+            } else {
                 maplayout.setVisibility(View.GONE);
                 inputLayoutPickup.setBackgroundColor(getResources().getColor(R.color.edit_text_color));
             }
@@ -344,24 +346,24 @@ public class PickupSelectionactivity extends DockActivity implements
                     if (places.getCount() > 0) {
                         // Got place details
                         final Place place = places.get(0);
-                        if (currentFocus.equals("origin")){
-                            origin = new LocationEnt(place.getAddress().toString(),place.getLatLng());
-                            if (destination==null){
-                                if(edtDestination.requestFocus()) {
+                        if (currentFocus.equals("origin")) {
+                            origin = new LocationEnt(place.getAddress().toString(), place.getLatLng());
+                            if (destination == null) {
+                                if (edtDestination.requestFocus()) {
                                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                                 }
-                               // edtDestination.requestFocus();
-                            }else{
+                                // edtDestination.requestFocus();
+                            } else {
                                 sendResult();
                             }
-                        }else{
-                            destination =  new LocationEnt(place.getAddress().toString(),place.getLatLng());
-                            if (origin==null){
-                                if(edtPickup.requestFocus()) {
+                        } else {
+                            destination = new LocationEnt(place.getAddress().toString(), place.getLatLng());
+                            if (origin == null) {
+                                if (edtPickup.requestFocus()) {
                                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                                 }
 
-                            }else
+                            } else
                                 sendResult();
                         }
                         // Do your stuff

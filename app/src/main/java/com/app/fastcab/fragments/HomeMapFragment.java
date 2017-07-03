@@ -1,6 +1,9 @@
 package com.app.fastcab.fragments;
 
 import android.Manifest;
+import android.animation.IntEvaluator;
+import android.animation.ValueAnimator;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,10 +11,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -20,9 +25,12 @@ import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,7 +38,11 @@ import com.app.fastcab.R;
 import com.app.fastcab.activities.PickupSelectionactivity;
 import com.app.fastcab.entities.LocationEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.helpers.BottomSheetDialogHelper;
+import com.app.fastcab.helpers.DialogHelper;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.OnSettingActivateListener;
+import com.app.fastcab.ui.adapters.ReasonCancelListViewAdapter;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
@@ -44,6 +56,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -56,6 +70,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import Modules.DirectionFinder;
 import Modules.DirectionFinderListener;
@@ -106,6 +121,8 @@ public class HomeMapFragment extends BaseFragment implements
     RelativeLayout layoutpick;
     @BindView(R.id.layout_destination)
     RelativeLayout layoutdestination;
+    @BindView(R.id.container_finding_ride)
+    RelativeLayout findingRide;
 
     private LocationEnt origin;
     private LocationEnt destination;
@@ -172,14 +189,16 @@ public class HomeMapFragment extends BaseFragment implements
 
     @Override
     public void onLocationActivateListener() {
-        if (origin==null)
-        getCurrentLocation();
+        if (origin == null)
+            getCurrentLocation();
     }
 
     @Override
     public void onNetworkActivateListener() {
-        if (origin==null)
-        getCurrentLocation();
+        if (origin == null) {
+            // getMainActivity().statusCheck();
+            getCurrentLocation();
+        }
     }
 
     @Override
@@ -308,8 +327,7 @@ public class HomeMapFragment extends BaseFragment implements
                     origin = new LocationEnt(address,
                             cameraPosition.target);
                 } else {
-                    origin = new LocationEnt("Un Named Street",
-                            cameraPosition.target);
+                    //  origin = new LocationEnt("Un Named Street",cameraPosition.target);
                 }
                 //UIHelper.showShortToastInCenter(getDockActivity(), cameraPosition.target.toString());
             }
@@ -365,10 +383,35 @@ public class HomeMapFragment extends BaseFragment implements
                 StartPickupActivity(10);
                 break;
             case R.id.btn_ridenow:
+                //new BottomSheetHelper().show(getMainActivity().getSupportFragmentManager(),"asd");
+                final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity());
+                dialogHelper.initSelectRideBottomSheet(R.layout.bottomsheet_selectride, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        initPromoCodeDialog();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogHelper.hideDialog();
+                        initEstimateFareBottomSheet();
+                    }
+                });
+                dialogHelper.showDialog();
+                getMainActivity().titleBar.hideButtons();
+                getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
+                getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogHelper.hideDialog();
+                    }
+                });
+
                 break;
             case R.id.btn_ridelater:
                 break;
             case R.id.btn_cancel_ride:
+                setcanceldialog();
                 break;
             case R.id.txt_locationtype:
                 StartPickupActivity(10);
@@ -379,7 +422,173 @@ public class HomeMapFragment extends BaseFragment implements
         }
     }
 
+    private void setcanceldialog() {
+        final DialogHelper canceldialog = new DialogHelper(getDockActivity());
+        canceldialog.cancelRide(R.layout.cancel_ride_dialog, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("http://www.google.com"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canceldialog.hideDialog();
+                setRequestCancelDialog();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canceldialog.hideDialog();
+            }
+        });
+        canceldialog.showDialog();
+    }
+
+    private void setRequestCancelDialog() {
+        final Dialog dialog = new Dialog(getDockActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.request_for_cancellation_dialog);
+        Button okbutton = (Button) dialog.findViewById(R.id.btn_ok);
+        ListView listView = (ListView)dialog.findViewById(R.id.lv_listview) ;
+        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel);
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 1; i <= 8; i++) {
+            arrayList.add("I'm getting late");
+        }
+
+
+        ReasonCancelListViewAdapter adapter = new ReasonCancelListViewAdapter(getDockActivity(), arrayList, true);
+        listView.setAdapter(adapter);
+        okbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+            }
+        });
+
+        cancelbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
+    }
+
+    private void initEstimateFareBottomSheet() {
+        final BottomSheetDialogHelper estimateFareDialog = new BottomSheetDialogHelper(getDockActivity());
+        estimateFareDialog.initEstimateFareBottomSheet(R.layout.bottom_dialog_estimate_fare, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                estimateFareDialog.hideDialog();
+                hideRideSelectionViews();
+                showFindRideViews();
+            }
+        });
+        estimateFareDialog.showDialog();
+        getMainActivity().titleBar.hideButtons();
+        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
+        getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                estimateFareDialog.hideDialog();
+            }
+        });
+    }
+
+    private void hideRideSelectionViews() {
+        googleMap.clear();
+        customMarkerView.setVisibility(View.GONE);
+        llDestination.setVisibility(View.GONE);
+        btndoneselection.setVisibility(View.GONE);
+        layoutdestination.setVisibility(View.GONE);
+        layoutpick.setVisibility(View.GONE);
+        btnRidenow.setVisibility(View.GONE);
+        btnRidelater.setVisibility(View.GONE);
+    }
+
+    private void showFindRideViews() {
+        getMainActivity().titleBar.hideButtons();
+        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
+        getMainActivity().titleBar.showMenuButton();
+        final Circle mCircle;
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.car);
+        double lat = origin.getLatlng().latitude;
+        double lng = origin.getLatlng().longitude;
+
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(100,new LatLng(lat,lng),180)).rotation(270.0f).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(130,new LatLng(lat,lng),180)).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(160,new LatLng(lat,lng),-180)).rotation(90.0f).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(190,new LatLng(lat,lng),-180)).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(17);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin.getLatlng(),17));
+        googleMap.animateCamera(zoom);
+        mCircle = googleMap.addCircle(new CircleOptions()
+                .center(origin.getLatlng())
+                .radius(6000)
+                .strokeColor(0xFF1BC868)
+                .fillColor(0xFFBAEED1));
+        ValueAnimator valueAnimator = new ValueAnimator();
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.setRepeatMode(ValueAnimator.RESTART);
+        valueAnimator.setIntValues(0, 100);
+        valueAnimator.setDuration(3000);
+        valueAnimator.setEvaluator(new IntEvaluator());
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                float animatedFraction = valueAnimator.getAnimatedFraction();
+                mCircle.setRadius(animatedFraction * 100);
+            }
+        });
+
+        valueAnimator.start();
+        findingRide.setVisibility(View.VISIBLE);
+        btnCancelRide.setVisibility(View.VISIBLE);
+
+    }
+    public LatLng translateCoordinates(final double distance, final LatLng origpoint, final double angle) {
+        final double distanceNorth = Math.sin(angle) * distance;
+        final double distanceEast = Math.cos(angle) * distance;
+
+        final double earthRadius = 6371000;
+
+        final double newLat = origpoint.latitude + (distanceNorth / earthRadius) * 180 / Math.PI;
+        final double newLon = origpoint.longitude + (distanceEast / (earthRadius * Math.cos(newLat * 180 / Math.PI))) * 180 / Math.PI;
+
+        return new LatLng(newLat, newLon);
+    }
+
+    private void initPromoCodeDialog() {
+        final DialogHelper promodialog = new DialogHelper(getDockActivity());
+        promodialog.promoCode(R.layout.promo_code_dialog, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promodialog.hideDialog();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promodialog.hideDialog();
+            }
+        });
+        promodialog.setCancelable(false);
+        promodialog.showDialog();
+    }
+
     private void getCurrentLocation() {
+
         if (googleMap != null)
             googleMap.clear();
         if (ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -393,7 +602,8 @@ public class HomeMapFragment extends BaseFragment implements
             latitude = location.getLatitude();
             // origin = new LatLng(latitude, longitude);
             String Address = getCurrentAddress(latitude, longitude);
-
+            customMarkerView.setVisibility(View.VISIBLE);
+            llDestination.setVisibility(View.VISIBLE);
             if (Address != null) {
 
                 origin = new LocationEnt(Address, new LatLng(latitude, longitude));
@@ -408,6 +618,7 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void movemap(LatLng latlng) {
+
         CameraUpdate center =
                 CameraUpdateFactory.newLatLng(latlng);
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
@@ -460,6 +671,13 @@ public class HomeMapFragment extends BaseFragment implements
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        UIHelper.hideSoftKeyboard( getDockActivity(), getMainActivity()
+                .getWindow().getDecorView() );
+    }
+
     private void initdestinationLocationSelect() {
         googleMap.clear();
         customMarkerView.setVisibility(View.VISIBLE);
@@ -471,7 +689,7 @@ public class HomeMapFragment extends BaseFragment implements
         btndoneselection.setVisibility(View.VISIBLE);
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
-        if (destination == null){
+        if (destination == null) {
             destination = origin;
         }
         movemap(destination.getLatlng());
@@ -520,9 +738,13 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        UIHelper.hideSoftKeyboard( getDockActivity(), getMainActivity()
+                .getWindow().getDecorView() );
         if (origin == null) {
-            getCurrentLocation();
+            customMarkerView.setVisibility(View.GONE);
+            llDestination.setVisibility(View.GONE);
             getMainActivity().statusCheck();
+            getCurrentLocation();
 
         }
 

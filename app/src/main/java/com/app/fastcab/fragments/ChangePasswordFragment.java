@@ -98,7 +98,7 @@ public class ChangePasswordFragment extends BaseFragment implements View.OnClick
             case R.id.UpdateButton:
                if(isvalidate())
                {
-                   getDockActivity().replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment");
+                   getDockActivity().replaceDockableFragment(SettingFragment.newInstance(), SettingFragment.class.getSimpleName());
                }
         }
     }

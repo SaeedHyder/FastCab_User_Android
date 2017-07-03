@@ -10,7 +10,7 @@
         android:id="@+id/ll_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/x22"
+        android:layout_marginLeft="@dimen/x22"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/img_selected"
@@ -35,7 +35,7 @@
             android:paddingTop="@dimen/x10"
             android:paddingLeft="@dimen/x10"
             android:text="@string/home"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="normal"
             app:typeface="Roboto-Regular.ttf"

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/x75"
         android:background="@color/white"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_finding_ride"
@@ -48,7 +48,8 @@
         android:layout_marginTop="@dimen/x20"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/ll_destination_selected"

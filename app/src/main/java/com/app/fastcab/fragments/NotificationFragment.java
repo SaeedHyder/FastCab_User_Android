@@ -63,9 +63,9 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private void setNotifications() {
         userCollection =new ArrayList<>();
 
-        userCollection.add(new NotificationEnt("drawable://"+R.drawable.ic_launcher,"Lorem is simply dummy text"));
-        userCollection.add(new NotificationEnt("drawable://"+R.drawable.ic_launcher,"Lorem is simply dummy text"));
-        userCollection.add(new NotificationEnt("drawable://"+R.drawable.ic_launcher,"Lorem is simply dummy text"));
+        userCollection.add(new NotificationEnt("drawable://"+R.drawable.logo_a,"Lorem is simply dummy text"));
+        userCollection.add(new NotificationEnt("drawable://"+R.drawable.logo_a,"Lorem is simply dummy text"));
+        userCollection.add(new NotificationEnt("drawable://"+R.drawable.logo_a,"Lorem is simply dummy text"));
 
         if (userCollection.size() <= 0) {
             txtNoData.setVisibility(View.VISIBLE);

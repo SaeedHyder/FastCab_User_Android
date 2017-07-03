@@ -167,7 +167,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 if(isvalidate()){
-                getDockActivity().replaceDockableFragment(HomeFragment.newInstance(),HomeFragment.class.getSimpleName());}
+                getDockActivity().replaceDockableFragment(ProfileFragment.newInstance(),ProfileFragment.class.getSimpleName());}
             }
         });
         titleBar.setSubHeading(getString(R.string.Edit_Profile));

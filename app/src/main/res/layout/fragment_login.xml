@@ -4,17 +4,17 @@
     android:id="@+id/scrollview_bigdaddy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
-   >
+
+    >
 
     <ImageView
         android:id="@+id/iv_LogoIcon"
         android:layout_width="@dimen/x150"
         android:layout_height="@dimen/x150"
-        android:layout_centerHorizontal="true"
         android:layout_above="@+id/ll_phone"
-        android:layout_marginTop="@dimen/x20"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/x20"
+        android:layout_marginTop="@dimen/x20"
         android:contentDescription=""
         android:src="@drawable/logo" />
 
@@ -34,7 +34,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/x27"
             android:contentDescription=""
-            android:src="@drawable/mobilenumber" />
+            android:src="@drawable/email" />
 
         <com.app.fastcab.ui.views.AnyEditTextView
             android:id="@+id/edtphone"
@@ -45,10 +45,10 @@
             android:layout_marginRight="@dimen/x20"
             android:layout_marginTop="@dimen/x2"
             android:background="@android:color/transparent"
+            android:hint="abc@email.com"
             android:imeOptions="actionNext"
-            android:inputType="phone"
-            android:maxLength="16"
-            android:hint="+9714 4507 600"
+            android:inputType="textEmailAddress"
+            android:maxLength="35"
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@color/dark_grey"
@@ -90,12 +90,12 @@
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:maxLength="50"
-            android:text="1111111"
             android:maxLines="1"
             android:overScrollMode="always"
             android:scrollbarStyle="insideInset"
             android:scrollbars="horizontal"
             android:singleLine="true"
+            android:text="1111111"
             android:textColor="@color/dark_grey"
             android:textSize="@dimen/x14"
             app:testType="email"
@@ -140,7 +140,6 @@
         android:layout_gravity="right"
         android:layout_marginBottom="@dimen/x40"
         android:layout_marginRight="@dimen/x15"
-        android:alpha="0.7"
         android:gravity="center"
         android:text="@string/new_user_create_account"
         android:textColor="@color/white"
@@ -160,9 +159,9 @@
             android:id="@+id/iv_facebookIcon"
             android:layout_width="@dimen/x20"
             android:layout_height="@dimen/x20"
-         android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/txtFacebookLogin"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/x10"
+            android:layout_toStartOf="@+id/txtFacebookLogin"
             android:contentDescription="asd"
             android:src="@drawable/fb" />
 
@@ -170,11 +169,11 @@
             android:id="@+id/txtFacebookLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/login_with_facebook"
-           android:layout_centerHorizontal="true"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textSize="@dimen/x20"
+            android:text="@string/login_with_facebook"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x15"
             app:testType="email"
             app:typeface="Roboto-Regular.ttf" />
 

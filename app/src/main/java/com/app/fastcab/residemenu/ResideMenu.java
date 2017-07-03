@@ -114,6 +114,12 @@ public class ResideMenu extends FrameLayout {
         initViews(context, customLeftMenuId, customRightMenuId);
     }
 
+    public LinearLayout getLeftMenu(){
+        return leftMenuView;
+    }
+    public LinearLayout getRightMenu(){
+        return rightMenuView;
+    }
     private void initViews(Context context, int customLeftMenuId,
                            int customRightMenuId) {
         LayoutInflater inflater = (LayoutInflater) context

@@ -2,6 +2,7 @@ package com.app.fastcab.helpers;
 
 import android.graphics.Color;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -40,7 +41,12 @@ public class ClickableSpanHelper {
         }
 
     }
+    public static void setColor(SpannableStringBuilder StringBuilder, String text, String clickableText,String color) {
+        StringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor(color)),text.indexOf(clickableText),
+                text.indexOf(clickableText) + String.valueOf(clickableText).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+
+    }
     public static void setClickableSpan(TextView textView, SpannableStringBuilder stringBuilder) {
         textView.setText(stringBuilder);
         textView.setMovementMethod(LinkMovementMethod.getInstance());

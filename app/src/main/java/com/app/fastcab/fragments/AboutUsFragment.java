@@ -23,10 +23,8 @@ import butterknife.ButterKnife;
 
 public class AboutUsFragment extends BaseFragment {
 
-    @BindView(R.id.txt_aboutUs)
-    TextView txtAboutUs;
-    @BindView(R.id.chk_read)
-    CheckBox chkRead;
+    @BindView(R.id.txt_term_condition)
+    TextView txtTermCondition;
 
     public static TermAndConditionFragment newInstance() {
         return new TermAndConditionFragment();
@@ -45,7 +43,7 @@ public class AboutUsFragment extends BaseFragment {
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
+        titleBar.showMenuButton();
         titleBar.setSubHeading(getString(R.string.terms_conditons));
     }
 
@@ -55,50 +53,15 @@ public class AboutUsFragment extends BaseFragment {
         if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity())) {
             bindTextview();
         }
-      /*  chkRead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                  *//*  prefHelper.setLoginStatus(true);
-                    getDockActivity().popBackStackTillEntry(0);*//*
-                   // getMainActivity().refreshSideMenu();
-                  //  getDockActivity().replaceDockableFragment(UserHomeFragment.newInstance(),"User Home Fragment");
-                }
-            }
-        });*/
 
     }
 
     private void bindTextview() {
-
-        txtAboutUs.setText(" ");
-     /*   Call<ResponseWrapper<StaticPageEnt>> call = webService.getTermandAbout(prefHelper.getUserId(),"term");
-        call.enqueue(new Callback<ResponseWrapper<StaticPageEnt>>() {
-            @Override
-            public void onResponse(Call<ResponseWrapper<StaticPageEnt>> call, Response<ResponseWrapper<StaticPageEnt>> response) {
-                if (response.body().getResponse().equals("2000")) {
-                    settitle(response.body().getResult().getBody());
-                }
-                else{
-                    UIHelper.showShortToastInCenter(getDockActivity(),response.body().getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseWrapper<StaticPageEnt>> call, Throwable t) {
-                Log.e("TermAndCondition", t.toString());
-              //  UIHelper.showShortToastInCenter(getDockActivity(), t.toString());
-            }
-        });*/
-
+        txtTermCondition.setText(getResources().getString(R.string.lorem_ipsum) + "\n \n \n " + getResources().getString(R.string.lorem_ipsum));
+        txtTermCondition.setMovementMethod(new ScrollingMovementMethod());
     }
 
-    private void settitle(String response) {
-        getMainActivity().titleBar.setSubHeading(getString(R.string.terms_conditons));
-        getMainActivity().titleBar.invalidate();
-        txtAboutUs.setText(response);
-        txtAboutUs.setMovementMethod(new ScrollingMovementMethod());
-    }
+
 
 
 }
