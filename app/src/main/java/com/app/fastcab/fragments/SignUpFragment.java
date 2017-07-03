@@ -7,6 +7,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,7 +32,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -153,37 +153,67 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private boolean isvalidate() {
 
         if (edtUserName.getText() == null || (edtUserName.getText().toString().isEmpty())) {
+            if (edtUserName.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtUserName.setError(getString(R.string.enter_username));
             return false;
         } else if (edtemail.getText() == null || (edtemail.getText().toString().isEmpty()) ||
                 (!Patterns.EMAIL_ADDRESS.matcher(edtemail.getText().toString()).matches())) {
+            if (edtemail.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtemail.setError(getString(R.string.enter_email));
             return false;
         } else if (edtllCurrentAddress.getText() == null || (edtllCurrentAddress.getText().toString().isEmpty())) {
+            if (edtllCurrentAddress.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtllCurrentAddress.setError(getString(R.string.enter_currentAddress));
             return false;
         } else if (edtMobileNumber.getText().toString().isEmpty()) {
+            if (edtMobileNumber.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtMobileNumber.setError(getString(R.string.enter_phone));
             return false;
         } else if (edtMobileNumber.getText().toString().length() < 11) {
+            if (edtMobileNumber.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtMobileNumber.setError(getString(R.string.numberLength));
             return false;
         } else if (edtzipCode.getText() == null || (edtzipCode.getText().toString().isEmpty())) {
+            if (edtzipCode.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtzipCode.setError(getString(R.string.enter_zipCode));
             return false;
         } else if (edtDateOfBirth.getText() == null || (edtDateOfBirth.getText().toString().isEmpty())) {
             edtDateOfBirth.setError(getString(R.string.enter_dob));
             return false;
         } else if (edtPassword.getText() == null || (edtPassword.getText().toString().isEmpty())) {
+            if (edtPassword.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtPassword.setError(getString(R.string.enter_password));
             return false;
         } else if (edtPassword.getText().toString().length() < 6) {
+            if (edtPassword.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtPassword.setError(getString(R.string.passwordLength));
             return false;
         } else if (edtConfirmPassword.getText() == null || (edtConfirmPassword.getText().toString().isEmpty()) || edtPassword.getText().toString().length() < 6) {
+            if (edtConfirmPassword.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtConfirmPassword.setError(getString(R.string.enter_password));
             return false;
         } else if (!edtConfirmPassword.getText().toString().equals(edtPassword.getText().toString())) {
+            if (edtConfirmPassword.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtConfirmPassword.setError("confirm password does not match");
             return false;
         } else {
@@ -244,10 +274,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
-        titleBar.hideTitleBar();
         titleBar.hideButtons();
         titleBar.showBackButton();
-        titleBar.setSubHeading("SignUp");
+        titleBar.setSubHeading(getResources().getString(R.string.sign_up));
 
     }
 
@@ -255,7 +284,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.edtDateOfBirth:
                 ShowDateDialog(edtDateOfBirth);
                 break;

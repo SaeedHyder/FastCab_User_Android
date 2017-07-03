@@ -60,22 +60,8 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_changePassword:
+                getDockActivity().replaceDockableFragment(ChangePasswordFragment.newInstance(),ChangePasswordFragment.class.getSimpleName());
 
-                final DialogHelper dialogHelper = new DialogHelper(getDockActivity());
-                dialogHelper.cancelRide(R.layout.cancel_ride_dialog, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogHelper.hideDialog();
-                        getDockActivity().onLoadingFinished();
-                    }
-                }, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-
-                    }
-                });
-                dialogHelper.showDialog();
                 break;
         }
     }

@@ -3,7 +3,9 @@ package com.app.fastcab.helpers;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -72,7 +74,7 @@ public class DialogHelper {
         return this.dialog;
     }
 
-    public Dialog cancelRide(int layoutID, View.OnClickListener onokclicklistener, View.OnClickListener oncancelclicklistener) {
+    public Dialog requestForCancellation(int layoutID, View.OnClickListener onokclicklistener, View.OnClickListener oncancelclicklistener) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.dialog.setContentView(layoutID);
@@ -94,16 +96,20 @@ public class DialogHelper {
         return this.dialog;
     }
 
-    public Dialog requestForCancellation(int layoutID, View.OnClickListener onokclicklistener, View.OnClickListener oncancelclicklistener) {
+    public Dialog cancelRide(int layoutID, View.OnClickListener linkclicklistener, View.OnClickListener onokclicklistener, View.OnClickListener oncancelclicklistener) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.dialog.setContentView(layoutID);
-        Button okbutton = (Button) dialog.findViewById(R.id.btn_No);
+        AnyTextView link = (AnyTextView)dialog.findViewById(R.id.txt_link) ;
+        link.setPaintFlags(link.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        link.setOnClickListener(linkclicklistener);
+        Button okbutton = (Button) dialog.findViewById(R.id.btn_yes);
         okbutton.setOnClickListener(onokclicklistener);
-        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_yes);
+        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_No);
         cancelbutton.setOnClickListener(oncancelclicklistener);
         return this.dialog;
     }
+
 /*
     public Dialog initRequestSendDialog(int layoutID, View.OnClickListener onclicklistener) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

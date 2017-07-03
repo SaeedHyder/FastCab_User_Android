@@ -11,12 +11,10 @@ import android.widget.TextView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
-import com.app.fastcab.helpers.InternetHelper;
 import com.app.fastcab.ui.views.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created on 5/23/2017.
@@ -28,9 +26,8 @@ public class TermAndConditionFragment extends BaseFragment {
 
     @BindView(R.id.chk_read)
     CheckBox chkRead;
-   // @BindView(R.id.chk_read1)
-   // CheckBox chkRead1;
-
+    // @BindView(R.id.chk_read1)
+    // CheckBox chkRead1;
 
 
     public static TermAndConditionFragment newInstance() {
@@ -41,8 +38,16 @@ public class TermAndConditionFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_term_condition, container, false);
-     ButterKnife.bind(this, view);
+        ButterKnife.bind(this, view);
+
         return view;
+    }
+
+    private void setCheckboxPadding(float scale) {
+        chkRead.setPadding(chkRead.getPaddingLeft() + (int) (10.0f * scale + 0.5f),
+                chkRead.getPaddingTop(),
+                chkRead.getPaddingRight(),
+                chkRead.getPaddingBottom());
     }
 
 
@@ -57,54 +62,15 @@ public class TermAndConditionFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity())) {
-            bindTextview();
-        }
-      /*  chkRead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                  *//*  prefHelper.setLoginStatus(true);
-                    getDockActivity().popBackStackTillEntry(0);*//*
-                   // getMainActivity().refreshSideMenu();
-                  //  getDockActivity().replaceDockableFragment(UserHomeFragment.newInstance(),"User Home Fragment");
-                }
-            }
-        });*/
-
+        bindTextview();
+        final float scale = this.getResources().getDisplayMetrics().density;
+        setCheckboxPadding(scale);
     }
 
     private void bindTextview() {
-
-        txtTermCondition.setText(" ");
-     /*   Call<ResponseWrapper<StaticPageEnt>> call = webService.getTermandAbout(prefHelper.getUserId(),"term");
-        call.enqueue(new Callback<ResponseWrapper<StaticPageEnt>>() {
-            @Override
-            public void onResponse(Call<ResponseWrapper<StaticPageEnt>> call, Response<ResponseWrapper<StaticPageEnt>> response) {
-                if (response.body().getResponse().equals("2000")) {
-                    settitle(response.body().getResult().getBody());
-                }
-                else{
-                    UIHelper.showShortToastInCenter(getDockActivity(),response.body().getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseWrapper<StaticPageEnt>> call, Throwable t) {
-                Log.e("TermAndCondition", t.toString());
-              //  UIHelper.showShortToastInCenter(getDockActivity(), t.toString());
-            }
-        });*/
-
-    }
-
-    private void settitle(String response) {
-        getMainActivity().titleBar.setSubHeading(getString(R.string.terms_conditons));
-        getMainActivity().titleBar.invalidate();
-        txtTermCondition.setText(response);
+        txtTermCondition.setText(getResources().getString(R.string.lorem_ipsum) + "\n \n \n " + getResources().getString(R.string.lorem_ipsum));
         txtTermCondition.setMovementMethod(new ScrollingMovementMethod());
     }
-
 
 
 }

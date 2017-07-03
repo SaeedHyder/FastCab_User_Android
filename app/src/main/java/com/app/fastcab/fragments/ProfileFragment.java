@@ -54,7 +54,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
-        titleBar.setSubHeading("Profile");
+        titleBar.showEditButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDockActivity().replaceDockableFragment(EditProfileFragment.newInstance(),EditProfileFragment.class.getSimpleName());
+            }
+        });
+        titleBar.showMenuButton();
+        titleBar.setSubHeading(getResources().getString(R.string.profile));
     }
 }

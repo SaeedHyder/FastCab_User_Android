@@ -86,7 +86,7 @@
          ftware like Aldus PageMaker including versions of Lorem Ipsum.</string>
     <string name="this_is_login_fragment">This is Login Fragment</string>
     <string name="reset_password">Reset Password</string>
-    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
     <string name="new_user_create_account">New User? Create Account</string>
     <string name="enter_password">Enter Password</string>
     <string name="enter_city">Enter City</string>
@@ -157,6 +157,9 @@
     <string name="destination_location">Destination location</string>
     <string name="drive_with_fastcab">Drive with FastCab</string>
     <string name="fastcab">FastCab</string>
+
+    <string name="set_location_on_map">Set Location on Map</string>
+
     <string name="Contact_Us">Contact Us</string>
     <string name="are_you_sure_you_want_to_cancel_ride">Are you sure you want to cancel ride?</string>
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
@@ -176,11 +179,37 @@
     <string name="comment">Comment...</string>
     <string name="rate_app">Rate App</string>
     <string name="rate">Rate</string>
+    <string name="rate_last">Rate Your Last Trip</string>
     <string name="rate_driver">Rate Driver</string>
     <string name="submit_rating">Submit Rating</string>
     <string name="promo_code">Promo Code</string>
     <string name="request_go">Request Go</string>
+
     <string name="Your_Trips">Your Trips</string>
+
+    <string name="notification">Notifications</string>
+    <string name="your_trips">Your Trips</string>
+    <string name="payment">Payment</string>
+    <string name="contact">Contact</string>
+    <string name="about_us">About Us</string>
+    <string name="invite_earn"><![CDATA[Invite & Earn]]></string>
+    <string name="arabic_english">Arabic - English</string>
+    <string name="logoout">Logout</string>
+    <string name="valid_email">Please Enter Valid Email</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="new_user_text">New User?</string>
+    <string name="verufy_number">Verify Number</string>
+    <string name="fastcap_com"><u>fastcap.com</u></string>
+    <string name="if_you_cancel_5_minutes_before_requesting_na_fee_may_apply_for_details_visit">If you cancel 5 minutes before requesting. a fee may apply, for details visit</string>
+    <string name="payment_method">Payment Methods</string>
+    <string name="card_detail">Card Details</string>
+    <string name="date_before_error">Selected Date is before Current Date</string>
+    <string name="enter_cc_number">Enter Credit Card Number</string>
+    <string name="cc_valid_error">Enter Valid Credit Card Number</string>
+    <string name="expiredate_error">Enter Credit Card Expire Date</string>
+    <string name="cvv_error">Enter CVV Number</string>
+    <string name="cc_name_error">Enter Name of the Card Owner</string>
+>>>>>>> 700cd6f0fbcba366451f0fdfe817cfa001aa97ea
 
 
 </resources>

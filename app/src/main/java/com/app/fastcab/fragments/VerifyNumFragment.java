@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,8 +67,8 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showMenuButton();
-        titleBar.setSubHeading("Verify Number");
+        titleBar.showBackButton();
+        titleBar.setSubHeading(getResources().getString(R.string.verufy_number));
 
     }
 
@@ -79,10 +80,28 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()) {
 
             case R.id.btn_submit:
+                if (validated())
                 getDockActivity().replaceDockableFragment(EntryCodeFragment.newInstance(), "EntryCodeFragment");
                 break;
 
         }
 
+    }
+
+    private boolean validated() {
+        if (edtphone.getText().toString().isEmpty()) {
+            if (edtphone.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+            edtphone.setError(getString(R.string.enter_phone));
+            return false;
+        } else if (edtphone.getText().toString().length() < 11) {
+            if (edtphone.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+            edtphone.setError(getString(R.string.numberLength));
+            return false;
+        } else
+            return true;
     }
 }

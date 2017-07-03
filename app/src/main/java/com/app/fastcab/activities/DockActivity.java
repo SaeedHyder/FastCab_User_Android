@@ -68,7 +68,9 @@ public abstract class DockActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
     }
-
+    public DockActivity getDockActivity(){
+        return (DockActivity)this;
+    }
     public void replaceDockableFragment(BaseFragment frag) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()

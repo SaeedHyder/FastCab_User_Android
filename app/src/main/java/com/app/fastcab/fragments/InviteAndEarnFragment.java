@@ -72,7 +72,7 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
+        titleBar.showMenuButton();
         titleBar.setSubHeading(getString(R.string.Invite_and_earn));
     }
 

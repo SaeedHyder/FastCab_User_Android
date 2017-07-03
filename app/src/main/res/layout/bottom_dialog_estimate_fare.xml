@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/x20">
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/img_selected_ride"
-        android:layout_width="@dimen/x70"
-        android:layout_height="@dimen/x80"
+        android:layout_width="@dimen/x50"
+        android:layout_height="@dimen/x50"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_launcher"/>
+        android:background="@drawable/circle_blue"
+        android:src="@drawable/business_active"
+        android:visibility="visible"/>
     <com.app.fastcab.ui.views.AnyTextView
         android:id="@+id/txt_type"
         android:layout_width="match_parent"

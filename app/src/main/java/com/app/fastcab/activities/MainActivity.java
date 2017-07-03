@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.app.fastcab.R;
-import com.app.fastcab.fragments.HomeFragment;
+import com.app.fastcab.fragments.HomeMapFragment;
 import com.app.fastcab.fragments.LoginFragment;
 import com.app.fastcab.fragments.SideMenuFragment;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
@@ -71,7 +71,6 @@ public class MainActivity extends DockActivity implements OnClickListener {
 
         sideMenuType = SideMenuChooser.RESIDE_MENU.getValue();
         sideMenuDirection = SideMenuDirection.LEFT.getValue();
-
         settingSideMenu(sideMenuType, sideMenuDirection);
 
         titleBar.setMenuButtonListener(new OnClickListener() {
@@ -135,22 +134,39 @@ public class MainActivity extends DockActivity implements OnClickListener {
     }
 
     private void buildAlertMessageNoGps(int StringResourceID, final String IntentType, final int requestCode) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(StringResourceID))
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(super.getDockActivity());
+        AlertDialog alert = builder.create();
+        final AlertDialog finalAlert = alert;
+        builder
+                .setMessage(getString(StringResourceID))
                 .setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.gps_yes), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        startActivityForResult(new Intent(IntentType), requestCode);
+                        finalAlert.dismiss();
+                        dialog.cancel();
+                        startImpIntent(dialog, IntentType, requestCode);
+                        dialog.dismiss();
                         // startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),LocationResultCode);
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.gps_no), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
+                        finalAlert.dismiss();
                         dialog.cancel();
+                        finalAlert.dismiss();
                     }
                 });
-        final AlertDialog alert = builder.create();
+         alert = builder.create();
         alert.show();
+
+    }
+
+    private void startImpIntent(DialogInterface dialog, String IntentType, int requestCode) {
+        dialog.dismiss();
+        Intent i = new Intent(IntentType);
+        i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(i, requestCode);
     }
 
 
@@ -170,6 +186,7 @@ public class MainActivity extends DockActivity implements OnClickListener {
 
 
       }*/
+
     public boolean isConnected(Context context) {
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -182,7 +199,7 @@ public class MainActivity extends DockActivity implements OnClickListener {
             if ((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting()))
                 return true;
             else {
-               isConnected(getApplicationContext());
+                //isConnected(getApplicationContext());
                 return false;
             }
         } else {
@@ -200,6 +217,7 @@ public class MainActivity extends DockActivity implements OnClickListener {
         }
 
         if (requestCode == WifiResultCode) {
+
             settingActivateListener.onNetworkActivateListener();
 
         }
@@ -238,7 +256,12 @@ public class MainActivity extends DockActivity implements OnClickListener {
 
 
             setMenuItemDirection(direction);
+
         }
+    }
+
+    public ResideMenu getResideMenu() {
+        return resideMenu;
     }
 
     private void setMenuItemDirection(String direction) {
@@ -247,12 +270,13 @@ public class MainActivity extends DockActivity implements OnClickListener {
 
             SideMenuFragment leftSideMenuFragment = SideMenuFragment.newInstance();
             resideMenu.addMenuItem(leftSideMenuFragment, "LeftSideMenuFragment", direction);
+            getResideMenu().getLeftMenu().setVisibility(View.GONE);
 
         } else if (direction.equals(SideMenuDirection.RIGHT.getValue())) {
 
             SideMenuFragment rightSideMenuFragment = SideMenuFragment.newInstance();
             resideMenu.addMenuItem(rightSideMenuFragment, "RightSideMenuFragment", direction);
-
+            getResideMenu().getRightMenu().setVisibility(View.GONE);
         }
 
     }
@@ -266,12 +290,22 @@ public class MainActivity extends DockActivity implements OnClickListener {
     public void initFragment() {
         getSupportFragmentManager().addOnBackStackChangedListener(getListener());
         if (prefHelper.isLogin()) {
-            replaceDockableFragment(HomeFragment.newInstance(), "HomeFragment");
+            replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
         } else {
             replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");
         }
     }
+    public void refreshFragmentbyTag(String tag){
 
+        BaseFragment currFrag = (BaseFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
+        if (currFrag!=null){
+            fragTransaction.detach(currFrag);
+            fragTransaction.attach(currFrag);
+            fragTransaction.commit();
+        }
+
+    }
     private FragmentManager.OnBackStackChangedListener getListener() {
         FragmentManager.OnBackStackChangedListener result = new FragmentManager.OnBackStackChangedListener() {
             public void onBackStackChanged() {

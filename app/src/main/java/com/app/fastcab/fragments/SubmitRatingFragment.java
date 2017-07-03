@@ -5,18 +5,41 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.ui.views.AnyTextView;
+import com.app.fastcab.ui.views.CustomRatingBar;
 import com.app.fastcab.ui.views.TitleBar;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by saeedhyder on 6/29/2017.
  */
 
-public class SubmitRatingFragment extends BaseFragment implements View.OnClickListener {
+public class SubmitRatingFragment extends BaseFragment  {
+
+    @BindView(R.id.txtDriverName)
+    AnyTextView txtDriverName;
+    @BindView(R.id.txtCarNo)
+    AnyTextView txtCarNo;
+    @BindView(R.id.txt_pick_text)
+    AnyTextView txtPickText;
+    @BindView(R.id.txt_destination_text)
+    AnyTextView txtDestinationText;
+    @BindView(R.id.txtFareAmount)
+    AnyTextView txtFareAmount;
+    @BindView(R.id.rbAddRating)
+    CustomRatingBar rbAddRating;
+    @BindView(R.id.SubmitButton)
+    Button SubmitButton;
+    @BindView(R.id.CircularImageSharePop)
+    CircleImageView CircularImageSharePop;
 
     public static SubmitRatingFragment newInstance() {
         return new SubmitRatingFragment();
@@ -41,18 +64,21 @@ public class SubmitRatingFragment extends BaseFragment implements View.OnClickLi
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
 
-        }
-    }
 
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
+        titleBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         titleBar.setSubHeading(getString(R.string.rate));
+    }
+
+
+
+    @OnClick(R.id.SubmitButton)
+    public void onViewClicked() {
+        getDockActivity().popBackStackTillEntry(0);
+        getMainActivity().replaceDockableFragment(HomeMapFragment.newInstance(),HomeMapFragment.class.getSimpleName());
     }
 }

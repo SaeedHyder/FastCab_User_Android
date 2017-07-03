@@ -31,7 +31,7 @@
             app:typeface="Roboto-Regular.ttf" />
 
 
-        <com.app.fastcab.ui.views.AnyTextView
+        <com.app.fastcab.ui.views.AnyEditTextView
             android:id="@+id/txt_promoCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,11 @@
             android:layout_marginRight="@dimen/x20"
             android:layout_marginTop="@dimen/x40"
             android:layout_marginBottom="@dimen/x9"
+            android:inputType="textEmailAddress"
             android:gravity="center"
+            android:background="@color/transparent"
+            android:maxLength="10"
+            android:maxLines="1"
             android:hint="Enter a promo/gift code"
             android:textColor="@color/black"
             android:textSize="20sp"

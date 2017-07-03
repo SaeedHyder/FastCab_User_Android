@@ -62,7 +62,7 @@ public abstract class BaseFragment extends Fragment {
 	//	setTitleBar( ((MainActivity) getDockActivity()).titleBar );
 
 		if(getDockActivity().getDrawerLayout() != null){
-			getDockActivity().releaseDrawer();
+			getDockActivity().lockDrawer();
 		}
 	}
 	public void fragmentResume() {

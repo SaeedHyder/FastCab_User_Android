@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/x20">
+    android:padding="@dimen/x10"
+    android:background="@color/white"
+   >
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,10 +16,10 @@
             android:layout_width="@dimen/x20"
             android:layout_height="@dimen/x20"
             android:layout_alignTop="@+id/txt_pickup"
-            android:layout_alignBottom="@+id/txt_locationText"
+            android:layout_alignBottom="@+id/txt_pick_text"
             android:scaleType="centerInside"
             android:layout_marginRight="@dimen/x15"
-            android:src="@drawable/ic_launcher"
+            android:src="@drawable/pick_location"
             android:id="@+id/imageView" />
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_pickup"
@@ -33,7 +35,7 @@
             app:typeface="Roboto-Regular.ttf"
             android:layout_toEndOf="@+id/imageView" />
         <com.app.fastcab.ui.views.AnyTextView
-            android:id="@+id/txt_locationText"
+            android:id="@+id/txt_pick_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -61,7 +63,7 @@
             android:id="@+id/img_driver"
             android:layout_width="@dimen/x40"
             android:layout_height="@dimen/x50"
-            android:src="@drawable/ic_launcher"
+            android:src="@drawable/img_holder"
             android:layout_centerHorizontal="true"/>
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_drivername"
@@ -78,10 +80,10 @@
         <com.app.fastcab.ui.views.CustomRatingBar
             android:layout_width="@dimen/x70"
             android:layout_height="wrap_content"
-            app:maxStars="4"
+            app:maxStars="5"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/txt_drivername"
-            app:stars="4"/>
+            app:stars="5"/>
     </RelativeLayout>
         <RelativeLayout
             android:layout_width="0dp"
@@ -90,12 +92,13 @@
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txt_car_color"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="@dimen/x10"
                 android:text="Black"
+                android:layout_centerHorizontal="true"
                 android:textColor="@color/black"
                 android:alpha="0.8"
                 android:textSize="@dimen/x14"
@@ -103,12 +106,13 @@
                 />
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txt_car_model"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:gravity="center_horizontal"
                 android:layout_below="@+id/txt_car_color"
                 android:text="Mercedes Benz"
+                android:layout_centerHorizontal="true"
                 android:textColor="@color/black"
                 android:alpha="0.8"
                 android:textSize="@dimen/x14"
@@ -116,7 +120,7 @@
                 />
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txt_car_number"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/x100"
                 android:layout_height="@dimen/x30"
                 android:layout_gravity="right"
                 android:layout_marginTop="@dimen/x5"
@@ -124,6 +128,7 @@
                 android:layout_below="@+id/txt_car_model"
                 android:background="@drawable/plate_background"
                 android:text="xxx-1017"
+                android:layout_centerHorizontal="true"
                 android:textColor="@color/black"
                 android:alpha="0.8"
                 android:textSize="@dimen/x14"
@@ -138,6 +143,9 @@
 
         android:background="@color/button_color"
         android:text="@string/cancel_ride"
+        android:layout_marginRight="@dimen/x10"
+        android:layout_marginLeft="@dimen/x10"
         android:layout_marginTop="@dimen/x25"
+        android:layout_marginBottom="@dimen/x20"
         android:textColor="@color/white"  />
 </LinearLayout>

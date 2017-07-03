@@ -89,7 +89,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:src="@drawable/tick"/>
+            android:src="@drawable/tick"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
