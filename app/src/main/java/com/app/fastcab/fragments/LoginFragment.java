@@ -108,7 +108,7 @@ public class LoginFragment extends BaseFragment  {
                     prefHelper.setLoginStatus(true);
                     //Intent intent=new Intent(getMainActivity(), MapsActivity.class);
                     //startActivity(intent);
-                    getDockActivity().replaceDockableFragment(SubmitRatingFragment.newInstance(), "HomeFragmnet");
+                    getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), "HomeFragmnet");
                 }
                 break;
             case R.id.txtResetPass:
