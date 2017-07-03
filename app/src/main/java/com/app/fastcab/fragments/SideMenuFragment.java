@@ -144,7 +144,7 @@ public class SideMenuFragment extends BaseFragment {
                     getDockActivity().replaceDockableFragment(ProfileFragment.newInstance(), ProfileFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.your_trips))) {
                     getMainActivity().getResideMenu().closeMenu();
-                    UIHelper.showShortToastInCenter(getDockActivity(), "Clicked");
+                    getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.payment))) {
                     getMainActivity().getResideMenu().closeMenu();
                     getDockActivity().replaceDockableFragment(PaymentMethodFragment.newInstance(), PaymentMethodFragment.class.getSimpleName());

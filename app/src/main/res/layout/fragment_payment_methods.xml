@@ -21,14 +21,15 @@
         <ImageView
             android:id="@+id/iv_cashOnDilevery"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="0.1"
             android:src="@drawable/cash"/>
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_cashOnDilevery"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/x25"
             android:layout_weight="0.8"
             android:layout_marginLeft="@dimen/x10"
             android:layout_gravity="center"
@@ -42,6 +43,7 @@
             android:id="@+id/iv_selectCOD"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="0.1"
             android:src="@drawable/tick"/>
 
@@ -67,14 +69,15 @@
         <ImageView
             android:id="@+id/iv_creditCard"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="0.1"
             android:src="@drawable/credit_card"/>
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_creditCard"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/x25"
             android:layout_weight="0.8"
             android:layout_marginLeft="@dimen/x10"
             android:layout_gravity="center"
@@ -89,6 +92,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
+            android:layout_gravity="center"
             android:src="@drawable/tick"
             android:visibility="gone"/>
 

@@ -27,6 +27,7 @@ import com.app.fastcab.ui.views.TitleBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.http.HEAD;
 
 
 public class LoginFragment extends BaseFragment {
@@ -110,8 +111,10 @@ public class LoginFragment extends BaseFragment {
                     prefHelper.setLoginStatus(true);
                     //Intent intent=new Intent(getMainActivity(), MapsActivity.class);
                     //startActivity(intent);
+
                     getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+
                 }
                 break;
             case R.id.txtResetPass:

@@ -27,8 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:button="@drawable/selector_chkbox"
-        android:checked="false"
+        android:buttonTint="@color/button_color"
         android:text="@string/i_have_read_the_term_and_conditions" />
 
 
