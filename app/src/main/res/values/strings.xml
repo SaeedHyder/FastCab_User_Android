@@ -209,7 +209,7 @@
     <string name="expiredate_error">Enter Credit Card Expire Date</string>
     <string name="cvv_error">Enter CVV Number</string>
     <string name="cc_name_error">Enter Name of the Card Owner</string>
->>>>>>> 700cd6f0fbcba366451f0fdfe817cfa001aa97ea
+
 
 
 </resources>
