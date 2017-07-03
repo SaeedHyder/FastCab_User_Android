@@ -9,6 +9,7 @@ import com.app.fastcab.R;
 import com.app.fastcab.entities.PastTripsEnt;
 import com.app.fastcab.ui.viewbinders.abstracts.ViewBinder;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,8 +20,11 @@ import butterknife.ButterKnife;
 
 public class PastTripsBinder extends ViewBinder<PastTripsEnt> {
 
+    ImageLoader imageLoader;
+
     public PastTripsBinder() {
         super(R.layout.past_trips_item);
+        imageLoader=ImageLoader.getInstance();
     }
 
     @Override
@@ -32,6 +36,12 @@ public class PastTripsBinder extends ViewBinder<PastTripsEnt> {
     public void bindView(PastTripsEnt entity, int position, int grpPosition, View view, Activity activity) {
 
         final PastTripsBinder.ViewHolder viewHolder = (PastTripsBinder.ViewHolder) view.getTag();
+
+        viewHolder.txtRideNo.setText(entity.getRideNo());
+        viewHolder.txtFare.setText(entity.getFare());
+        viewHolder.txtTimeDate.setText(entity.getDate());
+        viewHolder.txtTip.setText(entity.getTip());
+        imageLoader.displayImage(entity.getPastTripImg(),viewHolder.ivPastTrips);
 
 
 

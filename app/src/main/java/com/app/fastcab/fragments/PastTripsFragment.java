@@ -13,11 +13,14 @@ import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.ui.adapters.ArrayListAdapter;
 import com.app.fastcab.ui.viewbinder.PastTripsBinder;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.app.fastcab.ui.views.TitleBar;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.app.fastcab.R.id.txt_no_data;
 
 /**
  * Created by saeedhyder on 7/3/2017.
@@ -25,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class PastTripsFragment extends BaseFragment implements View.OnClickListener {
 
-    @BindView(R.id.txt_no_data)
+    @BindView(txt_no_data)
     AnyTextView txtNoData;
     @BindView(R.id.PastTrips_ListView)
     ListView PastTripsListView;
@@ -58,6 +61,39 @@ public class PastTripsFragment extends BaseFragment implements View.OnClickListe
         super.onViewCreated(view, savedInstanceState);
 
         setListners();
+        getPastTripsData();
+
+
+    }
+
+    private void getPastTripsData() {
+
+       /* if(result.size()<0)
+        {
+            txtNoData.setVisibility(View.VISIBLE);
+            PastTripsListView.setVisibility(View.GONE);
+        }
+        else{
+            txtNoData.setVisibility(View.GONE);
+            PastTripsListView.setVisibility(View.GONE);
+        }*/
+
+        userCollection = new ArrayList<>();
+        userCollection.add(new PastTripsEnt("055082595","AED 15.00","13-6-17 1:36PM","AED 2.00","drawable://" + R.drawable.trip));
+        userCollection.add(new PastTripsEnt("055082595","AED 15.00","13-6-17 1:36PM","AED 2.00","drawable://" + R.drawable.trip));
+        userCollection.add(new PastTripsEnt("055082595","AED 15.00","13-6-17 1:36PM","AED 2.00","drawable://" + R.drawable.trip));
+
+        bindData(userCollection);
+
+    }
+
+    private void bindData(ArrayList<PastTripsEnt> userCollection) {
+
+        adapter.clearList();
+        if (PastTripsListView!=null)
+            PastTripsListView.setAdapter(adapter);
+        adapter.addAll(userCollection);
+        adapter.notifyDataSetChanged();
     }
 
     private void setListners() {
@@ -69,6 +105,14 @@ public class PastTripsFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()) {
 
         }
+    }
+
+    @Override
+    public void setTitleBar(TitleBar titleBar) {
+        super.setTitleBar(titleBar);
+        titleBar.hideButtons();
+        titleBar.showBackButton();
+        titleBar.setSubHeading(getString(R.string.Your_Trips));
     }
 
 

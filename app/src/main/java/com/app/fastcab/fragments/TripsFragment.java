@@ -49,6 +49,7 @@ public class TripsFragment extends BaseFragment implements View.OnClickListener 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ReplaceListViewFragment(PastTripsFragment.newInstance());
         setListners();
     }
 
@@ -67,10 +68,10 @@ public class TripsFragment extends BaseFragment implements View.OnClickListener 
 
             case R.id.btn_past:
                 btnPast.setBackgroundColor(getResources().getColor(R.color.button_color));
-                btnPast.setTextColor(getResources().getColor(R.color.white));
+                btnPast.setTextColor(getDockActivity().getResources().getColor(R.color.white));
 
                 btnUpcoming.setBackgroundColor(getResources().getColor(R.color.white));
-                btnPast.setTextColor(getResources().getColor(R.color.black));
+                btnUpcoming.setTextColor(getResources().getColor(R.color.black));
 
                 ReplaceListViewFragment(PastTripsFragment.newInstance());
 
@@ -78,14 +79,13 @@ public class TripsFragment extends BaseFragment implements View.OnClickListener 
 
             case R.id.btn_upcoming:
                 btnUpcoming.setBackgroundColor(getResources().getColor(R.color.button_color));
-                btnPast.setTextColor(getResources().getColor(R.color.white));
+                btnUpcoming.setTextColor(getResources().getColor(R.color.white));
 
                 btnPast.setBackgroundColor(getResources().getColor(R.color.white));
                 btnPast.setTextColor(getResources().getColor(R.color.black));
 
 
-                ReplaceListViewFragment(PastTripsFragment.newInstance());
-               // ReplaceListViewFragment(UpcomingTripsFragment.newInstance());
+                ReplaceListViewFragment(UpcomingTripsFragment.newInstance());
 
                 break;
 
@@ -102,7 +102,7 @@ public class TripsFragment extends BaseFragment implements View.OnClickListener 
         titleBar.setSubHeading(getString(R.string.Your_Trips));
     }
 
-    private void ReplaceListViewFragment(PastTripsFragment frag) {
+    private void ReplaceListViewFragment(BaseFragment frag) {
 
         FragmentTransaction transaction = getChildFragmentManager()
                 .beginTransaction();
