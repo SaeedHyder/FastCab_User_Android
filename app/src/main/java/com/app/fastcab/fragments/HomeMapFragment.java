@@ -3,6 +3,7 @@ package com.app.fastcab.fragments;
 import android.Manifest;
 import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -21,6 +23,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -39,7 +43,10 @@ import com.app.fastcab.activities.PickupSelectionactivity;
 import com.app.fastcab.entities.LocationEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.helpers.BottomSheetDialogHelper;
+import com.app.fastcab.helpers.DateHelper;
+import com.app.fastcab.helpers.DatePickerHelper;
 import com.app.fastcab.helpers.DialogHelper;
+import com.app.fastcab.helpers.TimePickerHelper;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.OnSettingActivateListener;
 import com.app.fastcab.ui.adapters.ReasonCancelListViewAdapter;
@@ -64,13 +71,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import Modules.DirectionFinder;
 import Modules.DirectionFinderListener;
@@ -123,12 +133,18 @@ public class HomeMapFragment extends BaseFragment implements
     RelativeLayout layoutdestination;
     @BindView(R.id.container_finding_ride)
     RelativeLayout findingRide;
+    @BindView(R.id.txt_Schedule_text)
+    AnyTextView txtScheduleText;
+    @BindView(R.id.layout_schedule)
+    RelativeLayout layoutSchedule;
 
     private LocationEnt origin;
     private LocationEnt destination;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
+    private Date DateSelected;
+    private Date TimeSelected;
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
@@ -384,31 +400,12 @@ public class HomeMapFragment extends BaseFragment implements
                 break;
             case R.id.btn_ridenow:
                 //new BottomSheetHelper().show(getMainActivity().getSupportFragmentManager(),"asd");
-                final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity());
-                dialogHelper.initSelectRideBottomSheet(R.layout.bottomsheet_selectride, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        initPromoCodeDialog();
-                    }
-                }, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogHelper.hideDialog();
-                        initEstimateFareBottomSheet();
-                    }
-                });
-                dialogHelper.showDialog();
-                getMainActivity().titleBar.hideButtons();
-                getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
-                getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogHelper.hideDialog();
-                    }
-                });
+                setupRideNowDialog();
 
                 break;
             case R.id.btn_ridelater:
+                setupScheduleDialog();
+
                 break;
             case R.id.btn_cancel_ride:
                 setcanceldialog();
@@ -420,6 +417,180 @@ public class HomeMapFragment extends BaseFragment implements
                 initRideStatus();
                 break;
         }
+    }
+
+    private void setupRideNowDialog() {
+        final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity());
+        dialogHelper.initSelectRideBottomSheet(R.layout.bottomsheet_selectride, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initPromoCodeDialog();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogHelper.hideDialog();
+                initEstimateFareBottomSheet();
+            }
+        });
+        dialogHelper.showDialog();
+        getMainActivity().titleBar.hideButtons();
+        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
+        getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogHelper.hideDialog();
+            }
+        });
+    }
+
+    private void setupScheduleDialog() {
+        final BottomSheetDialog dialog = new BottomSheetDialog(getDockActivity());
+        dialog.setContentView(R.layout.bottom_sheet_scheduled_picker);
+        Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
+        final AnyTextView date_pick = (AnyTextView) dialog.findViewById(R.id.txt_datepicker);
+        final AnyTextView time_pick = (AnyTextView) dialog.findViewById(R.id.txt_timepicker);
+        date_pick.setPaintFlags(Typeface.BOLD);
+        time_pick.setPaintFlags(Typeface.BOLD);
+        cancelbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DateSelected == null) {
+                    UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_pickup_date));
+                } else if (TimeSelected == null) {
+                    UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_time_pickup));
+                } else {
+                    dialog.dismiss();
+                    layoutSchedule.setVisibility(View.VISIBLE);
+                    btnCancelRide.setVisibility(View.GONE);
+                    BottomSheetDialogHelper scheduleDialog = new BottomSheetDialogHelper(getDockActivity());
+                    scheduleDialog.initSelectRideBottomSheet(R.layout.bottomsheet_selectride, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        initPromoCodeDialog();
+                        }
+                    }, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        //getDockActivity().replaceDockableFragment();
+                        }
+                    },R.string.schedule_ride);
+                    scheduleDialog.showDialog();
+                }
+            }
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+
+        date_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initDatePicker(date_pick);
+            }
+        });
+
+        time_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initTimePicker(time_pick);
+            }
+        });
+        dialog.show();
+    }
+
+    private void initTimePicker(final TextView textView) {
+        final Calendar calendar = Calendar.getInstance();
+        final TimePickerHelper timePicker = new TimePickerHelper();
+        if (DateSelected != null) {
+            TimePickerDialog dialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                    Date date = new Date();
+                    if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
+                        UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
+                    } else {
+                        Calendar c = Calendar.getInstance();
+                        int year = c.get(Calendar.YEAR);
+                        int month = c.get(Calendar.MONTH);
+                        int day = c.get(Calendar.DAY_OF_MONTH);
+                        c.set(year, month, day, hourOfDay, minute);
+                        TimeSelected = c.getTime();
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(year, month, day, hourOfDay, minute + 15);
+                        String preTime = new SimpleDateFormat("HH:mm a").format(c.getTime()) + " - " +
+                                new SimpleDateFormat("HH:mm a").format(cal.getTime());
+                        textView.setText(preTime);
+                        textView.setPaintFlags(Typeface.BOLD);
+                    }
+                }
+            }, DateSelected.getHours(), DateSelected.getMinutes(), false);
+            Date date = new Date();
+            if (DateHelper.isSameDay(DateSelected, date))
+                dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
+            dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
+
+           /* timePicker.initTimeDialog(getDockActivity(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    Date date = new Date();
+                    if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
+                        UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
+                    } else {
+                        Calendar c = Calendar.getInstance();
+                        int year = c.get(Calendar.YEAR);
+                        int month = c.get(Calendar.MONTH);
+                        int day = c.get(Calendar.DAY_OF_MONTH);
+                        c.set(year, month, day, hourOfDay, minute);
+                        TimeSelected = c.getTime();
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(year, month, day, hourOfDay, minute + 15);
+                        String preTime = new SimpleDateFormat("HH:mm a").format(c.getTime()) + " - " +
+                                new SimpleDateFormat("HH:mm a").format(cal.getTime());
+                        textView.setText(preTime);
+                        textView.setPaintFlags(Typeface.BOLD);
+                    }
+                }
+            }, DateFormat.is24HourFormat(getMainActivity()));
+            timePicker.showTime();*/
+        } else {
+            UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_pickup_date_first));
+        }
+    }
+
+    private void initDatePicker(final TextView textView) {
+        Calendar calendar = Calendar.getInstance();
+        final DatePickerHelper datePickerHelper = new DatePickerHelper();
+        datePickerHelper.initDateDialog(
+                getDockActivity(),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+                , new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Date date = new Date();
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.YEAR, year);
+                        c.set(Calendar.MONTH, month);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+// and get that as a Date
+                        Date dateSpecified = c.getTime();
+                        if (dateSpecified.before(date)) {
+                            UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.date_before_error));
+                        } else {
+                            DateSelected = dateSpecified;
+                            String predate = new SimpleDateFormat("EEE,MMM d").format(c.getTime());
+
+                            textView.setText(predate);
+                            textView.setPaintFlags(Typeface.BOLD);
+                        }
+
+                    }
+                }, "PreferredDate");
+
+        datePickerHelper.showDate();
     }
 
     private void setcanceldialog() {
@@ -452,7 +623,7 @@ public class HomeMapFragment extends BaseFragment implements
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.request_for_cancellation_dialog);
         Button okbutton = (Button) dialog.findViewById(R.id.btn_ok);
-        ListView listView = (ListView)dialog.findViewById(R.id.lv_listview) ;
+        ListView listView = (ListView) dialog.findViewById(R.id.lv_listview);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel);
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
@@ -524,14 +695,14 @@ public class HomeMapFragment extends BaseFragment implements
         double lat = origin.getLatlng().latitude;
         double lng = origin.getLatlng().longitude;
 
-        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(100,new LatLng(lat,lng),180)).rotation(270.0f).icon(icon));
-        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(130,new LatLng(lat,lng),180)).icon(icon));
-        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(160,new LatLng(lat,lng),-180)).rotation(90.0f).icon(icon));
-        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(190,new LatLng(lat,lng),-180)).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(100, new LatLng(lat, lng), 180)).rotation(270.0f).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(130, new LatLng(lat, lng), 180)).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(160, new LatLng(lat, lng), -180)).rotation(90.0f).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(translateCoordinates(190, new LatLng(lat, lng), -180)).icon(icon));
         googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(17);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin.getLatlng(),17));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin.getLatlng(), 17));
         googleMap.animateCamera(zoom);
         mCircle = googleMap.addCircle(new CircleOptions()
                 .center(origin.getLatlng())
@@ -558,6 +729,7 @@ public class HomeMapFragment extends BaseFragment implements
         btnCancelRide.setVisibility(View.VISIBLE);
 
     }
+
     public LatLng translateCoordinates(final double distance, final LatLng origpoint, final double angle) {
         final double distanceNorth = Math.sin(angle) * distance;
         final double distanceEast = Math.cos(angle) * distance;
@@ -674,8 +846,8 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        UIHelper.hideSoftKeyboard( getDockActivity(), getMainActivity()
-                .getWindow().getDecorView() );
+        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
+                .getWindow().getDecorView());
     }
 
     private void initdestinationLocationSelect() {
@@ -738,8 +910,8 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        UIHelper.hideSoftKeyboard( getDockActivity(), getMainActivity()
-                .getWindow().getDecorView() );
+        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
+                .getWindow().getDecorView());
         if (origin == null) {
             customMarkerView.setVisibility(View.GONE);
             llDestination.setVisibility(View.GONE);
@@ -751,4 +923,9 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
 
+
+    @OnClick(R.id.txt_Schedule_text)
+    public void onViewClicked() {
+        setupScheduleDialog();
+    }
 }

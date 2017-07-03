@@ -206,6 +206,14 @@
     <string name="expiredate_error">Enter Credit Card Expire Date</string>
     <string name="cvv_error">Enter CVV Number</string>
     <string name="cc_name_error">Enter Name of the Card Owner</string>
+    <string name="select_a_pickup_date_and_time">Select a Pickup Date and Time</string>
+    <string name="select_pickup_time">Select Pickup Time</string>
+    <string name="less_time_error">Selected Time is in the Past</string>
+    <string name="select_pickup_date">Select Pickup Date</string>
+    <string name="select_time_pickup">Select Pickup Time</string>
+    <string name="select_pickup_date_first">Select Pickup Date First</string>
+    <string name="pickup_date_and_time">Pickup Date And Time</string>
+    <string name="schedule_ride">Schedule ride</string>
 
 
 </resources>

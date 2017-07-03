@@ -1,8 +1,12 @@
 package com.app.fastcab.helpers;
 
 import android.app.Dialog;
-import android.app.TimePickerDialog;
+
+
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,21 +16,23 @@ import java.util.Calendar;
  */
 
 public class TimePickerHelper {
-    private Dialog dialog;
+    private TimePickerDialog dialog;
 
     public TimePickerHelper() {
 
     }
-    public Dialog initTimeDialog(Context context, int hour, int minute, TimePickerDialog.OnTimeSetListener onTimeSetListener, boolean is24Hour){
-        this.dialog = new TimePickerDialog(context, onTimeSetListener, hour, minute,is24Hour );
+    public TimePickerDialog initTimeDialog(Context context, int hour, int minute, TimePickerDialog.OnTimeSetListener onTimeSetListener, boolean is24Hour){
+       // this.dialog = new TimePickerDialog(context, onTimeSetListener,hour,minute,is24Hour );
+        this.dialog = new TimePickerDialog();
+        dialog.setTitle("Select Pickup Time");
         return dialog;
     }
 
-    public void showDate() {
+    public void showTime(FragmentManager fm, String tag ) {
         if (this.dialog == null){
             throw  new NullPointerException("Initialize Dialog First");
         }else {
-            this.dialog.show();
+            this.dialog.show(fm,tag);
         }
 
     }
