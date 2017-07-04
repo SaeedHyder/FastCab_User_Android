@@ -98,7 +98,7 @@ public class TripsFragment extends BaseFragment implements View.OnClickListener 
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
+        titleBar.showMenuButton();
         titleBar.setSubHeading(getString(R.string.Your_Trips));
     }
 

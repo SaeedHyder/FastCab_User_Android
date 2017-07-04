@@ -20,10 +20,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -138,6 +140,9 @@ public class HomeMapFragment extends BaseFragment implements
     @BindView(R.id.layout_schedule)
     RelativeLayout layoutSchedule;
 
+    @BindView(R.id.Main_frame)
+    CoordinatorLayout Main_frame;
+    View viewParent;
     private LocationEnt origin;
     private LocationEnt destination;
     private List<Marker> originMarkers = new ArrayList<>();
@@ -160,12 +165,13 @@ public class HomeMapFragment extends BaseFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_map, container, false);
+        viewParent = inflater.inflate(R.layout.fragment_home_map, container, false);
         getMainActivity().setOnSettingActivateListener(this);
        /* originMarker = new MarkerOptions().position(new LatLng(0, 0));
         destinationMarker = new MarkerOptions().position(new LatLng(0, 0));*/
-        ButterKnife.bind(this, view);
-        return view;
+
+        ButterKnife.bind(this, viewParent);
+        return viewParent;
     }
 
     @Override
@@ -205,7 +211,7 @@ public class HomeMapFragment extends BaseFragment implements
 
     @Override
     public void onLocationActivateListener() {
-        if (origin == null)
+        if (origin == null||origin.getLatlng().equals(new LatLng(0,0)))
             getCurrentLocation();
     }
 
@@ -332,6 +338,24 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onMapReady(GoogleMap googlemap) {
         googleMap = googlemap;
+        googleMap.setMyLocationEnabled(true);
+        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                if (origin == null)
+                    if (getMainActivity().statusCheck())
+                        getCurrentLocation();
+                return true;
+            }
+        });
+        View locationButton = map.getView().findViewById(0x2);
+
+// and next place it, for exemple, on bottom right (as Google Maps app)
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+// position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE );
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+        rlp.setMargins(0,(int) getResources().getDimension(R.dimen.x100), (int) getResources().getDimension(R.dimen.x100),0 );
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
         googlemap.setOnMarkerClickListener(this);
@@ -399,9 +423,7 @@ public class HomeMapFragment extends BaseFragment implements
                 StartPickupActivity(10);
                 break;
             case R.id.btn_ridenow:
-                //new BottomSheetHelper().show(getMainActivity().getSupportFragmentManager(),"asd");
                 setupRideNowDialog();
-
                 break;
             case R.id.btn_ridelater:
                 setupScheduleDialog();
@@ -420,8 +442,10 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void setupRideNowDialog() {
-        final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity());
-        dialogHelper.initSelectRideBottomSheet(R.layout.bottomsheet_selectride, new View.OnClickListener() {
+        btnRidenow.setVisibility(View.GONE);
+        btnRidelater.setVisibility(View.GONE);
+        final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
+        dialogHelper.initSelectRideBottomSheet(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initPromoCodeDialog();
@@ -439,7 +463,12 @@ public class HomeMapFragment extends BaseFragment implements
         getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnRidenow.setVisibility(View.VISIBLE);
+                btnRidelater.setVisibility(View.VISIBLE);
                 dialogHelper.hideDialog();
+                StartPickupActivity(10);
+
+
             }
         });
     }
@@ -461,22 +490,7 @@ public class HomeMapFragment extends BaseFragment implements
                     UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_time_pickup));
                 } else {
                     dialog.dismiss();
-                    layoutSchedule.setVisibility(View.VISIBLE);
-                    btnCancelRide.setVisibility(View.GONE);
-                    BottomSheetDialogHelper scheduleDialog = new BottomSheetDialogHelper(getDockActivity());
-                    scheduleDialog.initSelectRideBottomSheet(R.layout.bottomsheet_selectride, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        initPromoCodeDialog();
-                        }
-                    }, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        //getDockActivity().replaceDockableFragment();
-                        }
-                    },R.string.schedule_ride);
-                    scheduleDialog.showDialog();
+                    setupScheduleComfirmDialog();
                 }
             }
         });
@@ -497,6 +511,40 @@ public class HomeMapFragment extends BaseFragment implements
             }
         });
         dialog.show();
+    }
+
+    private void setupScheduleComfirmDialog() {
+        layoutSchedule.setVisibility(View.VISIBLE);
+        btnCancelRide.setVisibility(View.GONE);
+        btnRidenow.setVisibility(View.GONE);
+        btnRidelater.setVisibility(View.GONE);
+        final BottomSheetDialogHelper scheduleDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
+        scheduleDialog.initSelectRideBottomSheet(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initPromoCodeDialog();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scheduleDialog.hideDialog();
+                getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
+            }
+        }, R.string.schedule_ride);
+        getMainActivity().titleBar.hideButtons();
+        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.schedule_new_trip));
+        getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnRidenow.setVisibility(View.VISIBLE);
+                btnRidelater.setVisibility(View.VISIBLE);
+                layoutSchedule.setVisibility(View.GONE);
+                scheduleDialog.hideDialog();
+
+
+            }
+        });
+        scheduleDialog.showDialog();
     }
 
     private void initTimePicker(final TextView textView) {
@@ -655,8 +703,8 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void initEstimateFareBottomSheet() {
-        final BottomSheetDialogHelper estimateFareDialog = new BottomSheetDialogHelper(getDockActivity());
-        estimateFareDialog.initEstimateFareBottomSheet(R.layout.bottom_dialog_estimate_fare, new View.OnClickListener() {
+        final BottomSheetDialogHelper estimateFareDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_estimate_fare);
+        estimateFareDialog.initEstimateFareBottomSheet(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 estimateFareDialog.hideDialog();
@@ -671,6 +719,7 @@ public class HomeMapFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 estimateFareDialog.hideDialog();
+                setupRideNowDialog();
             }
         });
     }
@@ -727,7 +776,45 @@ public class HomeMapFragment extends BaseFragment implements
         valueAnimator.start();
         findingRide.setVisibility(View.VISIBLE);
         btnCancelRide.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ShowrideReachingDialog();
+            }
+        }, 5000);
 
+    }
+
+    private void ShowrideReachingDialog() {
+        googleMap.clear();
+        findingRide.setVisibility(View.GONE);
+        btnCancelRide.setVisibility(View.GONE);
+        setRoute();
+        BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(),Main_frame,R.layout.bottom_dialog_ride_detail);
+        rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setcanceldialog();
+            }
+        });
+        getMainActivity().titleBar.hideButtons();
+        getMainActivity().titleBar.showMenuButton();
+        getMainActivity().titleBar.showMessageButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDockActivity().replaceDockableFragment(MessagesFragment.newInstance(),MessagesFragment.class.getSimpleName());
+            }
+        });
+        getMainActivity().titleBar.showCallButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel: 999888555222"));
+                startActivity(intent);
+            }
+        });
+        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.your_ride));
+        rideReaching.showDialog();
     }
 
     public LatLng translateCoordinates(final double distance, final LatLng origpoint, final double angle) {
@@ -852,6 +939,7 @@ public class HomeMapFragment extends BaseFragment implements
 
     private void initdestinationLocationSelect() {
         googleMap.clear();
+        googleMap.setMyLocationEnabled(false);
         customMarkerView.setVisibility(View.VISIBLE);
         imgIcon.setImageResource(R.drawable.destination_icon);
         txtLocationtype.setVisibility(View.GONE);
@@ -896,6 +984,7 @@ public class HomeMapFragment extends BaseFragment implements
         layoutpick.setVisibility(View.VISIBLE);
         btnRidenow.setVisibility(View.VISIBLE);
         btnRidelater.setVisibility(View.VISIBLE);
+        googleMap.setMyLocationEnabled(false);
         if (destination != null) {
             txtDestinationText.setText(destination.getAddress());
         }
@@ -921,7 +1010,6 @@ public class HomeMapFragment extends BaseFragment implements
         }
 
     }
-
 
 
     @OnClick(R.id.txt_Schedule_text)

@@ -217,7 +217,9 @@
     <string name="select_pickup_date_first">Select Pickup Date First</string>
     <string name="pickup_date_and_time">Pickup Date And Time</string>
     <string name="schedule_ride">Schedule ride</string>
-
+    <string name="schedule_new_trip">Schedule New Trip</string>
+    <string name="your_ride">Your Ride</string>
+    <string name="notifications">Notifications</string>
 
 
 </resources>

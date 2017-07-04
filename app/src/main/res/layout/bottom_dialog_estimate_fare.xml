@@ -1,132 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/x20">
-    <ImageView
-        android:id="@+id/img_selected_ride"
-        android:layout_width="@dimen/x50"
-        android:layout_height="@dimen/x50"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/circle_blue"
-        android:src="@drawable/business_active"
-        android:visibility="visible"/>
-    <com.app.fastcab.ui.views.AnyTextView
-        android:id="@+id/txt_type"
+    android:clickable="false"
+    android:background="?android:windowBackground"
+    android:orientation="vertical"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="right"
-        android:alpha="0.7"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="@dimen/x10"
-        android:text="Bussiness"
-        android:layout_below="@+id/img_selected_ride"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        app:typeface="Roboto-Regular.ttf" />
-    <com.app.fastcab.ui.views.AnyTextView
-        android:id="@+id/txt_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="right"
-        android:layout_below="@+id/txt_type"
-        android:alpha="0.7"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/x10"
-       android:text="@string/smaller_smater_cheaper_rides"
-        app:typeface="Roboto-Regular.ttf" />
-    <LinearLayout
-        android:id="@+id/ll_info"
-        android:layout_marginTop="21dp"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/x100"
-        android:orientation="horizontal"
-        android:background="@drawable/black_border"
-        android:layout_below="@+id/txt_description"
-        android:layout_alignParentStart="true">
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/x20">
+
+        <ImageView
+            android:id="@+id/img_selected_ride"
+            android:layout_width="@dimen/x50"
+            android:layout_height="@dimen/x50"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/circle_blue"
+            android:src="@drawable/business_active"
+            android:visibility="visible" />
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_type"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/x10"
-            android:layout_weight="0.5"
-            android:layout_gravity="center_vertical">
-            <com.app.fastcab.ui.views.AnyTextView
-                android:id="@+id/txt_no_people"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="right"
-                android:alpha="0.7"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="@dimen/x10"
-                android:text="4 People"
-                android:textColor="@color/button_color"
-                android:textSize="18sp"
-                app:typeface="Roboto-Regular.ttf" />
-            <com.app.fastcab.ui.views.AnyTextView
-                android:id="@+id/txt_capacity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="right"
-                android:layout_below="@+id/txt_no_people"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/x5"
-                android:text="@string/capacity"
-                app:typeface="Roboto-Regular.ttf" />
-        </RelativeLayout>
-        <View
-            android:layout_width="@dimen/x1"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/x15"
-            android:background="@drawable/horizontal_line"/>
-        <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_below="@+id/img_selected_ride"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/x10"
+            android:alpha="0.7"
+            android:gravity="center_horizontal"
+            android:text="Bussiness"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:typeface="Roboto-Regular.ttf" />
+
+        <com.app.fastcab.ui.views.AnyTextView
+            android:id="@+id/txt_description"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/x10"
-            android:layout_weight="0.5"
-            android:layout_gravity="center_vertical">
-            <com.app.fastcab.ui.views.AnyTextView
-                android:id="@+id/txt_fare_ammount"
+            android:layout_below="@+id/txt_type"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/x10"
+            android:alpha="0.7"
+            android:gravity="center"
+            android:text="@string/smaller_smater_cheaper_rides"
+            app:typeface="Roboto-Regular.ttf" />
+
+        <LinearLayout
+            android:id="@+id/ll_info"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x100"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txt_description"
+            android:layout_marginTop="21dp"
+            android:background="@drawable/black_border"
+            android:orientation="horizontal">
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="right"
-                android:alpha="0.7"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="@dimen/x10"
-                android:text="$ 25 -30"
-                android:textColor="@color/button_color"
-                android:textSize="18sp"
-                app:typeface="Roboto-Regular.ttf" />
-            <com.app.fastcab.ui.views.AnyTextView
-                android:id="@+id/txt_estimate_text"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/x10"
+                android:layout_weight="0.5">
+
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_no_people"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="@dimen/x10"
+                    android:alpha="0.7"
+                    android:gravity="center_horizontal"
+                    android:text="4 People"
+                    android:textColor="@color/button_color"
+                    android:textSize="18sp"
+                    app:typeface="Roboto-Regular.ttf" />
+
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_capacity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_no_people"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="@dimen/x5"
+                    android:gravity="center"
+                    android:text="@string/capacity"
+                    app:typeface="Roboto-Regular.ttf" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="@dimen/x1"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x15"
+                android:background="@drawable/horizontal_line" />
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="right"
-                android:layout_below="@+id/txt_fare_ammount"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/x5"
-                android:text="@string/estimated_fare"
-                app:typeface="Roboto-Regular.ttf" />
-        </RelativeLayout>
-    </LinearLayout>
-    <Button
-        android:id="@+id/btn_done"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/x40"
-        android:layout_centerVertical="true"
-        android:layout_below="@+id/ll_info"
-        android:background="@color/button_color"
-        android:text="@string/done"
-        android:layout_marginTop="@dimen/x15"
-        android:textColor="@color/white"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true" />
-</RelativeLayout>
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/x10"
+                android:layout_weight="0.5">
+
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_fare_ammount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="@dimen/x10"
+                    android:alpha="0.7"
+                    android:gravity="center_horizontal"
+                    android:text="$ 25 -30"
+                    android:textColor="@color/button_color"
+                    android:textSize="18sp"
+                    app:typeface="Roboto-Regular.ttf" />
+
+                <com.app.fastcab.ui.views.AnyTextView
+                    android:id="@+id/txt_estimate_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_fare_ammount"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="@dimen/x5"
+                    android:gravity="center"
+                    android:text="@string/estimated_fare"
+                    app:typeface="Roboto-Regular.ttf" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/x40"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ll_info"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/x15"
+            android:background="@color/button_color"
+            android:text="@string/done"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</LinearLayout>
