@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="?android:windowBackground"
+    android:clickable="false"
+    android:orientation="vertical"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <LinearLayout
         android:id="@+id/textLayout"
@@ -43,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/x60"
         android:layout_marginTop="@dimen/x20"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:id="@+id/ll_economy"
@@ -83,7 +87,7 @@
                 android:layout_marginRight="@dimen/x4"
                 android:background="@drawable/circle_blue"
                 android:src="@drawable/economy_active"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -103,6 +107,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/iv_businessCar"
                 android:src="@drawable/background_line" />
+
             <ImageView
                 android:layout_width="@dimen/x20"
                 android:layout_height="match_parent"
@@ -110,6 +115,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/iv_businessCar"
                 android:src="@drawable/background_line" />
+
             <ImageView
                 android:id="@+id/iv_businessCar"
                 android:layout_width="@dimen/x40"
@@ -127,8 +133,7 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/circle_blue"
                 android:src="@drawable/business_active"
-                android:visibility="visible"/>
-
+                android:visibility="visible" />
 
 
         </RelativeLayout>
@@ -166,7 +171,7 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/circle_blue"
                 android:src="@drawable/vip_active"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
 
         </RelativeLayout>
@@ -191,7 +196,7 @@
             android:gravity="center"
             android:text="@string/promo_code"
             android:textColor="@color/black"
-            app:typeface="Roboto-Regular.ttf"/>
+            app:typeface="Roboto-Regular.ttf" />
 
     </LinearLayout>
 

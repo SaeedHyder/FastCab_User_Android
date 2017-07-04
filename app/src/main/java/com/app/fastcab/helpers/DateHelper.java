@@ -76,6 +76,20 @@ public class DateHelper {
 	private static String format( int i, String s ) {
 		return i + " " + s + " ago";
 	}
+	public static boolean isTimeAfter(int starthour, int starmin, int endhour, int endmin) {
+		if (starthour > endhour) { //Same way you can check with after() method also.
+			return false;
+		} else {
+
+			if (starthour >= endhour && starmin > endmin) {
+				return false;
+			} else {
+				return true;
+			}
+
+
+		}
+	}
 
 	public static int computeMonthsBetweenDates( Date minDate, Date maxDate ) {
 		long diff = maxDate.getTime() - minDate.getTime();

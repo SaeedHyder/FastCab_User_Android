@@ -96,10 +96,10 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
-        titleBar.hideTitleBar();
-        titleBar.setSubHeading("Notifications");
         titleBar.hideButtons();
-        titleBar.showBackButton();
+        titleBar.setSubHeading(getResources().getString(R.string.notifications));
+        titleBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        titleBar.showMenuButton();
     }
 
 

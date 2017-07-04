@@ -14,13 +14,19 @@ import java.util.Locale;
  */
 
 public class DatePickerHelper {
-    private Dialog dialog;
+    private DatePickerDialog dialog;
 
     public DatePickerHelper() {
 
     }
-    public Dialog initDateDialog(Context context, int year, int month, int day, DatePickerDialog.OnDateSetListener dateSetListener,String tag){
+    public DatePickerDialog initDateDialog(Context context, int year, int month, int day, DatePickerDialog.OnDateSetListener dateSetListener,String tag){
         this.dialog = new DatePickerDialog(context, dateSetListener, year, month, day);
+        Calendar min = Calendar.getInstance();
+        min.set(year,month,day);
+        this.dialog.getDatePicker().setMinDate(min.getTimeInMillis());
+        Calendar max = Calendar.getInstance();
+        max.set(year,month,day+30);
+        this.dialog.getDatePicker().setMaxDate(max.getTimeInMillis());
         return dialog;
     }
 
