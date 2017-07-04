@@ -254,7 +254,6 @@
                 android:visibility="visible"
                 app:maxStars="5"
                 android:isIndicator="true"
-
                 app:starOff="@drawable/star_unfilled"
                 app:starOn="@drawable/star_filled"
                 app:starPadding="@dimen/x8"
