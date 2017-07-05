@@ -20,10 +20,10 @@
 
         <ImageView
             android:id="@+id/iv_cashOnDilevery"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/x20"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.1"
+
             android:src="@drawable/cash"/>
 
         <com.app.fastcab.ui.views.AnyTextView
@@ -41,10 +41,10 @@
             />
         <ImageView
             android:id="@+id/iv_selectCOD"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/x20"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.1"
+            android:layout_marginRight="@dimen/x5"
             android:src="@drawable/tick"/>
 
     </LinearLayout>
@@ -68,10 +68,9 @@
 
         <ImageView
             android:id="@+id/iv_creditCard"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/x20"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.1"
             android:src="@drawable/credit_card"/>
 
         <com.app.fastcab.ui.views.AnyTextView
@@ -89,9 +88,9 @@
             />
         <ImageView
             android:id="@+id/iv_selectCreditCard"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/x20"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
+            android:layout_marginRight="@dimen/x5"
             android:layout_gravity="center"
             android:src="@drawable/tick"
             android:visibility="gone"/>

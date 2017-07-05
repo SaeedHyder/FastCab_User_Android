@@ -50,7 +50,7 @@ public class ContactUsFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void setListners() {
-
+        SubmitButton.setOnClickListener(this);
         edtContactUs.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
@@ -70,7 +70,10 @@ public class ContactUsFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.SubmitButton:
+                getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(),HomeMapFragment.class.getSimpleName());
+                break;
         }
     }
 

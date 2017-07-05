@@ -69,10 +69,10 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
-        titleBar.hideTitleBar();
-        titleBar.setSubHeading("Settings");
         titleBar.hideButtons();
-        titleBar.showBackButton();
+        titleBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        titleBar.setSubHeading(getString(R.string.setting));
+        titleBar.showMenuButton();
     }
 
 

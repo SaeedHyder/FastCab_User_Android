@@ -220,6 +220,9 @@
     <string name="schedule_new_trip">Schedule New Trip</string>
     <string name="your_ride">Your Ride</string>
     <string name="notifications">Notifications</string>
+    <string name="submit_rating_last">Rate Your Last Trip</string>
+    <string name="setting">Settings</string>
+    <string name="date_after_error">Selected Date is After Current Date</string>
 
 
 </resources>

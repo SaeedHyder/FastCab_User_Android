@@ -6,6 +6,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -129,27 +130,48 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private boolean isvalidate() {
 
         if (edtUserName.getText() == null || (edtUserName.getText().toString().isEmpty())) {
+            if (edtUserName.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtUserName.setError(getString(R.string.enter_username));
             return false;
         }
         else if (edtMobileNumber.getText().toString().isEmpty()) {
+            if (edtMobileNumber.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtMobileNumber.setError(getString(R.string.enter_phone));
             return false;
         }
         else if (edtMobileNumber.getText().toString().length() < 11) {
+            if (edtMobileNumber.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtMobileNumber.setError(getString(R.string.numberLength));
             return false;
         } else if (edtllCurrentAddress.getText() == null || (edtllCurrentAddress.getText().toString().isEmpty())) {
+            if (edtllCurrentAddress.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtllCurrentAddress.setError(getString(R.string.enter_currentAddress));
             return false;
         }
         else if( edtCity.getText() == null || (edtCity.getText().toString().isEmpty())) {
+            if (edtCity.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtCity.setError(getString(R.string.enter_city));
             return false;
         } else if (edtState.getText() == null || (edtState.getText().toString().isEmpty()) ) {
+            if (edtState.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtState.setError(getString(R.string.enter_state));
             return false;
         } else if (edtzipCode.getText() == null || (edtzipCode.getText().toString().isEmpty())) {
+            if (edtzipCode.requestFocus()) {
+                getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
             edtzipCode.setError(getString(R.string.enter_zipCode));
             return false;
         }else {

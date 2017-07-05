@@ -6,21 +6,21 @@ package com.app.fastcab.entities;
 
 public class NotificationEnt {
 
-    String Notificationlogo;
+    Integer Notificationlogo;
     String NotificationTxt;
 
-    public NotificationEnt(String Notificationlogo,String NotificationTxt)
+    public NotificationEnt(Integer Notificationlogo, String NotificationTxt)
     {
         setNotificationlogo(Notificationlogo);
         setNotificationTxt(NotificationTxt);
 
     }
 
-    public String getNotificationlogo() {
+    public Integer getNotificationlogo() {
         return Notificationlogo;
     }
 
-    public void setNotificationlogo(String notificationlogo) {
+    public void setNotificationlogo(Integer notificationlogo) {
         Notificationlogo = notificationlogo;
     }
 

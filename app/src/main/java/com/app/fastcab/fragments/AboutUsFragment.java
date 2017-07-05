@@ -26,8 +26,8 @@ public class AboutUsFragment extends BaseFragment {
     @BindView(R.id.txt_term_condition)
     TextView txtTermCondition;
 
-    public static TermAndConditionFragment newInstance() {
-        return new TermAndConditionFragment();
+    public static AboutUsFragment newInstance() {
+        return new AboutUsFragment();
     }
 
     @Nullable
@@ -44,7 +44,7 @@ public class AboutUsFragment extends BaseFragment {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
         titleBar.showMenuButton();
-        titleBar.setSubHeading(getString(R.string.terms_conditons));
+        titleBar.setSubHeading(getString(R.string.about_us));
     }
 
     @Override

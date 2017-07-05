@@ -62,6 +62,11 @@ public class BottomSheetDialogHelper {
 // set hideable or not
         bottomSheetBehavior.setHideable(false);
     }
+    public void initRatingDialog(View.OnClickListener onClickListener){
+        bottomSheetBehavior.setPeekHeight((int)context.getResources().getDimension(R.dimen.x150));
+        Button submit = (Button)dialog.findViewById(R.id.SubmitButton);
+        submit.setOnClickListener(onClickListener);
+    }
     public void initRideDetailBottomSheet(View.OnClickListener oncancelclicklistener) {
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel_ride);
         cancelbutton.setOnClickListener(oncancelclicklistener);
@@ -206,10 +211,10 @@ public class BottomSheetDialogHelper {
     public void hideDialog(){
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        RemoveDialog();
        // dialog.dismiss();
     }
-    public void RemoveDialog(){
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    private void RemoveDialog(){
         mainParent.removeView(dialog);
         // dialog.dismiss();
     }

@@ -48,9 +48,9 @@
             <com.app.fastcab.ui.views.CustomRatingBar
                 android:id="@+id/rbAddRating"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/x30"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="@dimen/x20"
+                android:layout_marginTop="@dimen/x15"
                 android:layout_marginLeft="@dimen/x10"
                 android:layout_marginRight="@dimen/x10"
                 android:layout_marginBottom="@dimen/x10"
@@ -67,7 +67,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/x15"
-                    android:layout_marginTop="@dimen/x11"
                     android:alpha="0.5"
                     android:gravity="center"
                     android:text="@string/rating"
@@ -179,7 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
-            android:layout_marginTop="@dimen/x50"
+            android:layout_marginTop="@dimen/x20"
             android:orientation="horizontal">
 
             <ImageView
@@ -197,20 +196,25 @@
                 android:text="Male"
                 android:textColor="@color/black"
                 android:alpha="0.6"
-                android:textSize="@dimen/x18"
+                android:textSize="@dimen/x15"
                 android:gravity="left"
                 app:typeface="Roboto-Regular.ttf"
                 />
 
         </LinearLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x2"
+            android:layout_marginTop="@dimen/x7"
+            android:layout_below="@+id/txt_Notification"
+            android:background="@drawable/line" />
         <LinearLayout
             android:id="@+id/ll_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
-            android:layout_marginTop="@dimen/x25"
+            android:layout_marginTop="@dimen/x10"
             android:orientation="horizontal">
 
             <ImageView
@@ -228,20 +232,26 @@
                 android:text="+123-456-789"
                 android:textColor="@color/black"
                 android:alpha="0.6"
-                android:textSize="@dimen/x18"
+                android:textSize="@dimen/x15"
                 android:gravity="left"
                 app:typeface="Roboto-Regular.ttf"
                 />
 
         </LinearLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x2"
+            android:layout_marginTop="@dimen/x7"
+            android:layout_below="@+id/txt_Notification"
+            android:background="@drawable/line" />
         <LinearLayout
             android:id="@+id/ll_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
-            android:layout_marginTop="@dimen/x25"
+            android:layout_marginTop="@dimen/x10"
+            android:layout_marginBottom="@dimen/x20"
             android:orientation="horizontal">
 
             <ImageView
@@ -259,7 +269,7 @@
                 android:text="Olaya St, Al Olaya,Riyadh 12214,\nSaudi Arabia"
                 android:textColor="@color/black"
                 android:alpha="0.6"
-                android:textSize="@dimen/x18"
+                android:textSize="@dimen/x15"
                 android:gravity="left"
                 app:typeface="Roboto-Regular.ttf"
                 />
