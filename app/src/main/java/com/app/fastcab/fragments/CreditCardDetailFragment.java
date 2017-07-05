@@ -15,6 +15,7 @@ import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.helpers.DatePickerHelper;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyEditTextView;
+import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 
 import java.util.Calendar;
@@ -33,7 +34,7 @@ public class CreditCardDetailFragment extends BaseFragment implements View.OnCli
     @BindView(R.id.edtCreditCardNum)
     AnyEditTextView edtCreditCardNum;
     @BindView(R.id.edtExpirationDate)
-    AnyEditTextView edtExpirationDate;
+    AnyTextView edtExpirationDate;
     @BindView(R.id.edt_CVV)
     AnyEditTextView edtCVV;
     @BindView(R.id.edtNameOnCard)
@@ -141,7 +142,8 @@ public class CreditCardDetailFragment extends BaseFragment implements View.OnCli
                 break;
             case R.id.UpdateButton:
                 if (validate()){
-                    getDockActivity().popFragment();
+                   getDockActivity().popBackStackTillEntry(0);
+                    getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(),HomeMapFragment.class.getSimpleName());
                 }
                 break;
         }

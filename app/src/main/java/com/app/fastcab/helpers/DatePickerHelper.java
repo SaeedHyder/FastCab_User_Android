@@ -3,6 +3,8 @@ package com.app.fastcab.helpers;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,7 +31,17 @@ public class DatePickerHelper {
         this.dialog.getDatePicker().setMaxDate(max.getTimeInMillis());
         return dialog;
     }
-
+    public DatePickerDialog initDateDialog(Context context, int year, int month, int day, DatePickerDialog.OnDateSetListener dateSetListener){
+        this.dialog = new DatePickerDialog(context, dateSetListener, year, month, day);
+        return dialog;
+    }
+    public DatePickerDialog initDateDialog(Context context, int year, int month, int day, DatePickerDialog.OnDateSetListener dateSetListener, String tag, int minusdays){
+        this.dialog = new DatePickerDialog(context, dateSetListener, year, month, day);
+        Calendar max = Calendar.getInstance();
+        max.set(year,month,day-minusdays);
+        this.dialog.getDatePicker().setMaxDate(max.getTimeInMillis());
+        return dialog;
+    }
     public void showDate() {
         if (this.dialog == null){
             throw  new NullPointerException("Initialize Dialog First");

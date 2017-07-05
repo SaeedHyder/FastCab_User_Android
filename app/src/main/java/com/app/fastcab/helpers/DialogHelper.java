@@ -89,9 +89,9 @@ public class DialogHelper {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.dialog.setContentView(layoutID);
-        Button okbutton = (Button) dialog.findViewById(R.id.btn_No);
+        Button okbutton = (Button) dialog.findViewById(R.id.btn_yes);
         okbutton.setOnClickListener(onokclicklistener);
-        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_yes);
+        Button cancelbutton = (Button) dialog.findViewById(R.id.btn_No);
         cancelbutton.setOnClickListener(oncancelclicklistener);
         return this.dialog;
     }

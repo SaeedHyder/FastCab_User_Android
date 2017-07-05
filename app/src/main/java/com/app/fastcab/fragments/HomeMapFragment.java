@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,11 +166,20 @@ public class HomeMapFragment extends BaseFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewParent = inflater.inflate(R.layout.fragment_home_map, container, false);
+        if (viewParent != null) {
+            ViewGroup parent = (ViewGroup) viewParent.getParent();
+            if (parent != null)
+                parent.removeView(viewParent);
+        }
+        try {
+            viewParent = inflater.inflate(R.layout.fragment_home_map, container, false);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
         getMainActivity().setOnSettingActivateListener(this);
        /* originMarker = new MarkerOptions().position(new LatLng(0, 0));
         destinationMarker = new MarkerOptions().position(new LatLng(0, 0));*/
-
         ButterKnife.bind(this, viewParent);
         return viewParent;
     }
@@ -177,7 +187,8 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initMap();
+        if (map == null)
+            initMap();
 
     }
 
@@ -211,7 +222,7 @@ public class HomeMapFragment extends BaseFragment implements
 
     @Override
     public void onLocationActivateListener() {
-        if (origin == null||origin.getLatlng().equals(new LatLng(0,0)))
+        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
             getCurrentLocation();
     }
 
@@ -342,7 +353,7 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                if (origin == null)
+                if (origin == null||origin.getLatlng().equals(new LatLng(0,0)))
                     if (getMainActivity().statusCheck())
                         getCurrentLocation();
                 return true;
@@ -353,9 +364,9 @@ public class HomeMapFragment extends BaseFragment implements
 // and next place it, for exemple, on bottom right (as Google Maps app)
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
 // position on right bottom
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE );
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
-        rlp.setMargins(0,(int) getResources().getDimension(R.dimen.x100), (int) getResources().getDimension(R.dimen.x100),0 );
+        rlp.setMargins(0, (int) getResources().getDimension(R.dimen.x100), (int) getResources().getDimension(R.dimen.x100), 0);
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
         googlemap.setOnMarkerClickListener(this);
@@ -423,7 +434,7 @@ public class HomeMapFragment extends BaseFragment implements
                 StartPickupActivity(10);
                 break;
             case R.id.btn_ridenow:
-                setupRideNowDialog();
+                setupRatingDialog();
                 break;
             case R.id.btn_ridelater:
                 setupScheduleDialog();
@@ -439,6 +450,23 @@ public class HomeMapFragment extends BaseFragment implements
                 initRideStatus();
                 break;
         }
+    }
+
+    private void setupRatingDialog() {
+        btnRidenow.setVisibility(View.GONE);
+        btnRidelater.setVisibility(View.GONE);
+        final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.fragment_submit_rating);
+        ratingDialog.initRatingDialog(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ratingDialog.hideDialog();
+                setupRideNowDialog();
+            }
+        });
+        ratingDialog.showDialog();
+        getMainActivity().titleBar.hideButtons();
+        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.submit_rating_last));
+
     }
 
     private void setupRideNowDialog() {
@@ -790,7 +818,7 @@ public class HomeMapFragment extends BaseFragment implements
         findingRide.setVisibility(View.GONE);
         btnCancelRide.setVisibility(View.GONE);
         setRoute();
-        BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(),Main_frame,R.layout.bottom_dialog_ride_detail);
+        BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
         rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -802,7 +830,7 @@ public class HomeMapFragment extends BaseFragment implements
         getMainActivity().titleBar.showMessageButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDockActivity().replaceDockableFragment(MessagesFragment.newInstance(),MessagesFragment.class.getSimpleName());
+                getDockActivity().replaceDockableFragment(MessagesFragment.newInstance(), MessagesFragment.class.getSimpleName());
             }
         });
         getMainActivity().titleBar.showCallButton(new View.OnClickListener() {

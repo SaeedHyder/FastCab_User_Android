@@ -151,11 +151,10 @@
         android:id="@+id/btn_cancel_ride"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x40"
-
         android:layout_marginBottom="@dimen/x20"
         android:layout_marginLeft="@dimen/x10"
         android:layout_marginRight="@dimen/x10"
-        android:layout_marginTop="@dimen/x25"
+        android:layout_marginTop="@dimen/x15"
         android:background="@color/button_color"
         android:text="@string/cancel_ride"
         android:textColor="@color/white" />

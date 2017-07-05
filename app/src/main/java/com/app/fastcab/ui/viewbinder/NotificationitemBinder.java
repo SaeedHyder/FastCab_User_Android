@@ -14,12 +14,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class NotificationitemBinder extends ViewBinder<NotificationEnt> {
 
-    private ImageLoader imageLoader;
+
 
     public NotificationitemBinder() {
         super(R.layout.notification_item);
-
-        imageLoader = ImageLoader.getInstance();
     }
 
 
@@ -33,7 +31,7 @@ public class NotificationitemBinder extends ViewBinder<NotificationEnt> {
 
         NotificationitemBinder.ViewHolder viewHolder = (NotificationitemBinder.ViewHolder) view.getTag();
 
-        imageLoader.displayImage("drawable://" +entity.getNotificationlogo(),viewHolder.iv_Notificationlogo);
+        viewHolder.iv_Notificationlogo.setImageResource(entity.getNotificationlogo());
         viewHolder.txt_Notification.setText(entity.getNotificationTxt());
 
 

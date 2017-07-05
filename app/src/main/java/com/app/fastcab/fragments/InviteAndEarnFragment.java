@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.PinEntryEditText;
 import com.app.fastcab.ui.views.TitleBar;
@@ -58,13 +59,21 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
     }
 
     private void setListners() {
-
+        ivMessenger.setOnClickListener(this);
+        ivWhatsup.setOnClickListener(this);
+        txtPinEntry.setFocusable(false);
+        txtPinEntry.setFocusableInTouchMode(false);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.iv_messenger:
+                UIHelper.showShortToastInCenter(getDockActivity(),"Will be implemented in Beta Version");
+                break;
+            case R.id.iv_whatsup:
+                UIHelper.showShortToastInCenter(getDockActivity(),"Will be implemented in Beta Version");
+                break;
         }
     }
 

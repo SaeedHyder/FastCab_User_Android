@@ -118,7 +118,7 @@ public class SideMenuFragment extends BaseFragment {
 
             @Override
             public void onClick(View widget) {
-                UIHelper.showShortToastInCenter(getDockActivity(), "Clicked Event");
+                UIHelper.showShortToastInCenter(getDockActivity(), "Will be implemented in Beta Version");
             }
         });
 
@@ -171,6 +171,7 @@ public class SideMenuFragment extends BaseFragment {
                     logoutdialog.logout(R.layout.logout_dialog, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            logoutdialog.hideDialog();
                             prefHelper.setLoginStatus(false);
                             getDockActivity().popBackStackTillEntry(0);
                             getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), LoginFragment.class.getSimpleName());

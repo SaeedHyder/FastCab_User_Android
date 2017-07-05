@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/x15">
+    android:background="@drawable/backgroung_faded"
+    android:padding="@dimen/x15">
 
     <LinearLayout
         android:id="@+id/ll_notificationToggel"
@@ -19,7 +20,7 @@
             android:layout_weight="0.8"
             android:text="Notifications"
             android:textColor="@color/black"
-            android:textSize="@dimen/x16"
+            android:textSize="@dimen/x18"
             app:typeface="Roboto-Regular.ttf"/>
 
         <ToggleButton
@@ -40,7 +41,7 @@
         android:id="@+id/ll_ChangePassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/x10"
+        android:layout_marginTop="@dimen/x15"
         android:orientation="horizontal">
 
         <com.app.fastcab.ui.views.AnyTextView
@@ -50,7 +51,7 @@
             android:layout_weight="1"
             android:text="Change Password"
             android:textColor="@color/black"
-            android:textSize="@dimen/x16"
+            android:textSize="@dimen/x18"
             app:typeface="Roboto-Regular.ttf"/>
 
     </LinearLayout>

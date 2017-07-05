@@ -71,6 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x10"
+            android:layout_marginBottom="@dimen/x10"
             android:orientation="horizontal">
 
             <com.app.fastcab.ui.views.AnyTextView

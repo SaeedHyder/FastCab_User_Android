@@ -4,8 +4,6 @@
     android:id="@+id/scrollview_bigdaddy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
-
     >
 
     <ImageView
@@ -46,7 +44,7 @@
             android:layout_marginRight="@dimen/x20"
             android:layout_marginTop="@dimen/x2"
             android:background="@android:color/transparent"
-            android:hint="abc@email.com"
+            android:hint="Email Address"
             android:imeOptions="actionNext"
             android:inputType="textEmailAddress"
             android:maxLength="35"
@@ -96,7 +94,7 @@
             android:scrollbarStyle="insideInset"
             android:scrollbars="horizontal"
             android:singleLine="true"
-            android:text="1111111"
+            android:hint="Password"
             android:textColor="@color/dark_grey"
             android:textSize="@dimen/x14"
             app:testType="email"
