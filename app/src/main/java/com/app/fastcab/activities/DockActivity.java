@@ -99,6 +99,19 @@ public abstract class DockActivity extends AppCompatActivity implements
 
     }
 
+    public void replaceSideDockableFragment(BaseFragment frag, String Tag) {
+
+        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+
+        transaction.replace(getDockFrameLayoutId(), frag);
+        transaction.addToBackStack(null)
+               .commit();
+/* .addToBackStack(
+                getSupportFragmentManager().getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST
+                        : null)*/
+
+    }
     public void replaceDockableFragment(BaseFragment frag, boolean isAnimate) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()

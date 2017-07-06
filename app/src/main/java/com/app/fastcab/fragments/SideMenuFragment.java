@@ -140,33 +140,41 @@ public class SideMenuFragment extends BaseFragment {
                     getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.notification))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(NotificationFragment.newInstance(), NotificationFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.profile))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(ProfileFragment.newInstance(), ProfileFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.your_trips))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.payment))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(PaymentMethodFragment.newInstance(), PaymentMethodFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.contact))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(ContactUsFragment.newInstance(), ContactUsFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.about_us))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(AboutUsFragment.newInstance(), AboutUsFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.invite_earn))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(InviteAndEarnFragment.newInstance(), InviteAndEarnFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.arabic_english))) {
                     UIHelper.showShortToastInCenter(getDockActivity(), "Will be Implemented in Beta Version");
-                    getMainActivity().getResideMenu().closeMenu();
+                   // getMainActivity().getResideMenu().closeMenu();
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.settings))) {
                     getMainActivity().getResideMenu().closeMenu();
+                    getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(SettingFragment.newInstance(), SettingFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.logoout))) {
-                    getMainActivity().getResideMenu().closeMenu();
+                   // getMainActivity().getResideMenu().closeMenu();
                     final DialogHelper logoutdialog = new DialogHelper(getDockActivity());
                     logoutdialog.logout(R.layout.logout_dialog, new View.OnClickListener() {
                         @Override
