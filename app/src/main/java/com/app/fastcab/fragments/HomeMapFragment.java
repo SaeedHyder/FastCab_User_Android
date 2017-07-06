@@ -818,7 +818,7 @@ public class HomeMapFragment extends BaseFragment implements
         findingRide.setVisibility(View.GONE);
         btnCancelRide.setVisibility(View.GONE);
         setRoute();
-        BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
+        final BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
         rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -843,6 +843,23 @@ public class HomeMapFragment extends BaseFragment implements
         });
         getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.your_ride));
         rideReaching.showDialog();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.fragment_submit_rating);
+                ratingDialog.initRatingDialog(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rideReaching.hideDialog();
+                        ratingDialog.hideDialog();
+                       getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(),RideFeedbackFragment.class.getSimpleName());
+                    }
+                });
+                ratingDialog.showDialog();
+                getMainActivity().titleBar.hideButtons();
+                getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.rate_title));
+            }
+        }, 10000);
     }
 
     public LatLng translateCoordinates(final double distance, final LatLng origpoint, final double angle) {

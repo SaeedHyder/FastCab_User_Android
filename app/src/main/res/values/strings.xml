@@ -223,6 +223,7 @@
     <string name="submit_rating_last">Rate Your Last Trip</string>
     <string name="setting">Settings</string>
     <string name="date_after_error">Selected Date is After Current Date</string>
+    <string name="rate_title">Rate</string>
 
 
 </resources>

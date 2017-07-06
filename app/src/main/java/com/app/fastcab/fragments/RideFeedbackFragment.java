@@ -1,6 +1,5 @@
 package com.app.fastcab.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -21,9 +20,6 @@ import com.app.fastcab.ui.views.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.app.fastcab.R.id.edtContactUs;
-import static com.app.fastcab.R.id.txt_driving;
 
 /**
  * Created by saeedhyder on 6/29/2017.
@@ -68,10 +64,10 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
     @BindView(R.id.SubmitButton)
     Button SubmitButton;
 
-    Boolean drivingBoolean=false;
-    Boolean navigationBoolean=false;
-    Boolean comfortBoolean=false;
-    Boolean carQualityBoolean=false;
+    Boolean drivingBoolean = false;
+    Boolean navigationBoolean = false;
+    Boolean comfortBoolean = false;
+    Boolean carQualityBoolean = false;
 
 
     public static RideFeedbackFragment newInstance() {
@@ -105,7 +101,7 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
             public boolean onTouch(View v, MotionEvent event) {
 
                 v.getParent().requestDisallowInterceptTouchEvent(true);
-                switch (event.getAction() & MotionEvent.ACTION_MASK){
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
                         v.getParent().requestDisallowInterceptTouchEvent(false);
                         break;
@@ -123,69 +119,68 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
 
 
             case R.id.ll_Driving:
-                if(!drivingBoolean){
+                if (!drivingBoolean) {
                     llDriving.setBackground(getResources().getDrawable(R.drawable.blue_rect));
                     drivingTick.setVisibility(View.VISIBLE);
                     txtDriving.setTextColor(getResources().getColor(R.color.white));
                     txtDriving.setAlpha(1);
-                    drivingBoolean=true;
-                }
-                else {
+                    drivingBoolean = true;
+                } else {
                     llDriving.setBackground(getResources().getDrawable(R.drawable.black_border));
                     drivingTick.setVisibility(View.VISIBLE);
                     txtDriving.setTextColor(getResources().getColor(R.color.black));
-                    drivingBoolean=false;
+                    drivingBoolean = false;
                 }
                 break;
 
             case R.id.ll_Navigation:
-                if(!navigationBoolean){
+                if (!navigationBoolean) {
                     llNavigation.setBackground(getResources().getDrawable(R.drawable.blue_rect));
                     navigationTick.setVisibility(View.VISIBLE);
                     txtNavigation.setTextColor(getResources().getColor(R.color.white));
                     txtNavigation.setAlpha(1);
-                    navigationBoolean=true;
-                }
-                else {
+                    navigationBoolean = true;
+                } else {
                     llNavigation.setBackground(getResources().getDrawable(R.drawable.black_border));
                     navigationTick.setVisibility(View.VISIBLE);
                     txtNavigation.setTextColor(getResources().getColor(R.color.black));
-                    navigationBoolean=false;
+                    navigationBoolean = false;
                 }
                 break;
 
             case R.id.ll_Comfort:
-                if(!comfortBoolean){
+                if (!comfortBoolean) {
                     llComfort.setBackground(getResources().getDrawable(R.drawable.blue_rect));
                     comfortTick.setVisibility(View.VISIBLE);
                     txtComfort.setTextColor(getResources().getColor(R.color.white));
                     txtComfort.setAlpha(1);
-                    comfortBoolean=true;
-                }
-                else {
+                    comfortBoolean = true;
+                } else {
                     llComfort.setBackground(getResources().getDrawable(R.drawable.black_border));
                     comfortTick.setVisibility(View.VISIBLE);
                     txtComfort.setTextColor(getResources().getColor(R.color.black));
-                    comfortBoolean=false;
+                    comfortBoolean = false;
                 }
                 break;
 
             case R.id.ll_CarQuality:
-                if(!carQualityBoolean){
+                if (!carQualityBoolean) {
                     llCarQuality.setBackground(getResources().getDrawable(R.drawable.blue_rect));
                     carQualityTick.setVisibility(View.VISIBLE);
                     txtCarQuality.setTextColor(getResources().getColor(R.color.white));
                     txtCarQuality.setAlpha(1);
-                    carQualityBoolean=true;
-                }
-                else {
+                    carQualityBoolean = true;
+                } else {
                     llCarQuality.setBackground(getResources().getDrawable(R.drawable.black_border));
                     carQualityTick.setVisibility(View.VISIBLE);
                     txtCarQuality.setTextColor(getResources().getColor(R.color.black));
-                    carQualityBoolean=false;
+                    carQualityBoolean = false;
                 }
                 break;
-
+            case R.id.SubmitButton:
+                getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+                break;
         }
     }
 
@@ -194,7 +189,6 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
         titleBar.setSubHeading(getString(R.string.Ride_Feedback));
     }
 
