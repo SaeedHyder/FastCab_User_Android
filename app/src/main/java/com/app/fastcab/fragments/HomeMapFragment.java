@@ -57,6 +57,7 @@ import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -151,7 +152,6 @@ public class HomeMapFragment extends BaseFragment implements
     private List<Polyline> polylinePaths = new ArrayList<>();
     private Date DateSelected;
     private Date TimeSelected;
-
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
     }
@@ -180,7 +180,8 @@ public class HomeMapFragment extends BaseFragment implements
         getMainActivity().setOnSettingActivateListener(this);
        /* originMarker = new MarkerOptions().position(new LatLng(0, 0));
         destinationMarker = new MarkerOptions().position(new LatLng(0, 0));*/
-        ButterKnife.bind(this, viewParent);
+        if (viewParent != null)
+            ButterKnife.bind(this, viewParent);
         return viewParent;
     }
 
@@ -222,15 +223,15 @@ public class HomeMapFragment extends BaseFragment implements
 
     @Override
     public void onLocationActivateListener() {
-        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
-            getCurrentLocation();
+        //if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
+           // getCurrentLocation();
     }
 
     @Override
     public void onNetworkActivateListener() {
         if (origin == null) {
             // getMainActivity().statusCheck();
-            getCurrentLocation();
+          //  getCurrentLocation();
         }
     }
 
@@ -265,7 +266,7 @@ public class HomeMapFragment extends BaseFragment implements
                 .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location,
                         "14 min", R.color.black))));
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destination_icon);
-
+        movemap(origin.getLatlng());
         googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));
 
         for (Route routesingle : route) {
@@ -307,7 +308,7 @@ public class HomeMapFragment extends BaseFragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (origin == null)
+        if (origin == null||origin.getLatlng().equals(new LatLng(0,0)))
             getCurrentLocation();
     }
 
@@ -353,20 +354,20 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                if (origin == null||origin.getLatlng().equals(new LatLng(0,0)))
                     if (getMainActivity().statusCheck())
                         getCurrentLocation();
                 return true;
             }
         });
+        getCurrentLocation();
         View locationButton = map.getView().findViewById(0x2);
 
 // and next place it, for exemple, on bottom right (as Google Maps app)
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
 // position on right bottom
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
-        rlp.setMargins(0, (int) getResources().getDimension(R.dimen.x100), (int) getResources().getDimension(R.dimen.x100), 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.x100));
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
         googlemap.setOnMarkerClickListener(this);
@@ -852,7 +853,7 @@ public class HomeMapFragment extends BaseFragment implements
                     public void onClick(View v) {
                         rideReaching.hideDialog();
                         ratingDialog.hideDialog();
-                       getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(),RideFeedbackFragment.class.getSimpleName());
+                        getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
                     }
                 });
                 ratingDialog.showDialog();
@@ -899,6 +900,7 @@ public class HomeMapFragment extends BaseFragment implements
 
             return;
         }
+
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (location != null) {
             //Getting longitude and latitude
@@ -909,7 +911,7 @@ public class HomeMapFragment extends BaseFragment implements
             customMarkerView.setVisibility(View.VISIBLE);
             llDestination.setVisibility(View.VISIBLE);
             if (Address != null) {
-
+                //  UIHelper.showShortToastInCenter(getDockActivity(),"Seems Like a problem Try Again");
                 origin = new LocationEnt(Address, new LatLng(latitude, longitude));
             } else {
                 origin = new LocationEnt("Un Named Street", new LatLng(latitude, longitude));
@@ -925,7 +927,7 @@ public class HomeMapFragment extends BaseFragment implements
 
         CameraUpdate center =
                 CameraUpdateFactory.newLatLng(latlng);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
 
         googleMap.moveCamera(center);
         googleMap.animateCamera(zoom);
@@ -1021,6 +1023,7 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void initRideStatus() {
+        googleMap.setMyLocationEnabled(false);
         googleMap.clear();
         customMarkerView.setVisibility(View.GONE);
         llDestination.setVisibility(View.GONE);
@@ -1050,7 +1053,7 @@ public class HomeMapFragment extends BaseFragment implements
             customMarkerView.setVisibility(View.GONE);
             llDestination.setVisibility(View.GONE);
             getMainActivity().statusCheck();
-            getCurrentLocation();
+            //getCurrentLocation();
 
         }
 
