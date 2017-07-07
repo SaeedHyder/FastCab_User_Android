@@ -34,9 +34,9 @@
             android:digits="1234567890"
             android:editable="false"
             android:focusable="false"
-            android:focusableInTouchMode="false"
+            android:focusableInTouchMode="true"
             android:imeOptions="actionDone"
-            android:inputType="none"
+            android:inputType="number"
             android:maxLength="4"
             android:padding="10dp"
             android:text="1317"
@@ -45,6 +45,7 @@
             android:textSize="20sp"
             android:visibility="visible"
             app:pinLineColors="@color/transparent" />
+
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_share"

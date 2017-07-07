@@ -164,11 +164,6 @@
             </LinearLayout>
 
 
-
-
-
-
-
         </LinearLayout>
 
 
@@ -178,7 +173,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
-            android:layout_marginTop="@dimen/x20"
+            android:layout_marginTop="@dimen/x30"
+            android:layout_marginBottom="@dimen/x15"
             android:orientation="horizontal">
 
             <ImageView
@@ -193,7 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x20"
-                android:text="Male"
+                android:text="@string/male"
                 android:textColor="@color/black"
                 android:alpha="0.6"
                 android:textSize="@dimen/x15"
@@ -202,19 +198,23 @@
                 />
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/x2"
             android:layout_marginTop="@dimen/x7"
+            android:alpha="0.3"
             android:layout_below="@+id/txt_Notification"
             android:background="@drawable/line" />
+
         <LinearLayout
             android:id="@+id/ll_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
-            android:layout_marginTop="@dimen/x10"
+            android:layout_marginBottom="@dimen/x15"
+            android:layout_marginTop="@dimen/x15"
             android:orientation="horizontal">
 
             <ImageView
@@ -238,19 +238,22 @@
                 />
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/x2"
             android:layout_marginTop="@dimen/x7"
+            android:alpha="0.3"
             android:layout_below="@+id/txt_Notification"
             android:background="@drawable/line" />
+
         <LinearLayout
             android:id="@+id/ll_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
-            android:layout_marginTop="@dimen/x10"
+            android:layout_marginTop="@dimen/x15"
             android:layout_marginBottom="@dimen/x20"
             android:orientation="horizontal">
 

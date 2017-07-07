@@ -5,6 +5,7 @@ import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.app.fastcab.R;
 import com.app.fastcab.activities.PickupSelectionactivity;
@@ -57,6 +59,7 @@ import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -74,7 +77,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -91,6 +93,8 @@ import Modules.Route;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.app.fastcab.R.drawable.location;
 
 /**
  * Created on 6/29/2017.
@@ -144,6 +148,8 @@ public class HomeMapFragment extends BaseFragment implements
     @BindView(R.id.Main_frame)
     CoordinatorLayout Main_frame;
     View viewParent;
+    @BindView(R.id.ll_source_destination)
+    LinearLayout llSourceDestination;
     private LocationEnt origin;
     private LocationEnt destination;
     private List<Marker> originMarkers = new ArrayList<>();
@@ -151,6 +157,7 @@ public class HomeMapFragment extends BaseFragment implements
     private List<Polyline> polylinePaths = new ArrayList<>();
     private Date DateSelected;
     private Date TimeSelected;
+    LocationRequest locationrequest;
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
@@ -187,8 +194,10 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         if (map == null)
             initMap();
+
 
     }
 
@@ -261,18 +270,25 @@ public class HomeMapFragment extends BaseFragment implements
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
-        googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
+
+       /* googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
                 .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location,
                         "14 min", R.color.black))));
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destination_icon);
 
-        googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));
+        googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));*/
 
         for (Route routesingle : route) {
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLACK).
                     width(15);
+
+            googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
+                    .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location,
+                            routesingle.duration.text, R.color.black))));
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destination_icon);
+            googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));
 
             for (int i = 0; i < routesingle.points.size(); i++)
                 polylineOptions.add(routesingle.points.get(i));
@@ -353,12 +369,13 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                if (origin == null||origin.getLatlng().equals(new LatLng(0,0)))
+
                     if (getMainActivity().statusCheck())
                         getCurrentLocation();
                 return true;
             }
         });
+
         View locationButton = map.getView().findViewById(0x2);
 
 // and next place it, for exemple, on bottom right (as Google Maps app)
@@ -472,6 +489,7 @@ public class HomeMapFragment extends BaseFragment implements
     private void setupRideNowDialog() {
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
+        llSourceDestination.setVisibility(View.GONE);
         final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
         dialogHelper.initSelectRideBottomSheet(new View.OnClickListener() {
             @Override
@@ -546,6 +564,7 @@ public class HomeMapFragment extends BaseFragment implements
         btnCancelRide.setVisibility(View.GONE);
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
+        llSourceDestination.setVisibility(View.GONE);
         final BottomSheetDialogHelper scheduleDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
         scheduleDialog.initSelectRideBottomSheet(new View.OnClickListener() {
             @Override
@@ -579,9 +598,9 @@ public class HomeMapFragment extends BaseFragment implements
         final Calendar calendar = Calendar.getInstance();
         final TimePickerHelper timePicker = new TimePickerHelper();
         if (DateSelected != null) {
-            TimePickerDialog dialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+            TimePickerDialog dialog = new TimePickerDialog(getDockActivity(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
-                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     Date date = new Date();
                     if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
                         UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
@@ -600,11 +619,12 @@ public class HomeMapFragment extends BaseFragment implements
                         textView.setPaintFlags(Typeface.BOLD);
                     }
                 }
-            }, DateSelected.getHours(), DateSelected.getMinutes(), false);
+            }, DateSelected.getHours(), DateSelected.getMinutes(), true);
             Date date = new Date();
             if (DateHelper.isSameDay(DateSelected, date))
-                dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
-            dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
+                //   dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
+                //dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
+                dialog.show();
 
            /* timePicker.initTimeDialog(getDockActivity(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), new TimePickerDialog.OnTimeSetListener() {
                 @Override
@@ -777,7 +797,7 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.addMarker(new MarkerOptions().position(translateCoordinates(160, new LatLng(lat, lng), -180)).rotation(90.0f).icon(icon));
         googleMap.addMarker(new MarkerOptions().position(translateCoordinates(190, new LatLng(lat, lng), -180)).icon(icon));
         googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location)));
+                .icon(BitmapDescriptorFactory.fromResource(location)));
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(17);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin.getLatlng(), 17));
         googleMap.animateCamera(zoom);
@@ -852,7 +872,7 @@ public class HomeMapFragment extends BaseFragment implements
                     public void onClick(View v) {
                         rideReaching.hideDialog();
                         ratingDialog.hideDialog();
-                       getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(),RideFeedbackFragment.class.getSimpleName());
+                        getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
                     }
                 });
                 ratingDialog.showDialog();
@@ -923,13 +943,21 @@ public class HomeMapFragment extends BaseFragment implements
 
     private void movemap(LatLng latlng) {
 
-        CameraUpdate center =
-                CameraUpdateFactory.newLatLng(latlng);
+      /*  CameraUpdate center = CameraUpdateFactory.newLatLng(latlng);
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
 
         googleMap.moveCamera(center);
-        googleMap.animateCamera(zoom);
-    }
+        googleMap.animateCamera(zoom);*/
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(latlng.latitude, latlng.longitude))
+                .zoom(13)
+                .bearing(0)
+                .tilt(45)
+                .build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        //googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+}
 
     private void sendRequest(String origin, String destination) {
         try {
@@ -1061,4 +1089,6 @@ public class HomeMapFragment extends BaseFragment implements
     public void onViewClicked() {
         setupScheduleDialog();
     }
+
+
 }

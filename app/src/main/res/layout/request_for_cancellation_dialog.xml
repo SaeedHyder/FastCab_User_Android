@@ -67,7 +67,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/x7"
             android:layout_marginBottom="@dimen/x5"
-            android:text="Ok"
+            android:text="@string/ok"
             android:background="@color/transparent"
             android:textAllCaps="false"
             android:textColor="@color/black"

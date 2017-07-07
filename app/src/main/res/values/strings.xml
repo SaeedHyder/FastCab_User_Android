@@ -224,6 +224,41 @@
     <string name="setting">Settings</string>
     <string name="date_after_error">Selected Date is After Current Date</string>
     <string name="rate_title">Rate</string>
+    <string name="economy">Economy</string>
+    <string name="business">Business</string>
+    <string name="vip">Vip</string>
+    <string name="are_you_sure_you_want_to_cancel_ridee">Are you sure you want to cancel ride?</string>
+    <string name="current_password">Current Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="credit_card_number">Credit Card Number</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="cvv">CVV</string>
+    <string name="name_appearing_on_card">Name Appearing On Card</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="male">Male</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zip_code">Zip Code</string>
+    <string name="abc_email_com">abc@email.com</string>
+    <string name="cash_on_delivery">Cash On Delivery</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="email">Email</string>
+    <string name="current_address">Current Address</string>
+    <string name="Mobile_Number">Mobile Number</string>
+    <string name="dob">Date Of Birth</string>
+    <string name="Fare">Fare</string>
+    <string name="Past">Past</string>
+    <string name="Upcoming">Upcoming</string>
+    <string name="Send">Send</string>
+    <string name="Ride">Ride</string>
+    <string name="TimeDate">Time/Date</string>
+    <string name="Tip">Tip</string>
+    <string name="Promo_Gift_Code">Promo/Gift Code</string>
+    <string name="Enter_a_promo">Enter a promo/gift code</string>
+    <string name="ok">Ok</string>
+    <string name="type">Type</string>
 
 
 </resources>

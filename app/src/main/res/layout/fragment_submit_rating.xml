@@ -155,7 +155,7 @@
                             android:layout_toEndOf="@+id/imageView_destination"
                             android:alpha="0.5"
                             android:gravity="start"
-                            android:text="Destination Location"
+                            android:text="@string/destination_location"
                             android:textColor="@color/black"
                             android:textSize="@dimen/x10"
                             app:typeface="Roboto-Regular.ttf" />
@@ -202,7 +202,7 @@
                         android:layout_marginLeft="@dimen/x20"
                         android:alpha="0.5"
                         android:gravity="center"
-                        android:text="Fare"
+                        android:text="@string/Fare"
                         android:textColor="@color/black"
                         android:textSize="@dimen/x14"
                         app:typeface="Roboto-Regular.ttf" />
@@ -271,52 +271,52 @@
                     android:text="@string/submit_rating"
                     android:textColor="@color/white"
                     android:textSize="@dimen/x16" />
-<!--
-<<<<<<< HEAD
-=======
-            <com.app.fastcab.ui.views.AnyTextView
-                android:id="@+id/txtRateDriver"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x20"
-                android:layout_marginTop="@dimen/x10"
-                android:layout_weight="0.1"
-                android:text="@string/rate_driver"
-                android:textColor="@color/button_color"
-                android:textSize="@dimen/x15"
-                android:gravity="center"
-                app:typeface="Roboto-Regular.ttf"
-                />
-            <com.app.fastcab.ui.views.CustomRatingBar
-                android:id="@+id/rbAddRating"
-                android:layout_width="@dimen/x200"
-                android:layout_height="0dp"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginLeft="@dimen/x98"
-                android:layout_marginRight="@dimen/x98"
-                android:layout_marginBottom="@dimen/x10"
-                android:layout_weight="0.4"
-                android:visibility="visible"
-                app:maxStars="5"
-                android:isIndicator="true"
-                app:starOff="@drawable/star_unfilled"
-                app:starOn="@drawable/star_filled"
-                app:starPadding="@dimen/x8"
-                app:stars="0" />
+                <!--
+                <<<<<<< HEAD
+                =======
+                            <com.app.fastcab.ui.views.AnyTextView
+                                android:id="@+id/txtRateDriver"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/x20"
+                                android:layout_marginTop="@dimen/x10"
+                                android:layout_weight="0.1"
+                                android:text="@string/rate_driver"
+                                android:textColor="@color/button_color"
+                                android:textSize="@dimen/x15"
+                                android:gravity="center"
+                                app:typeface="Roboto-Regular.ttf"
+                                />
+                            <com.app.fastcab.ui.views.CustomRatingBar
+                                android:id="@+id/rbAddRating"
+                                android:layout_width="@dimen/x200"
+                                android:layout_height="0dp"
+                                android:layout_gravity="top|center_horizontal"
+                                android:layout_marginLeft="@dimen/x98"
+                                android:layout_marginRight="@dimen/x98"
+                                android:layout_marginBottom="@dimen/x10"
+                                android:layout_weight="0.4"
+                                android:visibility="visible"
+                                app:maxStars="5"
+                                android:isIndicator="true"
+                                app:starOff="@drawable/star_unfilled"
+                                app:starOn="@drawable/star_filled"
+                                app:starPadding="@dimen/x8"
+                                app:stars="0" />
 
-            <Button
-                android:id="@+id/SubmitButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x16"
-                android:layout_marginRight="@dimen/x16"
-                android:layout_marginBottom="@dimen/x10"
-                android:layout_gravity="bottom"
-                android:background="@color/button_color"
-                android:text="@string/submit_rating"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x16"/>
->>>>>>> 0771f201fe0bfacfb69b194cdf7a11748db2fa31-->
+                            <Button
+                                android:id="@+id/SubmitButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/x16"
+                                android:layout_marginRight="@dimen/x16"
+                                android:layout_marginBottom="@dimen/x10"
+                                android:layout_gravity="bottom"
+                                android:background="@color/button_color"
+                                android:text="@string/submit_rating"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/x16"/>
+                >>>>>>> 0771f201fe0bfacfb69b194cdf7a11748db2fa31-->
 
 
             </LinearLayout>

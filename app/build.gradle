@@ -22,6 +22,8 @@ repositories {
 }
 
 
+
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.0'
@@ -108,7 +110,10 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:3.0.0'
     //Material Wheel View
     compile project(':materialwheelview')
-
+    //image Chooser library
+    compile 'com.kbeanie:image-chooser-library:1.5.8@aar'
+    //picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
 
 
