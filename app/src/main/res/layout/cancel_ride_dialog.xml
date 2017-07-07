@@ -40,7 +40,7 @@
             android:layout_marginTop="@dimen/x30"
             android:layout_marginBottom="@dimen/x9"
             android:gravity="center_horizontal"
-            android:text="Are you sure you want to cancel ride?"
+            android:text="@string/are_you_sure_you_want_to_cancel_ridee"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="@dimen/x17"

@@ -148,6 +148,12 @@ public class BottomSheetDialogHelper {
     }
 
     private void setButtonChanger() {
+        AnyTextView economyInactivetxt=(AnyTextView)dialog.findViewById(R.id.txt_economy);
+        final AnyTextView economyactivetxt=(AnyTextView)dialog.findViewById(R.id.txteconomyActive);
+        AnyTextView businesstxt=(AnyTextView)dialog.findViewById(R.id.txt_business);
+        final AnyTextView businessActivetxt=(AnyTextView)dialog.findViewById(R.id.txt_businessActive);
+        AnyTextView viptxt=(AnyTextView)dialog.findViewById(R.id.txt_vip);
+        final AnyTextView vipActivetxt=(AnyTextView)dialog.findViewById(R.id.txt_vipActive);
         ImageView economyinactive = (ImageView)dialog.findViewById(R.id.iv_economyCar);
         final ImageView economyactive = (ImageView)dialog.findViewById(R.id.iv_economyCarActive);
         ImageView businessinactive = (ImageView)dialog.findViewById(R.id.iv_businessCar);
@@ -158,8 +164,11 @@ public class BottomSheetDialogHelper {
             @Override
             public void onClick(View v) {
                 economyactive.setVisibility(View.VISIBLE);
+                economyactivetxt.setVisibility(View.VISIBLE);
                 vipactive.setVisibility(View.GONE);
+                vipActivetxt.setVisibility(View.GONE);
                 businessactive.setVisibility(View.GONE);
+                businessActivetxt.setVisibility(View.GONE);
             }
         });
         economyactive.setOnClickListener(new View.OnClickListener() {
@@ -178,8 +187,11 @@ public class BottomSheetDialogHelper {
             @Override
             public void onClick(View v) {
                 economyactive.setVisibility(View.GONE);
+                economyactivetxt.setVisibility(View.GONE);
                 vipactive.setVisibility(View.GONE);
+                vipActivetxt.setVisibility(View.GONE);
                 businessactive.setVisibility(View.VISIBLE);
+                businessActivetxt.setVisibility(View.VISIBLE);
             }
         });
         vipactive.setOnClickListener(new View.OnClickListener() {
@@ -192,8 +204,11 @@ public class BottomSheetDialogHelper {
             @Override
             public void onClick(View v) {
                 economyactive.setVisibility(View.GONE);
+                economyactivetxt.setVisibility(View.GONE);
                 vipactive.setVisibility(View.VISIBLE);
+                vipActivetxt.setVisibility(View.VISIBLE);
                 businessactive.setVisibility(View.GONE);
+                businessActivetxt.setVisibility(View.GONE);
             }
         });
 

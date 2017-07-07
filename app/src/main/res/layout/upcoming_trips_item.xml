@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.06"
                 android:alpha="0.5"
-                android:text="Ride"
+                android:text="@string/Ride"
                 android:textColor="@color/black"
                 app:typeface="Roboto-Regular.ttf" />
 
@@ -51,7 +51,7 @@
                 android:alpha="0.5"
                 android:gravity="right"
                 android:paddingRight="@dimen/x3"
-                android:text="Estimated Fare"
+                android:text="@string/estimated_fare"
                 android:textColor="@color/black"
                 app:typeface="Roboto-Regular.ttf" />
 
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
                 android:alpha="0.5"
-                android:text="Time/Date"
+                android:text="@string/TimeDate"
                 android:textColor="@color/black"
                 app:typeface="Roboto-Regular.ttf" />
 
@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.13"
                 android:alpha="0.5"
-                android:text="Type"
+                android:text="@string/type"
                 android:textColor="@color/black"
                 app:typeface="Roboto-Regular.ttf" />
 

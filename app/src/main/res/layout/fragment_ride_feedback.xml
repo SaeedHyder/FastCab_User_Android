@@ -88,7 +88,7 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="Navigation"
+                    android:text="@string/navigation"
                     android:textColor="@color/black"
                     android:textSize="@dimen/x17"
                     app:typeface="Roboto-Regular.ttf" />
@@ -124,19 +124,18 @@
                 android:layout_marginRight="@dimen/x8"
                 android:layout_weight="1"
                 android:background="@drawable/black_border"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <com.app.fastcab.ui.views.AnyTextView
                     android:id="@+id/txt_comfort"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginBottom="@dimen/x6"
                     android:layout_marginTop="@dimen/x6"
                     android:alpha="0.6"
                     android:gravity="center"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
                     android:text="@string/comfort"
                     android:textColor="@color/black"
                     android:textSize="@dimen/x17"
@@ -146,11 +145,11 @@
                     android:id="@+id/comfortTick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/driving_tick"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
-                    android:visibility="gone"
-                    android:layout_marginEnd="16dp" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/driving_tick"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 

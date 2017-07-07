@@ -89,12 +89,18 @@
             android:orientation="vertical"
             android:padding="@dimen/x10">
 
+            <LinearLayout
+                android:id="@+id/ll_source_destination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/blue_border_rect"
+                android:orientation="vertical">
+
             <RelativeLayout
                 android:id="@+id/layout_schedule"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/x50"
                 android:layout_gravity="center_vertical"
-                android:background="@color/white"
                 android:visibility="gone">
 
                 <ImageView
@@ -154,7 +160,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/x50"
                 android:layout_gravity="center_vertical"
-                android:background="@color/white"
                 android:visibility="gone">
 
                 <ImageView
@@ -215,7 +220,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/x50"
                 android:layout_gravity="center_vertical"
-                android:background="@color/white"
                 android:visibility="gone">
 
                 <ImageView
@@ -268,6 +272,7 @@
                     android:textSize="@dimen/x12"
                     app:typeface="Roboto-Regular.ttf" />
             </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_destination"
@@ -275,7 +280,7 @@
                 android:layout_height="@dimen/x60"
                 android:layout_below="@+id/ll_pickup"
                 android:layout_centerHorizontal="true"
-                android:background="@color/white"
+                android:background="@drawable/blue_border_rect"
                 android:orientation="horizontal"
                 android:visibility="visible">
 

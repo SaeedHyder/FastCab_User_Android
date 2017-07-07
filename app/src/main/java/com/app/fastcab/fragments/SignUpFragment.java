@@ -19,14 +19,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.app.fastcab.R;
+import com.app.fastcab.activities.MainActivity;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.helpers.CameraHelper;
 import com.app.fastcab.helpers.DatePickerHelper;
 import com.app.fastcab.helpers.UIHelper;
+import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,11 +44,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.app.fastcab.R.id.imageView;
+
 /**
  * Created by saeedhyder on 6/20/2017.
  */
 
-public class SignUpFragment extends BaseFragment implements View.OnClickListener {
+public class SignUpFragment extends BaseFragment implements View.OnClickListener,ImageSetter {
 
     @BindView(R.id.CircularImageSharePop)
     CircleImageView CircularImageSharePop;
@@ -123,6 +131,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @BindView(R.id.ll_bottomText)
     LinearLayout llBottomText;
     private Date DateSelected;
+    File profilePic;
+    String profilePath;
+    MainActivity mainActivity;
 
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
@@ -143,8 +154,13 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         setDatePickerVariables();
         spGender();
         setListners();
+        getMainActivity().setImageSetter(this);
+
 
     }
+
+
+
 
     private void setListners() {
         edtDateOfBirth.setOnClickListener(this);
@@ -153,6 +169,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         txtTermCond.setTypeface(null, Typeface.BOLD);
         txtClickHere.setOnClickListener(this);
         txtTermCond.setOnClickListener(this);
+        ivCamera.setOnClickListener(this);
     }
 
     private boolean isvalidate() {
@@ -343,7 +360,34 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             case R.id.txt_TermCond:
                 getDockActivity().replaceDockableFragment(TermAndConditionFragment.newInstance(), "TermAndConditionFragment");
                 break;
+            case R.id.iv_camera:
+                CameraHelper.uploadPhotoDialog(getMainActivity());
+                break;
         }
+
+    }
+
+    @Override
+    public void setImage(String imagePath) {
+        if (imagePath != null) {
+            //profilePic = new File(imagePath);
+            profilePic = new File(imagePath);
+            profilePath=imagePath;
+            Picasso.with(getDockActivity())
+                    .load("file:///" +imagePath)
+                    .into(CircularImageSharePop);
+          //  ImageLoader.getInstance().displayImage(
+               //     "file:///" +imagePath, CircularImageSharePop);
+        }
+    }
+
+    @Override
+    public void setFilePath(String filePath) {
+
+    }
+
+    @Override
+    public void setVideo(String videoPath, String VideoThumbail) {
 
     }
 }

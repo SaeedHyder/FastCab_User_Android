@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgroung_faded">
+  >
 
     <LinearLayout
         android:id="@+id/ll_messages"
@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/x30"
             android:layout_weight="0.2"
-            android:text="Send"
+            android:text="@string/Send"
             android:textColor="@color/white"
             android:background="@drawable/send_btn"/>
 

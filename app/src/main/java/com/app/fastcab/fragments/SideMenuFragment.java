@@ -174,7 +174,7 @@ public class SideMenuFragment extends BaseFragment {
                     getDockActivity().popBackStackTillEntry(0);
                     getDockActivity().replaceDockableFragment(SettingFragment.newInstance(), SettingFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.logoout))) {
-                   // getMainActivity().getResideMenu().closeMenu();
+                    getMainActivity().getResideMenu().closeMenu();
                     final DialogHelper logoutdialog = new DialogHelper(getDockActivity());
                     logoutdialog.logout(R.layout.logout_dialog, new View.OnClickListener() {
                         @Override

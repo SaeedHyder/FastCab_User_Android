@@ -95,6 +95,7 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
         llNavigation.setOnClickListener(this);
         llComfort.setOnClickListener(this);
         llCarQuality.setOnClickListener(this);
+        SubmitButton.setOnClickListener(this);
 
         edtComments.setOnTouchListener(new View.OnTouchListener() {
 

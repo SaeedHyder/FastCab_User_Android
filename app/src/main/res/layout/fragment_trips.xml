@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/button_color"
-            android:text="Past"
+            android:text="@string/Past"
             android:textColor="@color/white"/>
 
         <Button
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/white"
-            android:text="Upcoming"
+            android:text="@string/Upcoming"
             android:textColor="@color/black"/>
 
     </LinearLayout>
