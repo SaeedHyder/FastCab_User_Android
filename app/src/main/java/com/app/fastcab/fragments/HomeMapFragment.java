@@ -271,7 +271,7 @@ public class HomeMapFragment extends BaseFragment implements
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
 
-       /* googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
+   /*    *//* googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
                 .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location,
                         "14 min", R.color.black))));
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destination_icon);
@@ -280,8 +280,8 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));
 =======
 
-        googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));*/
->>>>>>> f89e593cd6182c6ba33fabb11b9f8726c1c4d18b
+        googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));*//*
+>>>>>>> f89e593cd6182c6ba33fabb11b9f8726c1c4d18b*/
 
         for (Route routesingle : route) {
             PolylineOptions polylineOptions = new PolylineOptions().
@@ -374,20 +374,13 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-<<<<<<< HEAD
-=======
 
->>>>>>> f89e593cd6182c6ba33fabb11b9f8726c1c4d18b
                     if (getMainActivity().statusCheck())
                         getCurrentLocation();
                 return true;
             }
         });
-<<<<<<< HEAD
-        getCurrentLocation();
-=======
-
->>>>>>> f89e593cd6182c6ba33fabb11b9f8726c1c4d18b
+       // getCurrentLocation();
         View locationButton = map.getView().findViewById(0x2);
 
 // and next place it, for exemple, on bottom right (as Google Maps app)
@@ -956,11 +949,7 @@ public class HomeMapFragment extends BaseFragment implements
 
     private void movemap(LatLng latlng) {
 
-<<<<<<< HEAD
-        CameraUpdate center =
-                CameraUpdateFactory.newLatLng(latlng);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
-=======
+
       /*  CameraUpdate center = CameraUpdateFactory.newLatLng(latlng);
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
 >>>>>>> f89e593cd6182c6ba33fabb11b9f8726c1c4d18b
