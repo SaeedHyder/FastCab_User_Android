@@ -213,6 +213,7 @@ public class PickupSelectionactivity extends DockActivity implements
                 madapter.getFilter().filter(s.toString());
             }
         });
+        
         recentPlaces.setOnItemClickListener(this);
     }
 
