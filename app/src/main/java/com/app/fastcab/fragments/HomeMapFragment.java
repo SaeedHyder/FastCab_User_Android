@@ -87,9 +87,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import Modules.DirectionFinder;
-import Modules.DirectionFinderListener;
-import Modules.Route;
+import DirectionModule.DirectionFinder;
+import DirectionModule.DirectionFinderListener;
+import DirectionModule.Route;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
