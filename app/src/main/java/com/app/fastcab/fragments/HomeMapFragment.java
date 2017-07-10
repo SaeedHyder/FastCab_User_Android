@@ -59,7 +59,6 @@ import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -72,6 +71,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -93,6 +93,7 @@ import Modules.Route;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.fastcab.R.drawable.location;
 
@@ -144,7 +145,8 @@ public class HomeMapFragment extends BaseFragment implements
     AnyTextView txtScheduleText;
     @BindView(R.id.layout_schedule)
     RelativeLayout layoutSchedule;
-
+    @BindView(R.id.btn_location)
+    CircleImageView btnLocation;
     @BindView(R.id.Main_frame)
     CoordinatorLayout Main_frame;
     View viewParent;
@@ -157,6 +159,10 @@ public class HomeMapFragment extends BaseFragment implements
     private List<Polyline> polylinePaths = new ArrayList<>();
     private Date DateSelected;
     private Date TimeSelected;
+    private TitleBar titleBar;
+
+    private boolean mIsTitleBarChanged = false;
+    private boolean isCurrentLocationMove;
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
@@ -165,7 +171,7 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //BaseApplication.getBus().register(this);
 
     }
 
@@ -222,24 +228,30 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
-        titleBar.hideButtons();
-        titleBar.showMenuButton();
-        titleBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        titleBar.setSubHeading("Home");
+        this.titleBar = titleBar;
+
+        if (mIsTitleBarChanged) {
+            adjustTitleBar();
+        } else {
+            titleBar.hideButtons();
+            titleBar.showMenuButton();
+            titleBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            titleBar.setSubHeading("Home");
+        }
 
     }
 
     @Override
     public void onLocationActivateListener() {
-        //if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
-           // getCurrentLocation();
+        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
+            getCurrentLocation();
     }
 
     @Override
     public void onNetworkActivateListener() {
         if (origin == null) {
             // getMainActivity().statusCheck();
-          //  getCurrentLocation();
+            //  getCurrentLocation();
         }
     }
 
@@ -294,13 +306,34 @@ public class HomeMapFragment extends BaseFragment implements
                             routesingle.duration.text, R.color.black))));
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destination_icon);
             googleMap.addMarker(new MarkerOptions().position(destination.getLatlng()).icon(icon));
-
+            moveRouteMap();
             for (int i = 0; i < routesingle.points.size(); i++)
                 polylineOptions.add(routesingle.points.get(i));
             //moveMap(null);
             polylinePaths.add(googleMap.addPolyline(polylineOptions));
 
         }
+    }
+
+    private void moveRouteMap() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(origin.getLatlng());
+        builder.include(destination.getLatlng());
+        LatLngBounds bounds = builder.build();
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+        googleMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
+            @Override
+            public void onFinish() {
+                //   CameraUpdate zout = CameraUpdateFactory.zoomBy(-3.0f);
+                //  googleMap.animateCamera(zout);
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
     }
 
     private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String title, int ColorID) {
@@ -328,7 +361,7 @@ public class HomeMapFragment extends BaseFragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (origin == null||origin.getLatlng().equals(new LatLng(0,0)))
+        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
             getCurrentLocation();
     }
 
@@ -370,7 +403,7 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onMapReady(GoogleMap googlemap) {
         googleMap = googlemap;
-        googleMap.setMyLocationEnabled(true);
+       /* googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
@@ -391,7 +424,7 @@ public class HomeMapFragment extends BaseFragment implements
         rlp.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.x100));
         googleMap.setOnMarkerDragListener(this);
         googleMap.setOnMapLongClickListener(this);
-        googlemap.setOnMarkerClickListener(this);
+        googlemap.setOnMarkerClickListener(this);*/
         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -443,7 +476,7 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
 
-    @OnClick({R.id.txt_pick_text, R.id.btn_done_selection, R.id.txt_destination_text, R.id.ll_destination, R.id.btn_ridenow, R.id.btn_ridelater, R.id.btn_cancel_ride, R.id.txt_locationtype})
+    @OnClick({R.id.txt_pick_text, R.id.btn_done_selection, R.id.txt_destination_text, R.id.btn_location, R.id.ll_destination, R.id.btn_ridenow, R.id.btn_ridelater, R.id.btn_cancel_ride, R.id.txt_locationtype})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.txt_pick_text:
@@ -456,9 +489,11 @@ public class HomeMapFragment extends BaseFragment implements
                 StartPickupActivity(10);
                 break;
             case R.id.btn_ridenow:
+                movemap(origin.getLatlng());
                 setupRatingDialog();
                 break;
             case R.id.btn_ridelater:
+                movemap(origin.getLatlng());
                 setupScheduleDialog();
 
                 break;
@@ -471,12 +506,18 @@ public class HomeMapFragment extends BaseFragment implements
             case R.id.btn_done_selection:
                 initRideStatus();
                 break;
+            case R.id.btn_location:
+                if (getMainActivity().statusCheck())
+                    getCurrentLocation();
+                break;
         }
     }
 
     private void setupRatingDialog() {
+
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
+        llSourceDestination.setVisibility(View.GONE);
         final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.fragment_submit_rating);
         ratingDialog.initRatingDialog(new View.OnClickListener() {
             @Override
@@ -486,8 +527,8 @@ public class HomeMapFragment extends BaseFragment implements
             }
         });
         ratingDialog.showDialog();
-        getMainActivity().titleBar.hideButtons();
-        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.submit_rating_last));
+        titleBar.hideButtons();
+        titleBar.setSubHeading(getResources().getString(R.string.submit_rating_last));
 
     }
 
@@ -495,6 +536,7 @@ public class HomeMapFragment extends BaseFragment implements
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.GONE);
+
         final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
         dialogHelper.initSelectRideBottomSheet(new View.OnClickListener() {
             @Override
@@ -509,9 +551,9 @@ public class HomeMapFragment extends BaseFragment implements
             }
         });
         dialogHelper.showDialog();
-        getMainActivity().titleBar.hideButtons();
-        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
-        getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
+        titleBar.hideButtons();
+        titleBar.setSubHeading(getResources().getString(R.string.home));
+        titleBar.showBackButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 btnRidenow.setVisibility(View.VISIBLE);
@@ -580,12 +622,13 @@ public class HomeMapFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 scheduleDialog.hideDialog();
+                getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
             }
         }, R.string.schedule_ride);
-        getMainActivity().titleBar.hideButtons();
-        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.schedule_new_trip));
-        getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
+        titleBar.hideButtons();
+        titleBar.setSubHeading(getResources().getString(R.string.schedule_new_trip));
+        titleBar.showBackButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 btnRidenow.setVisibility(View.VISIBLE);
@@ -715,6 +758,7 @@ public class HomeMapFragment extends BaseFragment implements
                 canceldialog.hideDialog();
             }
         });
+        canceldialog.setCancelable(false);
         canceldialog.showDialog();
     }
 
@@ -734,12 +778,17 @@ public class HomeMapFragment extends BaseFragment implements
 
         ReasonCancelListViewAdapter adapter = new ReasonCancelListViewAdapter(getDockActivity(), arrayList, true);
         listView.setAdapter(adapter);
+
         okbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+               /* Fragment frg = null;
+                frg = getMainActivity().getSupportFragmentManager().findFragmentByTag(HomeMapFragment.class.getSimpleName());*/
                 getDockActivity().popBackStackTillEntry(0);
-                getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+                getMainActivity().initFragment();
+               /* getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());*/
             }
         });
 
@@ -766,9 +815,9 @@ public class HomeMapFragment extends BaseFragment implements
             }
         });
         estimateFareDialog.showDialog();
-        getMainActivity().titleBar.hideButtons();
-        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
-        getMainActivity().titleBar.showBackButton(new View.OnClickListener() {
+        titleBar.hideButtons();
+        titleBar.setSubHeading(getResources().getString(R.string.home));
+        titleBar.showBackButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 estimateFareDialog.hideDialog();
@@ -789,9 +838,9 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void showFindRideViews() {
-        getMainActivity().titleBar.hideButtons();
-        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.home));
-        getMainActivity().titleBar.showMenuButton();
+        titleBar.hideButtons();
+        titleBar.setSubHeading(getResources().getString(R.string.home));
+        titleBar.showMenuButton();
         final Circle mCircle;
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.car);
         double lat = origin.getLatlng().latitude;
@@ -838,6 +887,13 @@ public class HomeMapFragment extends BaseFragment implements
 
     }
 
+    /*@com.squareup.otto.Subscribe
+    public void onBackFromMessage(String isBack){
+        if(isBack.equals("true")){
+            adjustTitleBar();
+        }
+    }*/
+
     private void ShowrideReachingDialog() {
         googleMap.clear();
         findingRide.setVisibility(View.GONE);
@@ -850,25 +906,11 @@ public class HomeMapFragment extends BaseFragment implements
                 setcanceldialog();
             }
         });
-        getMainActivity().titleBar.hideButtons();
-        getMainActivity().titleBar.showMenuButton();
-        getMainActivity().titleBar.showMessageButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDockActivity().replaceDockableFragment(MessagesFragment.newInstance(), MessagesFragment.class.getSimpleName());
-            }
-        });
-        getMainActivity().titleBar.showCallButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel: 999888555222"));
-                startActivity(intent);
-            }
-        });
-        getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.your_ride));
+
         rideReaching.showDialog();
-        new Handler().postDelayed(new Runnable() {
+        mIsTitleBarChanged = true;
+        adjustTitleBar();
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.fragment_submit_rating);
@@ -881,10 +923,30 @@ public class HomeMapFragment extends BaseFragment implements
                     }
                 });
                 ratingDialog.showDialog();
-                getMainActivity().titleBar.hideButtons();
-                getMainActivity().titleBar.setSubHeading(getResources().getString(R.string.rate_title));
+                titleBar.hideButtons();
+                titleBar.setSubHeading(getResources().getString(R.string.rate_title));
             }
-        }, 10000);
+        }, 10000);*/
+    }
+
+    public void adjustTitleBar() {
+        titleBar.hideButtons();
+        titleBar.showMenuButton();
+        titleBar.showMessageButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDockActivity().replaceDockableFragment(MessagesFragment.newInstance(), MessagesFragment.class.getSimpleName());
+            }
+        });
+        titleBar.showCallButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel: 999888555222"));
+                startActivity(intent);
+            }
+        });
+        titleBar.setSubHeading(getResources().getString(R.string.your_ride));
     }
 
     public LatLng translateCoordinates(final double distance, final LatLng origpoint, final double angle) {
@@ -935,14 +997,16 @@ public class HomeMapFragment extends BaseFragment implements
             customMarkerView.setVisibility(View.VISIBLE);
             llDestination.setVisibility(View.VISIBLE);
             if (Address != null) {
-                //  UIHelper.showShortToastInCenter(getDockActivity(),"Seems Like a problem Try Again");
+
                 origin = new LocationEnt(Address, new LatLng(latitude, longitude));
             } else {
                 origin = new LocationEnt("Un Named Street", new LatLng(latitude, longitude));
             }
-
+            isCurrentLocationMove = true;
             movemap(origin.getLatlng());
             // moveMap(new LatLng(latitude, longitude));
+        } else {
+            UIHelper.showShortToastInCenter(getDockActivity(), "Can't get your Location Try getting using Location Button");
         }
 
     }
@@ -963,9 +1027,32 @@ public class HomeMapFragment extends BaseFragment implements
                 .bearing(0)
                 .tilt(45)
                 .build();
+        if (isCurrentLocationMove) {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            isCurrentLocationMove = false;
+        } else {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        /*if (isCurrentLocationMove) {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    customMarkerView.setVisibility(View.VISIBLE);
+                    llDestination.setVisibility(View.VISIBLE);
+                    isCurrentLocationMove = false;
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+        }else
+        {*/
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        // }
         //googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-}
+    }
 
     private void sendRequest(String origin, String destination) {
         try {
@@ -1011,16 +1098,10 @@ public class HomeMapFragment extends BaseFragment implements
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
-                .getWindow().getDecorView());
-    }
-
     private void initdestinationLocationSelect() {
         googleMap.clear();
-        googleMap.setMyLocationEnabled(false);
+        // googleMap.setMyLocationEnabled(false);
+        btnLocation.setVisibility(View.GONE);
         customMarkerView.setVisibility(View.VISIBLE);
         imgIcon.setImageResource(R.drawable.destination_icon);
         txtLocationtype.setVisibility(View.GONE);
@@ -1057,7 +1138,8 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void initRideStatus() {
-        googleMap.setMyLocationEnabled(false);
+        btnLocation.setVisibility(View.GONE);
+        //googleMap.setMyLocationEnabled(false);
         googleMap.clear();
         customMarkerView.setVisibility(View.GONE);
         llDestination.setVisibility(View.GONE);
@@ -1066,7 +1148,7 @@ public class HomeMapFragment extends BaseFragment implements
         layoutpick.setVisibility(View.VISIBLE);
         btnRidenow.setVisibility(View.VISIBLE);
         btnRidelater.setVisibility(View.VISIBLE);
-        googleMap.setMyLocationEnabled(false);
+
         if (destination != null) {
             txtDestinationText.setText(destination.getAddress());
         }
@@ -1079,20 +1161,26 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
+                .getWindow().getDecorView());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
                 .getWindow().getDecorView());
-        if (origin == null) {
+        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0))) {
             customMarkerView.setVisibility(View.GONE);
             llDestination.setVisibility(View.GONE);
             getMainActivity().statusCheck();
             //getCurrentLocation();
-
         }
 
-    }
 
+    }
 
     @OnClick(R.id.txt_Schedule_text)
     public void onViewClicked() {

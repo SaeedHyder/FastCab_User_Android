@@ -7,13 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.app.fastcab.BaseApplication;
 import com.app.fastcab.R;
 import com.app.fastcab.entities.MessagesEnt;
-import com.app.fastcab.entities.NotificationEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.ui.adapters.ArrayListAdapter;
 import com.app.fastcab.ui.viewbinder.MessagesBinder;
-import com.app.fastcab.ui.viewbinder.NotificationitemBinder;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 
@@ -63,11 +62,11 @@ public class MessagesFragment extends BaseFragment implements View.OnClickListen
 
     private void setMessages() {
 
-        userCollection =new ArrayList<>();
+        userCollection = new ArrayList<>();
 
-        userCollection.add(new MessagesEnt("Please Wait","03362912002"));
-        userCollection.add(new MessagesEnt("Please Wait","03362912002"));
-        userCollection.add(new MessagesEnt("Please Wait","03362912002"));
+        userCollection.add(new MessagesEnt("Please Wait", "03362912002"));
+        userCollection.add(new MessagesEnt("Please Wait", "03362912002"));
+        userCollection.add(new MessagesEnt("Please Wait", "03362912002"));
 
 
         if (userCollection.size() <= 0) {
@@ -91,8 +90,6 @@ public class MessagesFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -104,9 +101,20 @@ public class MessagesFragment extends BaseFragment implements View.OnClickListen
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
-        titleBar.showBackButton();
+        titleBar.showBackButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDockActivity().popFragment();
+            }
+        });
         titleBar.setSubHeading(getString(R.string.Messages));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+        //BaseApplication.getBus().post("true");
+
+    }
 }

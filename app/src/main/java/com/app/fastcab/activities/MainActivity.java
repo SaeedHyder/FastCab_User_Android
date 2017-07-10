@@ -89,6 +89,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
 
     private String sideMenuType;
     private String sideMenuDirection;
+    private AlertDialog alert;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,21 +173,17 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
 
     private void buildAlertMessageNoGps(final int StringResourceID, final String IntentType, final int requestCode) {
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(super.getDockActivity());
-        AlertDialog alert = builder.create();
-        final AlertDialog finalAlert = alert;
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getDockActivity());
         builder
                 .setMessage(getString(StringResourceID))
                 .setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.gps_yes), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         if (StringResourceID == R.string.gps_question) {
-                            finalAlert.dismiss();
                             dialog.cancel();
                             turnLocationOn(null);
                             dialog.dismiss();
                         } else {
-                            finalAlert.dismiss();
                             dialog.cancel();
                             startImpIntent(dialog, IntentType, requestCode);
                             dialog.dismiss();
@@ -197,13 +194,18 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
                 })
                 .setNegativeButton(getResources().getString(R.string.gps_no), new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        finalAlert.dismiss();
+                        dialog.dismiss();
                         dialog.cancel();
-                        finalAlert.dismiss();
+
                     }
                 });
-        alert = builder.create();
-        alert.show();
+        if (alert == null) {
+            alert = builder.create();
+
+        }
+
+        if (!alert.isShowing())
+            alert.show();
 
     }
 
@@ -283,14 +285,17 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
             }
         }
 
+
         if (requestCode == LocationResultCode) {
             settingActivateListener.onLocationActivateListener();
         }
 
         if (requestCode == WifiResultCode) {
-
             settingActivateListener.onNetworkActivateListener();
 
+        }
+        if (requestCode == 1000){
+            settingActivateListener.onLocationActivateListener();
         }
 
 

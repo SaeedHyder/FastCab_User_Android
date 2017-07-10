@@ -8,6 +8,7 @@
         android:id="@+id/radio_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checked="true"
         android:buttonTint="@color/button_color"/>
     <TextView
         android:id="@+id/label"

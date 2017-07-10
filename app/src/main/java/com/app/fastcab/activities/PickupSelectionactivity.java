@@ -352,8 +352,10 @@ public class PickupSelectionactivity extends DockActivity implements
                                 if (edtDestination.requestFocus()) {
                                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                                 }
+                                edtPickup.setText(origin.getAddress());
                                 // edtDestination.requestFocus();
                             } else {
+                                edtPickup.setText(origin.getAddress());
                                 sendResult();
                             }
                         } else {
@@ -362,8 +364,10 @@ public class PickupSelectionactivity extends DockActivity implements
                                 if (edtPickup.requestFocus()) {
                                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                                 }
+                                edtDestination.setText(destination.getAddress());
 
                             } else
+                                edtDestination.setText(destination.getAddress());
                                 sendResult();
                         }
                         // Do your stuff

@@ -11,9 +11,14 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.L;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
+
 import io.fabric.sdk.android.Fabric;
 
 public class BaseApplication extends Application {
+
+	private static Bus bus;
 	
 	@Override
 	public void onCreate() {
@@ -22,6 +27,12 @@ public class BaseApplication extends Application {
 		Fabric.with(this, new Crashlytics());
 		MultiDex.install(this);
 		initImageLoader();
+
+		bus = new Bus(ThreadEnforcer.MAIN);
+	}
+
+	public static Bus getBus(){
+		return bus;
 	}
 	
 	public void initImageLoader() {

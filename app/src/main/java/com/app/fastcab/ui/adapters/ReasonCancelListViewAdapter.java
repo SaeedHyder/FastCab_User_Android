@@ -17,13 +17,12 @@ import java.util.ArrayList;
  */
 
 public class ReasonCancelListViewAdapter extends BaseAdapter {
+    String item;
     private Context context;
     private ArrayList<String> arrayList;
     private LayoutInflater inflater;
     private boolean isListView;
     private int selectedPosition = -1;
-    String item;
-
 
 
     public ReasonCancelListViewAdapter(Context context, ArrayList<String> arrayList, boolean isListView) {
@@ -64,9 +63,13 @@ public class ReasonCancelListViewAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
 
         viewHolder.label.setText(arrayList.get(i));
+        if (selectedPosition == -1 && i == 0) {
+            viewHolder.radioButton.setChecked(true);
 
+        } else {
+            viewHolder.radioButton.setChecked(i == selectedPosition);
+        }
         //check the radio button if both position and selectedPosition matches
-        viewHolder.radioButton.setChecked(i == selectedPosition);
 
         //Set the position tag to both radio button and label
         viewHolder.radioButton.setTag(i);
@@ -109,16 +112,11 @@ public class ReasonCancelListViewAdapter extends BaseAdapter {
        // adapter.add(Updateditem);
     }*/
 
-    private class ViewHolder {
-        private TextView label;
-        private RadioButton radioButton;
-    }
-
     //Return the selectedPosition item
     public String getSelectedItem() {
         if (selectedPosition != -1) {
             // Toast.makeText(context, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
-            item=arrayList.get(selectedPosition);
+            item = arrayList.get(selectedPosition);
             return arrayList.get(selectedPosition);
         }
 
@@ -132,5 +130,10 @@ public class ReasonCancelListViewAdapter extends BaseAdapter {
             selectedPosition = -1;//after removing selectedPosition set it back to -1
             notifyDataSetChanged();
         }
+    }
+
+    private class ViewHolder {
+        private TextView label;
+        private RadioButton radioButton;
     }
 }
