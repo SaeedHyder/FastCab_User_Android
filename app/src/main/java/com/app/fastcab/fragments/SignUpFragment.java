@@ -238,6 +238,10 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             }
             edtConfirmPassword.setError("confirm password does not match");
             return false;
+        }
+        else if (prefHelper.isTermAccepted()){
+            UIHelper.showShortToastInCenter(getDockActivity(),"Accept Term And Condition");
+            return false;
         } else {
             return true;
         }
