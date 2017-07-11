@@ -28,7 +28,7 @@
         android:layout_alignBottom="@+id/iv_Notificationlogo"
         android:gravity="center_vertical"
         android:text="Dummy Data Dummy Data"
-        android:textColor="@color/black"
+        android:textColor="@color/light_grey"
         android:textSize="@dimen/x15"
         app:typeface="Roboto-Regular.ttf" />
 

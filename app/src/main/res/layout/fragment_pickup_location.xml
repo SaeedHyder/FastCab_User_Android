@@ -205,7 +205,8 @@
             <com.app.fastcab.ui.views.ExpandedListView
                 android:id="@+id/recent_places"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"

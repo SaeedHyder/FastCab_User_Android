@@ -683,9 +683,9 @@ public class HomeMapFragment extends BaseFragment implements
                         textView.setPaintFlags(Typeface.BOLD);
                     }
                 }
-            }, DateSelected.getHours(), DateSelected.getMinutes(), true);
+            }, DateSelected.getHours(), DateSelected.getMinutes(), false);
             Date date = new Date();
-            if (DateHelper.isSameDay(DateSelected, date))
+            //if (DateHelper.isSameDay(DateSelected, date))
                 //   dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
                 //dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
                 dialog.show();
@@ -1129,6 +1129,8 @@ public class HomeMapFragment extends BaseFragment implements
 
     private void initdestinationLocationSelect() {
         googleMap.clear();
+        llSourceDestination.setVisibility(View.VISIBLE);
+        titleBar.showMenuButton();
         // googleMap.setMyLocationEnabled(false);
         btnLocation.setVisibility(View.GONE);
         customMarkerView.setVisibility(View.VISIBLE);
@@ -1168,6 +1170,8 @@ public class HomeMapFragment extends BaseFragment implements
 
     private void initRideStatus() {
         btnLocation.setVisibility(View.GONE);
+        llSourceDestination.setVisibility(View.VISIBLE);
+        titleBar.showMenuButton();
         //googleMap.setMyLocationEnabled(false);
         googleMap.clear();
         customMarkerView.setVisibility(View.GONE);

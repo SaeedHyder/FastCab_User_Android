@@ -112,6 +112,7 @@
     <string name="API_KEY">AIzaSyBwD4E_JR99kKFXGaIRzq5p5caDw_KJvRU</string>
 
     <string name="enter_username">Enter UserName</string>
+    <string name="enter_contactUs">Enter Contact Us</string>
     <string name="enter_currentAddress">Enter Current Address</string>
     <string name="enter_zipCode">Enter Zip Code</string>
     <string name="enter_dob">Enter Date Of Birth</string>

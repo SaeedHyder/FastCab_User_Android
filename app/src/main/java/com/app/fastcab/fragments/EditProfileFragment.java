@@ -16,9 +16,13 @@ import android.widget.Spinner;
 
 import com.app.fastcab.R;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.helpers.CameraHelper;
+import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.TitleBar;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +38,7 @@ import static com.app.fastcab.R.id.edtemail;
  * Created by saeedhyder on 6/21/2017.
  */
 
-public class EditProfileFragment extends BaseFragment implements View.OnClickListener {
+public class EditProfileFragment extends BaseFragment implements View.OnClickListener,ImageSetter {
 
     @BindView(R.id.CircularImageSharePop)
     CircleImageView CircularImageSharePop;
@@ -90,6 +94,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     LinearLayout llSignUpFields;
     @BindView(R.id.sv_signup)
     ScrollView svSignup;
+    File profilePic;
+    String profilePath;
 
     public static EditProfileFragment newInstance() {
         return new EditProfileFragment();
@@ -109,6 +115,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
         setListners();
         spGender();
+        getMainActivity().setImageSetter(this);
     }
 
     private void spGender() {
@@ -124,6 +131,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
 
     private void setListners() {
+
+        ivCamera.setOnClickListener(this);
 
     }
 
@@ -198,12 +207,34 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //  case R.id.btn_submit:
-            // getDockActivity().replaceDockableFragment(HomeFragment.newInstance(),HomeFragment.class.getSimpleName());
-            // break;
+            case R.id.iv_camera:
+                CameraHelper.uploadPhotoDialog(getMainActivity());
+                break;
         }
     }
 
 
+    @Override
+    public void setImage(String imagePath) {
+        if (imagePath != null) {
+            //profilePic = new File(imagePath);
+            profilePic = new File(imagePath);
+            profilePath=imagePath;
+            Picasso.with(getDockActivity())
+                    .load("file:///" +imagePath)
+                    .into(CircularImageSharePop);
+            //  ImageLoader.getInstance().displayImage(
+            //     "file:///" +imagePath, CircularImageSharePop);
+        }
+    }
 
+    @Override
+    public void setFilePath(String filePath) {
+
+    }
+
+    @Override
+    public void setVideo(String videoPath, String VideoThumbail) {
+
+    }
 }
