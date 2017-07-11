@@ -23,6 +23,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 
+@SuppressWarnings("deprecation")
 public class AutoCompleteLocation extends AutoCompleteTextView {
 
   private Drawable mCloseIcon;
