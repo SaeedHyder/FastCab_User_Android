@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.app.fastcab.R;
@@ -65,6 +66,12 @@ public class TermAndConditionFragment extends BaseFragment {
         bindTextview();
         final float scale = this.getResources().getDisplayMetrics().density;
         setCheckboxPadding(scale);
+        chkRead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                prefHelper.setTermStatus(isChecked);
+            }
+        });
     }
 
     private void bindTextview() {

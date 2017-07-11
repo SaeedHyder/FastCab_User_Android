@@ -10,7 +10,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     private Context context;
 
     protected static final String KEY_LOGIN_STATUS = "islogin";
-
+    protected static final String KEY_Term_STATUS = "isAgree";
     private static final String FILENAME = "preferences";
 
 
@@ -30,5 +30,11 @@ public class BasePreferenceHelper extends PreferenceHelper {
         return getBooleanPreference(context, FILENAME, KEY_LOGIN_STATUS);
     }
 
+    public void setTermStatus( boolean isAgree ) {
+        putBooleanPreference( context, FILENAME, KEY_LOGIN_STATUS, isAgree );
+    }
 
+    public boolean isTermAccepted() {
+        return getBooleanPreference(context, FILENAME, KEY_Term_STATUS);
+    }
 }

@@ -13,8 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dip"
+        android:alpha="0.5"
         android:layout_marginLeft="@dimen/x10"
-        android:textAppearance="?android:attr/textAppearanceListItem"
+
         android:textAlignment="viewStart"
         android:layout_toEndOf="@+id/img_icon" />
 
