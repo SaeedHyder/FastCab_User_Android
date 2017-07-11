@@ -325,8 +325,8 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
             @Override
             public void onFinish() {
-                //   CameraUpdate zout = CameraUpdateFactory.zoomBy(-3.0f);
-                //  googleMap.animateCamera(zout);
+                   CameraUpdate zout = CameraUpdateFactory.zoomBy(-0.5f);
+                  googleMap.animateCamera(zout);
             }
 
             @Override
