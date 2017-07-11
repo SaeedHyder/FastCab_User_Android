@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-android:fillViewport="true"
+    android:fillViewport="true"
     android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -178,51 +178,76 @@ android:fillViewport="true"
                 android:alpha="0.4"
                 android:background="@drawable/line_gradient" />
 
-                <ListView
-                    android:id="@+id/recent_places"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                  />
+            <com.app.fastcab.ui.views.ExpandedListView
+                android:id="@+id/new_places"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
+            <!-- <View
 
+                 android:layout_width="match_parent"
+                 android:visibility="visible"
+                 android:layout_height="@dimen/x5"
+                 android:layout_marginBottom="@dimen/x10"
+                 android:layout_marginLeft="@dimen/x20_"
+                 android:layout_marginRight="@dimen/x20_"
+                 android:layout_marginTop="@dimen/x10"
+                 android:alpha="0.4"
+                 android:background="@drawable/line_gradient" />
+             --><View
+            android:id="@+id/dividerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:alpha="0.4"
+            android:background="@drawable/line"
+            android:visibility="gone" />
+
+            <com.app.fastcab.ui.views.ExpandedListView
+                android:id="@+id/recent_places"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x1"
-                android:layout_marginLeft="@dimen/x50"
                 android:alpha="0.4"
                 android:background="@drawable/line" />
+
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-               android:id="@+id/layout_map_location"
-                android:orientation="vertical" android:layout_width="match_parent"
+                android:id="@+id/layout_map_location"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:orientation="vertical"
                 android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/img_icon"
                     android:layout_width="@dimen/x30"
                     android:layout_height="@dimen/x30"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/set_location"
-                    android:layout_marginLeft="@dimen/x15"
-                    android:scaleType="centerInside"/>
-                <TextView android:id="@+id/text1"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/set_location" />
+
+                <TextView
+                    android:id="@+id/text1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dip"
-                    android:layout_marginLeft="@dimen/x10"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
-                    android:textAlignment="viewStart"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_marginTop="6dip"
+                    android:layout_toEndOf="@+id/img_icon"
                     android:text="@string/set_location_on_map"
-                    android:layout_toEndOf="@+id/img_icon" />
+                    android:textAlignment="viewStart"
+                    android:textAppearance="?android:attr/textAppearanceListItem" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/x1"
-                    android:layout_marginLeft="@dimen/x50"
+                    android:layout_below="@+id/text1"
+
                     android:layout_marginTop="@dimen/x20"
                     android:alpha="0.4"
-                    android:layout_below="@+id/text1"
                     android:background="@drawable/line" />
 
             </RelativeLayout>

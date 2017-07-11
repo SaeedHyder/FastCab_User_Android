@@ -32,7 +32,7 @@ public class AutocompleteBinder extends ViewBinder<AutocompletePrediction> {
         ViewHolder viewHolder = (ViewHolder)view.getTag();
         viewHolder. text1.setText(entity.getPrimaryText(new StyleSpan(Typeface.BOLD)));
         viewHolder.  text2.setText(entity.getSecondaryText(new StyleSpan(Typeface.BOLD)));
-        viewHolder.imgIcon.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.adress_recent));
+        viewHolder.imgIcon.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.set_location));
     }
 
     public static class ViewHolder extends BaseViewHolder {

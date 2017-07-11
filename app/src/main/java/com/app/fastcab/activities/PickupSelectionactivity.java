@@ -23,8 +23,11 @@ import com.app.fastcab.R;
 import com.app.fastcab.entities.LocationEnt;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.OnReceivePlaceListener;
+import com.app.fastcab.ui.adapters.ArrayListAdapter;
 import com.app.fastcab.ui.adapters.AutoCompleteListAdapter;
+import com.app.fastcab.ui.viewbinder.RecentPlaceViewBinder;
 import com.app.fastcab.ui.viewbinders.abstracts.AutocompleteBinder;
+import com.app.fastcab.ui.views.ExpandedListView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -33,7 +36,10 @@ import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,19 +65,26 @@ public class PickupSelectionactivity extends DockActivity implements
     TextInputLayout inputLayoutDestination;
     @BindView(R.id.ll_destination)
     RelativeLayout llDestination;
+    @BindView(R.id.new_places)
+    ExpandedListView newPlaces;
     @BindView(R.id.recent_places)
-    ListView recentPlaces;
+    ExpandedListView recentPlaces;
     @BindView(R.id.header_main)
     TitleBar headerMain;
     @BindView(R.id.layout_map_location)
     RelativeLayout maplayout;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.dividerView)
+    View dividerView;
     private AutoCompleteListAdapter madapter;
     private GoogleApiClient mGoogleApiClient;
     private LocationEnt origin;
     private LocationEnt destination;
     private String currentFocus = "";
+
+    ArrayListAdapter<LocationEnt> recentPlacesAdapter;
+    ArrayList<LocationEnt> userCollection;
 
     /**** Method for Setting the Height of the ListView dynamically.
      **** Hack to fix the issue of not showing all the items of the ListView
@@ -102,6 +115,9 @@ public class PickupSelectionactivity extends DockActivity implements
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_pickup_location);
+
+        recentPlacesAdapter = new ArrayListAdapter<LocationEnt>(this, new RecentPlaceViewBinder());
+
         ButterKnife.bind(this);
         if (getIntent() != null) {
             Bundle b = getIntent().getBundleExtra("route");
@@ -111,10 +127,37 @@ public class PickupSelectionactivity extends DockActivity implements
             }
         }
         bindData();
+        setRecentPlacesData();
         setAutocomplete();
         setListeners();
         settitlebar();
     }
+
+    private void setRecentPlacesData() {
+
+        userCollection = new ArrayList<>();
+
+        userCollection.add(new LocationEnt("Iqra University, Karachi 75500, Pakistan", new LatLng(24.837734199999996, 67.0812502)));
+        userCollection.add(new LocationEnt("Axact House,82B Khayban-e-Ittehad Rd, Karachi 75500, Pakistan", new LatLng(24.8276911, 67.0742583)));
+        userCollection.add(new LocationEnt("Ocean Mall,Khayaban-e-Iqbal, Karachi 75500, Pakistan", new LatLng(24.823853300000003, 67.0358956)));
+
+        bindRecentPlacesData(userCollection);
+    }
+
+    private void bindRecentPlacesData(ArrayList<LocationEnt> userCollection) {
+
+        recentPlacesAdapter.clearList();
+        recentPlaces.setAdapter(recentPlacesAdapter);
+        recentPlacesAdapter.addAll(userCollection);
+        recentPlacesAdapter.notifyDataSetChanged();
+        //  setListViewHeightBasedOnChildren(recentPlaces);
+
+        recentPlaces.setOnTouchListener(null);
+        recentPlaces.setScrollContainer(false);
+        recentPlaces.setExpanded(true);
+        recentPlaces.setOnItemClickListener(this);
+    }
+
 
     private void bindData() {
         if (origin != null && origin.getAddress() != null) {
@@ -147,6 +190,7 @@ public class PickupSelectionactivity extends DockActivity implements
         setResult(RESULT_OK, i);
         finish();
     }
+
     private void sendEmptyResult(Boolean setEmpty) {
 
         finish();
@@ -193,7 +237,7 @@ public class PickupSelectionactivity extends DockActivity implements
             @Override
             public void afterTextChanged(Editable s) {
                 currentFocus = "origin";
-                madapter.getFilter().filter(s.toString());
+                madapter.getFilter().filter(s);
             }
         });
         edtDestination.addTextChangedListener(new TextWatcher() {
@@ -210,11 +254,11 @@ public class PickupSelectionactivity extends DockActivity implements
             @Override
             public void afterTextChanged(Editable s) {
                 currentFocus = "destination";
-                madapter.getFilter().filter(s.toString());
+                madapter.getFilter().filter(s);
             }
         });
-        
-        recentPlaces.setOnItemClickListener(this);
+
+        newPlaces.setOnItemClickListener(this);
     }
 
     private void setAutocomplete() {
@@ -222,13 +266,13 @@ public class PickupSelectionactivity extends DockActivity implements
                 //.addApi(AppIndex.API)
                 .build();
         madapter = new AutoCompleteListAdapter(this, mGoogleApiClient, null, null, new AutocompleteBinder(), this);
-        recentPlaces.setAdapter(madapter);
+        newPlaces.setAdapter(madapter);
 
         //enables filtering for the contents of the given ListView
-        recentPlaces.setTextFilterEnabled(true);
+        newPlaces.setTextFilterEnabled(true);
 
     }
-   
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -322,12 +366,33 @@ public class PickupSelectionactivity extends DockActivity implements
     @Override
     public void OnPlaceReceive() {
         madapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(recentPlaces);
+        newPlaces.setOnTouchListener(null);
+        newPlaces.setScrollContainer(false);
+        newPlaces.setExpanded(true);
+        if(madapter.getCount()>0)
+        {
+            dividerView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            dividerView.setVisibility(View.GONE);
+        }
+
+        // setListViewHeightBasedOnChildren(newPlaces);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        getPlace(position);
+        switch (parent.getId()) {
+            case R.id.new_places:
+                getPlace(position);
+                break;
+            case R.id.recent_places:
+                LocationEnt ent = (LocationEnt) recentPlacesAdapter.getItem(position);
+                setPlace(ent.getAddress(), ent.getLatlng());
+                break;
+        }
+
     }
 
     private void getPlace(int position) {
@@ -335,6 +400,7 @@ public class PickupSelectionactivity extends DockActivity implements
         final AutocompletePrediction item = madapter.getItem(position);
         if (item != null) {
             final String placeId = item.getPlaceId();
+
             PendingResult<PlaceBuffer> placeResult =
                     Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -347,30 +413,7 @@ public class PickupSelectionactivity extends DockActivity implements
                     if (places.getCount() > 0) {
                         // Got place details
                         final Place place = places.get(0);
-                        if (currentFocus.equals("origin")) {
-                            origin = new LocationEnt(place.getAddress().toString(), place.getLatLng());
-                            if (destination == null) {
-                                if (edtDestination.requestFocus()) {
-                                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                                }
-                                edtPickup.setText(origin.getAddress());
-                                // edtDestination.requestFocus();
-                            } else {
-                                edtPickup.setText(origin.getAddress());
-                                sendResult();
-                            }
-                        } else {
-                            destination = new LocationEnt(place.getAddress().toString(), place.getLatLng());
-                            if (origin == null) {
-                                if (edtPickup.requestFocus()) {
-                                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                                }
-                                edtDestination.setText(destination.getAddress());
-
-                            } else
-                                edtDestination.setText(destination.getAddress());
-                                sendResult();
-                        }
+                        setPlace(place.getAddress().toString(), place.getLatLng());
                         // Do your stuff
                     } else {
                         // No place details
@@ -383,5 +426,32 @@ public class PickupSelectionactivity extends DockActivity implements
 
         }
 
+    }
+
+    private void setPlace(String address, LatLng latLng) {
+        if (currentFocus.equals("origin")) {
+            origin = new LocationEnt(address, latLng);
+            if (destination == null) {
+                if (edtDestination.requestFocus()) {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+                edtPickup.setText(origin.getAddress());
+                // edtDestination.requestFocus();
+            } else {
+                edtPickup.setText(origin.getAddress());
+                sendResult();
+            }
+        } else {
+            destination = new LocationEnt(address, latLng);
+            if (origin == null) {
+                if (edtPickup.requestFocus()) {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+                edtDestination.setText(destination.getAddress());
+
+            } else
+                edtDestination.setText(destination.getAddress());
+            sendResult();
+        }
     }
 }

@@ -59,6 +59,9 @@ import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -152,6 +155,7 @@ public class HomeMapFragment extends BaseFragment implements
     View viewParent;
     @BindView(R.id.ll_source_destination)
     LinearLayout llSourceDestination;
+    Location Mylocation;
     private LocationEnt origin;
     private LocationEnt destination;
     private List<Marker> originMarkers = new ArrayList<>();
@@ -160,7 +164,6 @@ public class HomeMapFragment extends BaseFragment implements
     private Date DateSelected;
     private Date TimeSelected;
     private TitleBar titleBar;
-
     private boolean mIsTitleBarChanged = false;
     private boolean isCurrentLocationMove;
 
@@ -327,6 +330,8 @@ public class HomeMapFragment extends BaseFragment implements
             public void onFinish() {
                 //   CameraUpdate zout = CameraUpdateFactory.zoomBy(-3.0f);
                 //  googleMap.animateCamera(zout);
+                CameraUpdate zout = CameraUpdateFactory.zoomBy(-0.5f);
+                googleMap.animateCamera(zout);
             }
 
             @Override
@@ -460,8 +465,9 @@ public class HomeMapFragment extends BaseFragment implements
             addresses = geocoder.getFromLocation(lat, lng, 1);
             if (addresses.size() > 0) {
                 String address = addresses.get(0).getAddressLine(0);
+                String Province = addresses.get(0).getAddressLine(1);
                 String country = addresses.get(0).getCountryName();
-                return address + ", " + country;
+                return address + ", " + Province + ", " + country;
             } else {
 
                 return "Address Not Available";
@@ -474,7 +480,6 @@ public class HomeMapFragment extends BaseFragment implements
 
         return null;
     }
-
 
     @OnClick({R.id.txt_pick_text, R.id.btn_done_selection, R.id.txt_destination_text, R.id.btn_location, R.id.ll_destination, R.id.btn_ridenow, R.id.btn_ridelater, R.id.btn_cancel_ride, R.id.txt_locationtype})
     public void onViewClicked(View view) {
@@ -631,15 +636,23 @@ public class HomeMapFragment extends BaseFragment implements
         titleBar.showBackButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnRidenow.setVisibility(View.VISIBLE);
-                btnRidelater.setVisibility(View.VISIBLE);
-                layoutSchedule.setVisibility(View.GONE);
+                hideScheduleViews();
                 scheduleDialog.hideDialog();
 
 
             }
         });
         scheduleDialog.showDialog();
+    }
+
+    private void hideScheduleViews() {
+        btnRidenow.setVisibility(View.VISIBLE);
+        btnRidelater.setVisibility(View.VISIBLE);
+        layoutSchedule.setVisibility(View.GONE);
+        llSourceDestination.setVisibility(View.VISIBLE);
+        titleBar.hideButtons();
+        titleBar.showMenuButton();
+        titleBar.setSubHeading(getResources().getString(R.string.home));
     }
 
     private void initTimePicker(final TextView textView) {
@@ -887,13 +900,6 @@ public class HomeMapFragment extends BaseFragment implements
 
     }
 
-    /*@com.squareup.otto.Subscribe
-    public void onBackFromMessage(String isBack){
-        if(isBack.equals("true")){
-            adjustTitleBar();
-        }
-    }*/
-
     private void ShowrideReachingDialog() {
         googleMap.clear();
         findingRide.setVisibility(View.GONE);
@@ -977,38 +983,58 @@ public class HomeMapFragment extends BaseFragment implements
         promodialog.setCancelable(false);
         promodialog.showDialog();
     }
-
+     private LocationListener listener;
     private void getCurrentLocation() {
 
-        if (googleMap != null)
+
+        if (googleMap != null) {
             googleMap.clear();
+        }
         if (ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (location != null) {
-            //Getting longitude and latitude
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-            // origin = new LatLng(latitude, longitude);
-            String Address = getCurrentAddress(latitude, longitude);
-            customMarkerView.setVisibility(View.VISIBLE);
-            llDestination.setVisibility(View.VISIBLE);
-            if (Address != null) {
-
-                origin = new LocationEnt(Address, new LatLng(latitude, longitude));
-            } else {
-                origin = new LocationEnt("Un Named Street", new LatLng(latitude, longitude));
-            }
-            isCurrentLocationMove = true;
-            movemap(origin.getLatlng());
-            // moveMap(new LatLng(latitude, longitude));
-        } else {
-            UIHelper.showShortToastInCenter(getDockActivity(), "Can't get your Location Try getting using Location Button");
+        if (Mylocation == null) {
+            locationRequest.setInterval(1000);
         }
+        listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location mlocation) {
+                if (mlocation != null) {
+                    Mylocation = mlocation;
+                    listener = null;
+                    if (Mylocation != null) {
+                        //Getting longitude and latitude
+                        longitude = Mylocation.getLongitude();
+                        latitude = Mylocation.getLatitude();
+                        // origin = new LatLng(latitude, longitude);
+                        String Address = getCurrentAddress(latitude, longitude);
+                        customMarkerView.setVisibility(View.VISIBLE);
+                        llDestination.setVisibility(View.VISIBLE);
+                        if (Address != null) {
 
+                            origin = new LocationEnt(Address, new LatLng(latitude, longitude));
+                        } else {
+                            origin = new LocationEnt("Un Named Street", new LatLng(latitude, longitude));
+                        }
+                        isCurrentLocationMove = true;
+                        movemap(origin.getLatlng());
+                        // moveMap(new LatLng(latitude, longitude));
+                    } else {
+                        UIHelper.showShortToastInCenter(getDockActivity(), "Can't get your Location Try getting using Location Button");
+                    }
+                }
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+           LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,listener );
+
+            //location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+        }
     }
 
     private void movemap(LatLng latlng) {

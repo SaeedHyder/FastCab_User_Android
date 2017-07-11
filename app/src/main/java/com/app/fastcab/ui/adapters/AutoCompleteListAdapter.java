@@ -53,7 +53,6 @@ public class AutoCompleteListAdapter extends ArrayAdapter<AutocompletePrediction
         mBounds = bounds;
         mPlaceFilter = filter;
         this.viewBinder = viewBinder;
-
     }
 
     public void setBounds(LatLngBounds bounds) {
