@@ -107,7 +107,7 @@ dependencies {
     //Show Hide Password
     compile 'com.github.scottyab:showhidepasswordedittext:0.8'
 
-    compile 'com.wdullaer:materialdatetimepicker:3.0.0'
+    //compile 'com.wdullaer:materialdatetimepicker:3.0.0'
     //Material Wheel View
     compile project(':materialwheelview')
     //image Chooser library
