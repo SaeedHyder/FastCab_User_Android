@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
@@ -7,8 +7,11 @@
     android:background="?android:windowBackground"
     android:clickable="false"
     android:orientation="vertical"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-
+    app:layout_behavior="com.app.fastcab.ui.views.ExpandedBottomSheetBehavior">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <LinearLayout
         android:id="@+id/textLayout"
         android:layout_width="match_parent"
@@ -282,5 +285,5 @@
         android:text="@string/request_go"
         android:textColor="@color/white"
         android:textSize="@dimen/x16" />
-
 </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

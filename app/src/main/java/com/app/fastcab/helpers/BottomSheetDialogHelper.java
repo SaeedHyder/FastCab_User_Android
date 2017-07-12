@@ -1,21 +1,18 @@
 package com.app.fastcab.helpers;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.fastcab.R;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.app.fastcab.ui.views.ExpandedBottomSheetBehavior;
 
 import java.util.Date;
 import java.util.List;
@@ -27,19 +24,20 @@ import io.blackbox_vision.wheelview.view.WheelView;
  */
 
 public class BottomSheetDialogHelper {
-   // private BottomSheetDialog dialog;
-    private LinearLayout dialog;
+    ExpandedBottomSheetBehavior bottomSheetBehavior;
+    // private BottomSheetDialog dialog;
+    private NestedScrollView dialog;
     private Context context;
-    BottomSheetBehavior bottomSheetBehavior;
     private CoordinatorLayout mainParent;
-    public BottomSheetDialogHelper(Context context, CoordinatorLayout mainParent,int LayoutID) {
+
+    public BottomSheetDialogHelper(Context context, CoordinatorLayout mainParent, int LayoutID) {
         this.context = context;
         this.mainParent = mainParent;
         LayoutInflater inflater = LayoutInflater.from(context);
-        dialog = (LinearLayout) inflater.inflate(LayoutID, null, false);
+        dialog = (NestedScrollView) inflater.inflate(LayoutID, null, false);
         mainParent.addView(dialog);
-        CoordinatorLayout.LayoutParams params =(CoordinatorLayout.LayoutParams) dialog.getLayoutParams();
-        params.setBehavior(new BottomSheetBehavior());
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) dialog.getLayoutParams();
+        params.setBehavior(new ExpandedBottomSheetBehavior());
         dialog.requestLayout();
         dialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,82 +45,81 @@ public class BottomSheetDialogHelper {
 
             }
         });
-        // setupRideNowDialog();
-// init the bottom sheet behavior
-        bottomSheetBehavior = BottomSheetBehavior.from(dialog);
 
-// change the state of the bottom sheet
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
-// set the peek height
-        bottomSheetBehavior.setPeekHeight((int)context.getResources().getDimension(R.dimen.x100));
-
-// set hideable or not
-        bottomSheetBehavior.setHideable(false);
+        bottomSheetBehavior = (ExpandedBottomSheetBehavior) ExpandedBottomSheetBehavior.from(dialog);
+      //  bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setAllowUserDragging(false);
+        bottomSheetBehavior.setPeekHeight(0);
     }
-    public void initRatingDialog(View.OnClickListener onClickListener){
-        bottomSheetBehavior.setPeekHeight((int)context.getResources().getDimension(R.dimen.x150));
-        Button submit = (Button)dialog.findViewById(R.id.SubmitButton);
+
+    public void initRatingDialog(View.OnClickListener onClickListener) {
+        bottomSheetBehavior.setPeekHeight((int) context.getResources().getDimension(R.dimen.x150));
+        Button submit = (Button) dialog.findViewById(R.id.SubmitButton);
         submit.setOnClickListener(onClickListener);
     }
+
     public void initRideDetailBottomSheet(View.OnClickListener oncancelclicklistener) {
+        bottomSheetBehavior.setAllowUserDragging(false);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel_ride);
         cancelbutton.setOnClickListener(oncancelclicklistener);
     }
+
     public void initSelectRideBottomSheet(View.OnClickListener promoclicklistener,
-                                            View.OnClickListener oncancelclicklistener) {
-       // this.dialog.setContentView(layoutID);
+                                          View.OnClickListener oncancelclicklistener) {
+        // this.dialog.setContentView(layoutID);
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
-        AnyTextView promocode = (AnyTextView)dialog.findViewById(R.id.txt_promoCode);
+        AnyTextView promocode = (AnyTextView) dialog.findViewById(R.id.txt_promoCode);
         promocode.setOnClickListener(promoclicklistener);
         cancelbutton.setOnClickListener(oncancelclicklistener);
         setButtonChanger();
-       // dialog.setCanceledOnTouchOutside(false);
-       // return this.dialog;
+        // dialog.setCanceledOnTouchOutside(false);
+        // return this.dialog;
     }
-    public void initSelectRideBottomSheet( View.OnClickListener promoclicklistener,
-                                            View.OnClickListener oncancelclicklistener,int text) {
-       // this.dialog.setContentView(layoutID);
+
+    public void initSelectRideBottomSheet(View.OnClickListener promoclicklistener,
+                                          View.OnClickListener oncancelclicklistener, int text) {
+        // this.dialog.setContentView(layoutID);
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
-        AnyTextView promocode = (AnyTextView)dialog.findViewById(R.id.txt_promoCode);
+        AnyTextView promocode = (AnyTextView) dialog.findViewById(R.id.txt_promoCode);
         cancelbutton.setText(context.getResources().getString(text));
         promocode.setOnClickListener(promoclicklistener);
         cancelbutton.setOnClickListener(oncancelclicklistener);
         setButtonChanger();
-       // dialog.setCanceledOnTouchOutside(false);
-       // dialog.setCancelable(false);
-       // return this.dialog;
+        // dialog.setCanceledOnTouchOutside(false);
+        // dialog.setCancelable(false);
+        // return this.dialog;
     }
+
     public void initEstimateFareBottomSheet(View.OnClickListener requestclicklistener) {
         //this.dialog.setContentView(layoutID);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_done);
         cancelbutton.setOnClickListener(requestclicklistener);
-       // dialog.setCanceledOnTouchOutside(false);
+        // dialog.setCanceledOnTouchOutside(false);
         //return this.dialog;
     }
+
     public void initScheduleDateTimeDialog(View.OnClickListener okclicklistener,
-                                                        View.OnClickListener Dateclicklistener,
-                                                        View.OnClickListener Timeclicklistener){
+                                           View.OnClickListener Dateclicklistener,
+                                           View.OnClickListener Timeclicklistener) {
         //this.dialog.setContentView(layoutID);
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
         cancelbutton.setOnClickListener(okclicklistener);
-      //  dialog.setCanceledOnTouchOutside(false);
+        //  dialog.setCanceledOnTouchOutside(false);
         final AnyTextView date_pick = (AnyTextView) dialog.findViewById(R.id.txt_datepicker);
         date_pick.setOnClickListener(Dateclicklistener);
         final AnyTextView time_pick = (AnyTextView) dialog.findViewById(R.id.txt_timepicker);
         time_pick.setOnClickListener(Timeclicklistener);
-       // return this.dialog;
+        // return this.dialog;
     }
+
     public void initSchedulesTimeDialog(View.OnClickListener okclicklistener,
-                                                     WheelView.OnLoopScrollListener dateloop,
-                                                     Date startDate,
-                                                     Date StartTime){
-       // this.dialog.setContentView(layoutID);
+                                        WheelView.OnLoopScrollListener dateloop,
+                                        Date startDate,
+                                        Date StartTime) {
+        // this.dialog.setContentView(layoutID);
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
         cancelbutton.setOnClickListener(okclicklistener);
-       // dialog.setCanceledOnTouchOutside(false);
+        // dialog.setCanceledOnTouchOutside(false);
         /*final WheelView date_loop = (WheelView) dialog.findViewById(R.id.date);
         date_loop.setInitialPosition(2);
         date_loop.setIsLoopEnabled(false);
@@ -135,7 +132,7 @@ public class BottomSheetDialogHelper {
         time_loop.addOnLoopScrollListener(dateloop);
         time_loop.setTextSize(15);
         time_loop.setItems(gettimeList(StartTime));*/
-       // return this.dialog;
+        // return this.dialog;
     }
 
     private List gettimeList(Date startTime) {
@@ -148,18 +145,18 @@ public class BottomSheetDialogHelper {
     }
 
     private void setButtonChanger() {
-        AnyTextView economyInactivetxt=(AnyTextView)dialog.findViewById(R.id.txt_economy);
-        final AnyTextView economyactivetxt=(AnyTextView)dialog.findViewById(R.id.txteconomyActive);
-        AnyTextView businesstxt=(AnyTextView)dialog.findViewById(R.id.txt_business);
-        final AnyTextView businessActivetxt=(AnyTextView)dialog.findViewById(R.id.txt_businessActive);
-        AnyTextView viptxt=(AnyTextView)dialog.findViewById(R.id.txt_vip);
-        final AnyTextView vipActivetxt=(AnyTextView)dialog.findViewById(R.id.txt_vipActive);
-        ImageView economyinactive = (ImageView)dialog.findViewById(R.id.iv_economyCar);
-        final ImageView economyactive = (ImageView)dialog.findViewById(R.id.iv_economyCarActive);
-        ImageView businessinactive = (ImageView)dialog.findViewById(R.id.iv_businessCar);
-        final ImageView businessactive = (ImageView)dialog.findViewById(R.id.iv_businessCarActive);
-        ImageView vipinactive = (ImageView)dialog.findViewById(R.id.iv_vipCar);
-        final ImageView vipactive = (ImageView)dialog.findViewById(R.id.iv_vipCarActive);
+        AnyTextView economyInactivetxt = (AnyTextView) dialog.findViewById(R.id.txt_economy);
+        final AnyTextView economyactivetxt = (AnyTextView) dialog.findViewById(R.id.txteconomyActive);
+        AnyTextView businesstxt = (AnyTextView) dialog.findViewById(R.id.txt_business);
+        final AnyTextView businessActivetxt = (AnyTextView) dialog.findViewById(R.id.txt_businessActive);
+        AnyTextView viptxt = (AnyTextView) dialog.findViewById(R.id.txt_vip);
+        final AnyTextView vipActivetxt = (AnyTextView) dialog.findViewById(R.id.txt_vipActive);
+        ImageView economyinactive = (ImageView) dialog.findViewById(R.id.iv_economyCar);
+        final ImageView economyactive = (ImageView) dialog.findViewById(R.id.iv_economyCarActive);
+        ImageView businessinactive = (ImageView) dialog.findViewById(R.id.iv_businessCar);
+        final ImageView businessactive = (ImageView) dialog.findViewById(R.id.iv_businessCarActive);
+        ImageView vipinactive = (ImageView) dialog.findViewById(R.id.iv_vipCar);
+        final ImageView vipactive = (ImageView) dialog.findViewById(R.id.iv_vipCarActive);
         economyinactive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,26 +212,40 @@ public class BottomSheetDialogHelper {
 
     }
 
-    public void showDialog(){
+    public void showDialog() {
+        // setupRideNowDialog();
+// init the bottom sheet behavior
+
+
+// change the state of the bottom sheet
+      //  bottomSheetBehavior.setAllowUserDragging(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+// set the peek height
+        bottomSheetBehavior.setPeekHeight((int) context.getResources().getDimension(R.dimen.x100));
+
+// set hideable or not
+        bottomSheetBehavior.setHideable(false);
+
         //dialog.show();
     }
-    public void setCancelable(boolean isCancelable){
+
+    public void setCancelable(boolean isCancelable) {
         //dialog.setCancelable(isCancelable);
-      //  dialog.setCanceledOnTouchOutside(isCancelable);
+        //  dialog.setCanceledOnTouchOutside(isCancelable);
     }
-    public void hideDialog(){
+
+    public void hideDialog() {
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         RemoveDialog();
-       // dialog.dismiss();
-    }
-    private void RemoveDialog(){
-        mainParent.removeView(dialog);
         // dialog.dismiss();
     }
 
-
+    private void RemoveDialog() {
+        mainParent.removeView(dialog);
+        // dialog.dismiss();
+    }
 
 
 }

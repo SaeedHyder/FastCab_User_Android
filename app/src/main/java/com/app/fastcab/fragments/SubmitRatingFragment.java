@@ -47,7 +47,7 @@ public class SubmitRatingFragment extends BaseFragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_submit_rating, container, false);
+        View view = inflater.inflate(R.layout.bottom_submit_rating, container, false);
 
         ButterKnife.bind(this, view);
         return view;

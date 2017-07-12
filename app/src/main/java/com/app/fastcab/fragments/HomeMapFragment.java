@@ -59,7 +59,6 @@ import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -97,7 +96,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.http.HEAD;
 
 import static com.app.fastcab.R.drawable.location;
 
@@ -526,7 +524,7 @@ public class HomeMapFragment extends BaseFragment implements
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.GONE);
-        final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.fragment_submit_rating);
+        final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_submit_rating);
         ratingDialog.initRatingDialog(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -922,7 +920,7 @@ public class HomeMapFragment extends BaseFragment implements
         /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.fragment_submit_rating);
+                final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_submit_rating);
                 ratingDialog.initRatingDialog(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
