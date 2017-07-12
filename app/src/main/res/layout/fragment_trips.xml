@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/button_color"
+            android:textAllCaps="false"
             android:text="@string/Past"
             android:textColor="@color/white"/>
 
@@ -23,6 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textAllCaps="false"
             android:background="@color/white"
             android:text="@string/Upcoming"
             android:textColor="@color/black"/>

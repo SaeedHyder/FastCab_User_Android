@@ -66,6 +66,7 @@ public class TermAndConditionFragment extends BaseFragment {
         bindTextview();
         final float scale = this.getResources().getDisplayMetrics().density;
         setCheckboxPadding(scale);
+        chkRead.setChecked(prefHelper.isTermAccepted());
         chkRead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

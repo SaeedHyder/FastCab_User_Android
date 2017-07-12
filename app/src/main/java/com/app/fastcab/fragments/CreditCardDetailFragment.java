@@ -77,6 +77,7 @@ public class CreditCardDetailFragment extends BaseFragment implements View.OnCli
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
         titleBar.showBackButton();
+        titleBar.setBackgroundColor(getResources().getColor(R.color.transparent));
         titleBar.setSubHeading(getResources().getString(R.string.card_detail));
     }
     private void initDatePicker(final TextView textView){

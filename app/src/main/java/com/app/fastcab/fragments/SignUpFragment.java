@@ -1,5 +1,6 @@
 package com.app.fastcab.fragments;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -251,12 +252,44 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void spGender() {
 
         List<String> categories = new ArrayList<>();
+        categories.add("Gender");
         categories.add("Male");
         categories.add("Female");
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), android.R.layout.simple_spinner_item, categories);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), R.layout.spinner_item, categories){
+            @Override
+            public boolean isEnabled(int position){
+                if(position == 0)
+                {
+                    // Disable the first item from Spinner
+                    // First item will be use for hint
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    // Set the hint text color gray
+                    tv.setTextColor(Color.GRAY);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+        //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.setDropDownViewResource(R.layout.spinner_dropdown);
+
         spGender.setAdapter(dataAdapter);
+
         spGender.setSelection(0);
     }
 
@@ -290,7 +323,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                             UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.date_after_error));
                         } else {
                             DateSelected = dateSpecified;
-                            String predate = new SimpleDateFormat("EEE,MMM d").format(c.getTime());
+                            String predate = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
 
                             textView.setText(predate);
                             textView.setPaintFlags(Typeface.BOLD);

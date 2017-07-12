@@ -28,6 +28,14 @@
 
     </style>
 
+    <style name="spinner_style">
+        <item name="android:background">@drawable/spinner_dawable</item>
+        <!--        <item name="android:layout_marginLeft">5dp</item>
+                <item name="android:layout_marginRight">5dp</item>
+                <item name="android:layout_marginBottom">5dp</item>-->
+    </style>
+
+
 
 
 </resources>
