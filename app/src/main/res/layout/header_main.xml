@@ -14,6 +14,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/x10"
+        android:padding="@dimen/x5"
         android:scaleType="fitXY"
         android:src="@drawable/ic_launcher"
         android:visibility="visible" />

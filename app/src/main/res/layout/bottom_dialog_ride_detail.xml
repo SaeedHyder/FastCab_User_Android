@@ -59,6 +59,13 @@
             app:typeface="Roboto-Regular.ttf" />
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginTop="@dimen/x10"
+        android:alpha="0.2"
+        android:background="@drawable/text"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
