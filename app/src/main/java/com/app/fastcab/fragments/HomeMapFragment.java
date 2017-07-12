@@ -589,7 +589,7 @@ public class HomeMapFragment extends BaseFragment implements
                     UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_time_pickup));
                 } else {
                     dialog.dismiss();
-                    setupScheduleComfirmDialog();
+                    setupScheduleComfirmDialog(date_pick.getText().toString()+" at"+time_pick.getText().toString());
                 }
             }
         });
@@ -612,12 +612,13 @@ public class HomeMapFragment extends BaseFragment implements
         dialog.show();
     }
 
-    private void setupScheduleComfirmDialog() {
+    private void setupScheduleComfirmDialog(String s) {
         layoutSchedule.setVisibility(View.VISIBLE);
+        txtScheduleText.setText(s);
         btnCancelRide.setVisibility(View.GONE);
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
-        llSourceDestination.setVisibility(View.GONE);
+        llSourceDestination.setVisibility(View.VISIBLE);
         final BottomSheetDialogHelper scheduleDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
         scheduleDialog.initSelectRideBottomSheet(new View.OnClickListener() {
             @Override
