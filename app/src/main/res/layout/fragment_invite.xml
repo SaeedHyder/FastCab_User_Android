@@ -76,6 +76,12 @@
                 android:layout_marginRight="@dimen/x15"
                 android:src="@drawable/messenger_icon" />
 
+            <View
+                android:layout_width="@dimen/x1"
+                android:layout_height="fill_parent"
+                android:alpha="0.1"
+                android:background="#FF0000FF" />
+
             <ImageView
                 android:id="@+id/iv_whatsup"
                 android:layout_width="wrap_content"

@@ -65,6 +65,7 @@ public class PaymentMethodFragment extends BaseFragment implements View.OnClickL
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         titleBar.hideButtons();
+        titleBar.setBackgroundColor(getResources().getColor(R.color.transparent));
         titleBar.showBackButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -310,11 +310,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                style="@style/spinner_style"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x12"
+                android:layout_marginRight="@dimen/x10"
                 android:layout_toRightOf="@+id/iv_Gender"
                 android:alpha="0.6"
-                android:hint="@string/male"
+                android:hint="@string/gender"
                 android:imeOptions="actionNext"
                 android:textColor="@color/dark_grey"
                 android:textSize="@dimen/x15" />
@@ -401,7 +403,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/x40"
             android:layout_marginTop="@dimen/x10"
-            android:text="Sing Up"
+            android:text="@string/sign_up"
             android:textColor="@color/white"
             android:textSize="@dimen/x14"
             android:background="#37949C"/>

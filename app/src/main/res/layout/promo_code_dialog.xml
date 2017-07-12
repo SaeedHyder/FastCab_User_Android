@@ -30,6 +30,13 @@
             android:textSize="20sp"
             app:typeface="Roboto-Regular.ttf" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:layout_marginTop="@dimen/x15"
+            android:alpha="0.2"
+            android:background="@drawable/text"/>
+
 
         <com.app.fastcab.ui.views.AnyEditTextView
             android:id="@+id/txt_promoCode"
