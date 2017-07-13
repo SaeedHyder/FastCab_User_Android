@@ -194,11 +194,18 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginTop="@dimen/x20"
+        android:alpha="0.2"
+        android:background="@drawable/text"/>
+
     <com.app.fastcab.ui.views.AnyTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/x10"
-        android:layout_marginTop="@dimen/x40"
+        android:layout_marginTop="@dimen/x20"
         android:gravity="center"
         android:text="@string/others_specify"
         android:textColor="@color/black"
@@ -228,6 +235,15 @@
         android:textSize="@dimen/x14"
         app:emptyAllowed="false"
         app:typeface="Roboto-Regular.ttf" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginTop="@dimen/x10"
+        android:alpha="0.2"
+        android:background="@drawable/text"/>
+
+
 
     <com.app.fastcab.ui.views.AnyTextView
         android:layout_width="match_parent"
