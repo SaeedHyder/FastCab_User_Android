@@ -1,14 +1,11 @@
 package com.app.fastcab.fragments;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,20 +14,23 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.app.fastcab.R;
+import com.app.fastcab.entities.FacebookLoginEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.helpers.ClickableSpanHelper;
-import com.app.fastcab.helpers.UIHelper;
+import com.app.fastcab.helpers.FacebookLoginHelper;
+import com.app.fastcab.interfaces.FacebookLoginListener;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
+import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.http.HEAD;
 
 
-public class LoginFragment extends BaseFragment {
+public class LoginFragment extends BaseFragment implements FacebookLoginListener {
 
 
     @BindView(R.id.edtphone)
@@ -45,7 +45,9 @@ public class LoginFragment extends BaseFragment {
     AnyTextView txtSignup;
     @BindView(R.id.ll_loginfacebook)
     RelativeLayout llLoginfacebook;
-
+    @BindView(R.id.loginButton_fb)
+    LoginButton btnfbLogin;
+    private CallbackManager callbackManager;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -55,15 +57,23 @@ public class LoginFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onViewCreated(view, savedInstanceState);
-
-        setListeners();
-
+        setupFacebookLogin();
     }
 
-    private void setListeners() {
-        //loginButton.setOnClickListener(this);
+    private void setupFacebookLogin() {
+
+        callbackManager = CallbackManager.Factory.create();
+        btnfbLogin.setFragment(this);
+        FacebookLoginHelper facebookLoginHelper = new FacebookLoginHelper(getDockActivity(), this,this);
+        btnfbLogin.registerCallback(callbackManager, facebookLoginHelper);
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
     @Override
     public void setTitleBar(TitleBar titleBar) {
         // TODO Auto-generated method stub
@@ -121,7 +131,8 @@ public class LoginFragment extends BaseFragment {
                 getDockActivity().replaceDockableFragment(ForgotPassowordFragment.newInstance(), "ForgotPassowordFragment");
                 break;
             case R.id.ll_loginfacebook:
-                UIHelper.showShortToastInCenter(getDockActivity(), "Will be implemented in Beta");
+
+               btnfbLogin.performClick();
                 break;
         }
     }
@@ -140,5 +151,10 @@ public class LoginFragment extends BaseFragment {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void onSuccessfulFacebookLogin(FacebookLoginEnt LoginEnt) {
+
     }
 }

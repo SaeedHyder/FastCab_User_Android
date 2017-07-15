@@ -1,5 +1,6 @@
 package com.app.fastcab.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -21,15 +22,19 @@ import android.widget.TextView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.activities.MainActivity;
+import com.app.fastcab.entities.FacebookLoginEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.helpers.CameraHelper;
 import com.app.fastcab.helpers.DatePickerHelper;
+import com.app.fastcab.helpers.FacebookLoginHelper;
 import com.app.fastcab.helpers.UIHelper;
+import com.app.fastcab.interfaces.FacebookLoginListener;
 import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
 import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -45,13 +50,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.app.fastcab.R.id.imageView;
-
 /**
  * Created by saeedhyder on 6/20/2017.
  */
 
-public class SignUpFragment extends BaseFragment implements View.OnClickListener,ImageSetter {
+public class SignUpFragment extends BaseFragment implements View.OnClickListener, ImageSetter, FacebookLoginListener {
 
     @BindView(R.id.CircularImageSharePop)
     CircleImageView CircularImageSharePop;
@@ -117,8 +120,10 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     LinearLayout llSignUpFields;
     @BindView(R.id.sv_signup)
     ScrollView svSignup;
-
-
+    @BindView(R.id.ll_loginfacebook)
+    RelativeLayout llLoginfacebook;
+    @BindView(R.id.loginButton_fb)
+    LoginButton btnfbLogin;
     Calendar calendar;
     int Year, Month, Day;
     @BindView(R.id.iv_camera)
@@ -131,11 +136,13 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     AnyTextView txtTermCond;
     @BindView(R.id.ll_bottomText)
     LinearLayout llBottomText;
-    private Date DateSelected;
     File profilePic;
     String profilePath;
     MainActivity mainActivity;
-
+    private CallbackManager callbackManager;
+    private Date DateSelected;
+    private List<String> genderList;
+    private FacebookLoginEnt facebookLoginEnt;
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
     }
@@ -156,14 +163,25 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         spGender();
         setListners();
         getMainActivity().setImageSetter(this);
-
+        setupFacebookLogin();
 
     }
 
+    private void setupFacebookLogin() {
+        callbackManager = CallbackManager.Factory.create();
+        btnfbLogin.setFragment(this);
+        FacebookLoginHelper facebookLoginHelper = new FacebookLoginHelper(getDockActivity(), this, this);
+        btnfbLogin.registerCallback(callbackManager, facebookLoginHelper);
+    }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void setListners() {
+        llLoginfacebook.setOnClickListener(this);
         edtDateOfBirth.setOnClickListener(this);
         btnSubmuit.setOnClickListener(this);
         txtClickHere.setTypeface(null, Typeface.BOLD);
@@ -239,9 +257,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             }
             edtConfirmPassword.setError("confirm password does not match");
             return false;
-        }
-        else if (prefHelper.isTermAccepted()){
-            UIHelper.showShortToastInCenter(getDockActivity(),"Accept Term And Condition");
+        } else if (prefHelper.isTermAccepted()) {
+            UIHelper.showShortToastInCenter(getDockActivity(), "Accept Term And Condition");
             return false;
         } else {
             return true;
@@ -251,35 +268,33 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private void spGender() {
 
-        List<String> categories = new ArrayList<>();
-        categories.add("Gender");
-        categories.add("Male");
-        categories.add("Female");
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), R.layout.spinner_item, categories){
+        genderList = new ArrayList<>();
+        genderList.add("Gender");
+        genderList.add("Male");
+        genderList.add("Female");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), R.layout.spinner_item, genderList) {
             @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
+            public boolean isEnabled(int position) {
+                if (position == 0) {
                     // Disable the first item from Spinner
                     // First item will be use for hint
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             }
+
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if(position == 0){
+                if (position == 0) {
                     // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
-                }
-                else {
+                } else {
                     tv.setTextColor(Color.BLACK);
                 }
                 return view;
@@ -330,10 +345,11 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                         }
 
                     }
-                }, "PreferredDate",1);
+                }, "PreferredDate", 1);
 
         datePickerHelper.showDate();
     }
+
     void ShowDateDialog(final AnyTextView txtView) {
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
@@ -366,7 +382,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     }
 
-
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
@@ -375,7 +390,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         titleBar.setSubHeading(getResources().getString(R.string.sign_up));
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -400,6 +414,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             case R.id.iv_camera:
                 CameraHelper.uploadPhotoDialog(getMainActivity());
                 break;
+            case R.id.ll_loginfacebook:
+                btnfbLogin.performClick();
+                break;
         }
 
     }
@@ -409,12 +426,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         if (imagePath != null) {
             //profilePic = new File(imagePath);
             profilePic = new File(imagePath);
-            profilePath=imagePath;
+            profilePath = imagePath;
             Picasso.with(getDockActivity())
-                    .load("file:///" +imagePath)
+                    .load("file:///" + imagePath)
                     .into(CircularImageSharePop);
-          //  ImageLoader.getInstance().displayImage(
-               //     "file:///" +imagePath, CircularImageSharePop);
+            //  ImageLoader.getInstance().displayImage(
+            //     "file:///" +imagePath, CircularImageSharePop);
         }
     }
 
@@ -426,5 +443,15 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void setVideo(String videoPath, String VideoThumbail) {
 
+    }
+
+    @Override
+    public void onSuccessfulFacebookLogin(FacebookLoginEnt loginEnt) {
+        facebookLoginEnt = loginEnt;
+        edtUserName.setText("" + loginEnt.getFacebookFirstName() + " " + loginEnt.getFacebookLastName());
+        edtDateOfBirth.setText("" + loginEnt.getFacebookEmail());
+        setImage(loginEnt.getFacebookUProfilePicture());
+        if (genderList.contains(loginEnt.getFacebookGender()))
+            spGender.setSelection(genderList.indexOf(loginEnt.getFacebookGender()));
     }
 }
