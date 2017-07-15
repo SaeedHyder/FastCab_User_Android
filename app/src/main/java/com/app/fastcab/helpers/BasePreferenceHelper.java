@@ -12,6 +12,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     protected static final String KEY_LOGIN_STATUS = "islogin";
     protected static final String KEY_Term_STATUS = "isAgree";
     private static final String FILENAME = "preferences";
+    protected static final String Firebase_TOKEN = "Firebasetoken";
 
 
     public BasePreferenceHelper(Context c) {
@@ -36,5 +37,13 @@ public class BasePreferenceHelper extends PreferenceHelper {
 
     public boolean isTermAccepted() {
         return getBooleanPreference(context, FILENAME, KEY_Term_STATUS);
+    }
+
+    public String getFirebase_TOKEN() {
+        return getStringPreference(context, FILENAME, Firebase_TOKEN);
+    }
+
+    public void setFirebase_TOKEN(String _token) {
+        putStringPreference(context, FILENAME, Firebase_TOKEN, _token);
     }
 }

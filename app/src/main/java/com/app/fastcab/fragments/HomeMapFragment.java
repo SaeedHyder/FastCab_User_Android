@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Movie;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -46,6 +47,7 @@ import android.widget.TimePicker;
 import com.app.fastcab.R;
 import com.app.fastcab.activities.PickupSelectionactivity;
 import com.app.fastcab.entities.LocationEnt;
+import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.helpers.BottomSheetDialogHelper;
 import com.app.fastcab.helpers.DateHelper;
@@ -165,6 +167,7 @@ public class HomeMapFragment extends BaseFragment implements
     private TitleBar titleBar;
     private boolean mIsTitleBarChanged = false;
     private boolean isCurrentLocationMove;
+    private ArrayList<SelectCarEnt> carTypeList;
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
@@ -203,11 +206,14 @@ public class HomeMapFragment extends BaseFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         if (map == null)
             initMap();
 
 
     }
+
+
 
     private void initMap() {
         map = (SupportMapFragment) getChildFragmentManager()
@@ -543,6 +549,12 @@ public class HomeMapFragment extends BaseFragment implements
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.GONE);
 
+        carTypeList=new ArrayList<>();
+
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.economy,R.drawable.circle_unactive,"Economy",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.economy_active,R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.business_unactive,R.drawable.circle_unactive,"Business",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.business_active,R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.vip_unactive,R.drawable.circle_unactive,"Vip",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.vip_active,R.drawable.circle_blue));
+
         final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
         dialogHelper.initSelectRideBottomSheet(new View.OnClickListener() {
             @Override
@@ -555,7 +567,7 @@ public class HomeMapFragment extends BaseFragment implements
                 dialogHelper.hideDialog();
                 initEstimateFareBottomSheet();
             }
-        });
+        },carTypeList);
         dialogHelper.showDialog();
         titleBar.hideButtons();
         titleBar.setSubHeading(getResources().getString(R.string.home));
@@ -593,8 +605,8 @@ public class HomeMapFragment extends BaseFragment implements
                 }
             }
         });
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+       // dialog.setCanceledOnTouchOutside(false);
+        //dialog.setCancelable(false);
 
         date_pick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -619,6 +631,15 @@ public class HomeMapFragment extends BaseFragment implements
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.VISIBLE);
+
+
+        carTypeList=new ArrayList<>();
+
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.economy,R.drawable.circle_unactive,"Economy",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.economy_active,R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.business_unactive,R.drawable.circle_unactive,"Business",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.business_active,R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.vip_unactive,R.drawable.circle_unactive,"Vip",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.vip_active,R.drawable.circle_blue));
+
+
         final BottomSheetDialogHelper scheduleDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
         scheduleDialog.initSelectRideBottomSheet(new View.OnClickListener() {
             @Override
@@ -632,7 +653,7 @@ public class HomeMapFragment extends BaseFragment implements
                 getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
             }
-        }, R.string.schedule_ride);
+        }, R.string.schedule_ride,carTypeList);
         titleBar.hideButtons();
         titleBar.setSubHeading(getResources().getString(R.string.schedule_new_trip));
         titleBar.showBackButton(new View.OnClickListener() {
