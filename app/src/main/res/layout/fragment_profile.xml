@@ -249,7 +249,7 @@
             android:layout_marginLeft="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
             android:layout_marginTop="@dimen/x15"
-            android:layout_marginBottom="@dimen/x20"
+            android:layout_marginBottom="@dimen/x10"
             android:orientation="horizontal">
 
             <ImageView

@@ -1,23 +1,27 @@
 package com.app.fastcab.helpers;
 
-import android.content.Context;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.app.fastcab.R;
+import com.app.fastcab.activities.DockActivity;
+import com.app.fastcab.entities.SelectCarEnt;
+import com.app.fastcab.ui.adapters.SelectCarAdapter;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.ExpandedBottomSheetBehavior;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.blackbox_vision.wheelview.view.WheelView;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created on 6/30/2017.
@@ -27,10 +31,13 @@ public class BottomSheetDialogHelper {
     ExpandedBottomSheetBehavior bottomSheetBehavior;
     // private BottomSheetDialog dialog;
     private NestedScrollView dialog;
-    private Context context;
-    private CoordinatorLayout mainParent;
+    private DockActivity context;
 
-    public BottomSheetDialogHelper(Context context, CoordinatorLayout mainParent, int LayoutID) {
+    private CoordinatorLayout mainParent;
+    private RecyclerView recyclerView;
+    private SelectCarAdapter mAdapter;
+
+    public BottomSheetDialogHelper(DockActivity context, CoordinatorLayout mainParent, int LayoutID) {
         this.context = context;
         this.mainParent = mainParent;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -47,7 +54,7 @@ public class BottomSheetDialogHelper {
         });
 
         bottomSheetBehavior = (ExpandedBottomSheetBehavior) ExpandedBottomSheetBehavior.from(dialog);
-      //  bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        //  bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setAllowUserDragging(false);
         bottomSheetBehavior.setPeekHeight(0);
     }
@@ -65,26 +72,55 @@ public class BottomSheetDialogHelper {
     }
 
     public void initSelectRideBottomSheet(View.OnClickListener promoclicklistener,
-                                          View.OnClickListener oncancelclicklistener) {
+                                          View.OnClickListener oncancelclicklistener, ArrayList<SelectCarEnt> carTypes) {
         // this.dialog.setContentView(layoutID);
+        recyclerView = (RecyclerView) dialog.findViewById(R.id.recycler_view);
+
+        mAdapter = new SelectCarAdapter(carTypes, context);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
+
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
         AnyTextView promocode = (AnyTextView) dialog.findViewById(R.id.txt_promoCode);
         promocode.setOnClickListener(promoclicklistener);
         cancelbutton.setOnClickListener(oncancelclicklistener);
-        setButtonChanger();
+        //setButtonChanger();
         // dialog.setCanceledOnTouchOutside(false);
         // return this.dialog;
     }
 
     public void initSelectRideBottomSheet(View.OnClickListener promoclicklistener,
-                                          View.OnClickListener oncancelclicklistener, int text) {
+                                          View.OnClickListener oncancelclicklistener, int text, ArrayList<SelectCarEnt> carTypes) {
         // this.dialog.setContentView(layoutID);
+
+        recyclerView = (RecyclerView) dialog.findViewById(R.id.recycler_view);
+
+        mAdapter = new SelectCarAdapter(carTypes, context);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
+
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
         AnyTextView promocode = (AnyTextView) dialog.findViewById(R.id.txt_promoCode);
         cancelbutton.setText(context.getResources().getString(text));
         promocode.setOnClickListener(promoclicklistener);
         cancelbutton.setOnClickListener(oncancelclicklistener);
-        setButtonChanger();
+        //setButtonChanger();
         // dialog.setCanceledOnTouchOutside(false);
         // dialog.setCancelable(false);
         // return this.dialog;
@@ -113,7 +149,7 @@ public class BottomSheetDialogHelper {
     }
 
     public void initSchedulesTimeDialog(View.OnClickListener okclicklistener,
-                                        WheelView.OnLoopScrollListener dateloop,
+
                                         Date startDate,
                                         Date StartTime) {
         // this.dialog.setContentView(layoutID);
@@ -144,7 +180,7 @@ public class BottomSheetDialogHelper {
         return null;
     }
 
-    private void setButtonChanger() {
+  /*  private void setButtonChanger() {
         AnyTextView economyInactivetxt = (AnyTextView) dialog.findViewById(R.id.txt_economy);
         final AnyTextView economyactivetxt = (AnyTextView) dialog.findViewById(R.id.txteconomyActive);
         AnyTextView businesstxt = (AnyTextView) dialog.findViewById(R.id.txt_business);
@@ -210,7 +246,7 @@ public class BottomSheetDialogHelper {
         });
 
 
-    }
+    }*/
 
     public void showDialog() {
         // setupRideNowDialog();
@@ -218,7 +254,7 @@ public class BottomSheetDialogHelper {
 
 
 // change the state of the bottom sheet
-      //  bottomSheetBehavior.setAllowUserDragging(true);
+        //  bottomSheetBehavior.setAllowUserDragging(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
 // set the peek height

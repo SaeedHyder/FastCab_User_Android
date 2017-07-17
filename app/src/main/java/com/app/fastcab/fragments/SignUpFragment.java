@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +24,16 @@ import android.widget.TextView;
 import com.app.fastcab.R;
 import com.app.fastcab.activities.MainActivity;
 import com.app.fastcab.entities.FacebookLoginEnt;
+import com.app.fastcab.entities.ResponseWrapper;
+import com.app.fastcab.entities.UserEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.AppConstants;
+import com.app.fastcab.global.WebServiceConstants;
 import com.app.fastcab.helpers.CameraHelper;
 import com.app.fastcab.helpers.DatePickerHelper;
 import com.app.fastcab.helpers.FacebookLoginHelper;
+import com.app.fastcab.helpers.InternetHelper;
+import com.app.fastcab.helpers.TokenUpdater;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.FacebookLoginListener;
 import com.app.fastcab.interfaces.ImageSetter;
@@ -37,6 +44,8 @@ import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
 import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.File;
 import java.text.ParseException;
@@ -49,6 +58,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by saeedhyder on 6/20/2017.
@@ -143,6 +158,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private Date DateSelected;
     private List<String> genderList;
     private FacebookLoginEnt facebookLoginEnt;
+
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
     }
@@ -160,6 +176,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
 
         setDatePickerVariables();
+        edtMobileNumber.setText(getDockActivity().getCountryCode());
         spGender();
         setListners();
         getMainActivity().setImageSetter(this);
@@ -401,7 +418,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
             case R.id.btn_submuit:
                 if (isvalidate()) {
-                    getDockActivity().replaceDockableFragment(VerifyNumFragment.newInstance(), "VerifyNumFragment");
+                    if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity())) {
+                        makeUserSignup();
+                    }
                 }
                 break;
             case R.id.txt_clickHere:
@@ -419,6 +438,64 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                 break;
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (DateSelected!=null){
+            String predate = new SimpleDateFormat("dd MMM yyyy").format(DateSelected.getTime());
+            edtDateOfBirth.setText(predate);
+            edtDateOfBirth.setPaintFlags(Typeface.BOLD);
+        }
+    }
+
+    private void makeUserSignup() {
+        loadingStarted();
+
+        MultipartBody.Part filePart;
+        if (profilePic != null) {
+            filePart = MultipartBody.Part.createFormData("profile_picture",
+                    profilePic.getName(), RequestBody.create(MediaType.parse("image/*"), profilePic));
+        } else {
+            filePart = MultipartBody.Part.createFormData("profile_picture", "",
+                    RequestBody.create(MediaType.parse("*/*"), ""));
+        }
+        Call<ResponseWrapper<UserEnt>> call = webService.registerUser(
+                RequestBody.create(MediaType.parse("text/plain"), edtUserName.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtemail.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), WordUtils.uncapitalize(genderList.get(spGender.getSelectedItemPosition()))),
+                RequestBody.create(MediaType.parse("text/plain"), edtMobileNumber.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtllCurrentAddress.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtzipCode.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtDateOfBirth.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtPassword.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtConfirmPassword.getText().toString()),
+                filePart
+        );
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    prefHelper.putUser(response.body().getResult());
+                    prefHelper.setUsrId(response.body().getResult().getId()+"");
+                    TokenUpdater.getInstance().UpdateToken(getDockActivity(),
+                            prefHelper.getUserId(),
+                            AppConstants.Device_Type,
+                            prefHelper.getFirebase_TOKEN());
+                    getDockActivity().replaceDockableFragment(VerifyNumFragment.newInstance(), "VerifyNumFragment");
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+                loadingFinished();
+                Log.e(LoginFragment.class.getSimpleName(), t.toString());
+            }
+        });
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.app.fastcab.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 
 import com.app.fastcab.BaseApplication;
 import com.app.fastcab.R;
@@ -30,18 +32,11 @@ public abstract class DockActivity extends AppCompatActivity implements
         LoadingListener {
 
     public static final String KEY_FRAG_FIRST = "firstFrag";
-
-    public abstract int getDockFrameLayoutId();
-
-    BaseFragment baseFragment;
-
-
+    public SideMenuFragment sideMenuFragment;
     protected BasePreferenceHelper prefHelper;
-
     //For side menu
     protected DrawerLayout drawerLayout;
-    public SideMenuFragment sideMenuFragment;
-
+    BaseFragment baseFragment;
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
         @Override
         public void openMenu() {
@@ -54,10 +49,32 @@ public abstract class DockActivity extends AppCompatActivity implements
         }
     };
 
+    public abstract int getDockFrameLayoutId();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefHelper = new BasePreferenceHelper(this);
+    }
+
+    public String getCountryCode() {
+        String CountryID = "";
+        String CountryZipCode = "";
+        TelephonyManager tm = (TelephonyManager) getApplicationContext()
+                .getSystemService(Context.TELEPHONY_SERVICE);
+
+        CountryID = tm.getSimCountryIso().toUpperCase();
+        String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
+
+        for (String aRl : rl) {
+            String[] g = aRl.split(",");
+            if (g[1].trim().equals(CountryID.trim())) {
+                CountryZipCode = g[0];
+                break;
+            }
+        }
+        return CountryZipCode;
+
     }
 
     @Override
@@ -68,9 +85,11 @@ public abstract class DockActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
     }
-    public DockActivity getDockActivity(){
-        return (DockActivity)this;
+
+    public DockActivity getDockActivity() {
+        return (DockActivity) this;
     }
+
     public void replaceDockableFragment(BaseFragment frag) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
@@ -106,12 +125,13 @@ public abstract class DockActivity extends AppCompatActivity implements
 
         transaction.replace(getDockFrameLayoutId(), frag);
         transaction.addToBackStack(null)
-               .commit();
+                .commit();
 /* .addToBackStack(
                 getSupportFragmentManager().getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST
                         : null)*/
 
     }
+
     public void replaceDockableFragment(BaseFragment frag, boolean isAnimate) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
@@ -130,6 +150,7 @@ public abstract class DockActivity extends AppCompatActivity implements
                         getSupportFragmentManager().getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST
                                 : null).commit();
     }
+
     public void addDockableFragment(BaseFragment frag, String Tag) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
@@ -143,7 +164,8 @@ public abstract class DockActivity extends AppCompatActivity implements
 
 
     }
-    public DrawerLayout getDrawerLayout(){
+
+    public DrawerLayout getDrawerLayout() {
         return drawerLayout;
     }
 
@@ -253,7 +275,7 @@ public abstract class DockActivity extends AppCompatActivity implements
         return (BaseApplication) getApplication();
     }
 
-    public ResideMenu.OnMenuListener getMenuListener(){
+    public ResideMenu.OnMenuListener getMenuListener() {
         return menuListener;
     }
 
