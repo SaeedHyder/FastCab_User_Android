@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Movie;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -168,6 +167,7 @@ public class HomeMapFragment extends BaseFragment implements
     private boolean mIsTitleBarChanged = false;
     private boolean isCurrentLocationMove;
     private ArrayList<SelectCarEnt> carTypeList;
+    private LocationListener listener;
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
@@ -212,8 +212,6 @@ public class HomeMapFragment extends BaseFragment implements
 
 
     }
-
-
 
     private void initMap() {
         map = (SupportMapFragment) getChildFragmentManager()
@@ -549,11 +547,11 @@ public class HomeMapFragment extends BaseFragment implements
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.GONE);
 
-        carTypeList=new ArrayList<>();
+        carTypeList = new ArrayList<>();
 
-        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.economy,R.drawable.circle_unactive,"Economy",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.economy_active,R.drawable.circle_blue));
-        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.business_unactive,R.drawable.circle_unactive,"Business",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.business_active,R.drawable.circle_blue));
-        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.vip_unactive,R.drawable.circle_unactive,"Vip",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.vip_active,R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.economy, R.drawable.circle_unactive, "Economy", R.color.button_color, R.color.gray_dark, "drawable://" + R.drawable.economy_active, R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.business_unactive, R.drawable.circle_unactive, "Business", R.color.button_color, R.color.gray_dark, "drawable://" + R.drawable.business_active, R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.vip_unactive, R.drawable.circle_unactive, "Vip", R.color.button_color, R.color.gray_dark, "drawable://" + R.drawable.vip_active, R.drawable.circle_blue));
 
         final BottomSheetDialogHelper dialogHelper = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
         dialogHelper.initSelectRideBottomSheet(new View.OnClickListener() {
@@ -567,7 +565,7 @@ public class HomeMapFragment extends BaseFragment implements
                 dialogHelper.hideDialog();
                 initEstimateFareBottomSheet();
             }
-        },carTypeList);
+        }, carTypeList);
         dialogHelper.showDialog();
         titleBar.hideButtons();
         titleBar.setSubHeading(getResources().getString(R.string.home));
@@ -601,11 +599,11 @@ public class HomeMapFragment extends BaseFragment implements
                     UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_time_pickup));
                 } else {
                     dialog.dismiss();
-                    setupScheduleComfirmDialog(date_pick.getText().toString()+" at"+time_pick.getText().toString());
+                    setupScheduleComfirmDialog(date_pick.getText().toString() + " at" + time_pick.getText().toString());
                 }
             }
         });
-       // dialog.setCanceledOnTouchOutside(false);
+        // dialog.setCanceledOnTouchOutside(false);
         //dialog.setCancelable(false);
 
         date_pick.setOnClickListener(new View.OnClickListener() {
@@ -633,11 +631,11 @@ public class HomeMapFragment extends BaseFragment implements
         llSourceDestination.setVisibility(View.VISIBLE);
 
 
-        carTypeList=new ArrayList<>();
+        carTypeList = new ArrayList<>();
 
-        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.economy,R.drawable.circle_unactive,"Economy",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.economy_active,R.drawable.circle_blue));
-        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.business_unactive,R.drawable.circle_unactive,"Business",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.business_active,R.drawable.circle_blue));
-        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.vip_unactive,R.drawable.circle_unactive,"Vip",R.color.button_color,R.color.gray_dark,"drawable://" + R.drawable.vip_active,R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.economy, R.drawable.circle_unactive, "Economy", R.color.button_color, R.color.gray_dark, "drawable://" + R.drawable.economy_active, R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.business_unactive, R.drawable.circle_unactive, "Business", R.color.button_color, R.color.gray_dark, "drawable://" + R.drawable.business_active, R.drawable.circle_blue));
+        carTypeList.add(new SelectCarEnt("drawable://" + R.drawable.vip_unactive, R.drawable.circle_unactive, "Vip", R.color.button_color, R.color.gray_dark, "drawable://" + R.drawable.vip_active, R.drawable.circle_blue));
 
 
         final BottomSheetDialogHelper scheduleDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottomsheet_selectride);
@@ -653,7 +651,7 @@ public class HomeMapFragment extends BaseFragment implements
                 getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
             }
-        }, R.string.schedule_ride,carTypeList);
+        }, R.string.schedule_ride, carTypeList);
         titleBar.hideButtons();
         titleBar.setSubHeading(getResources().getString(R.string.schedule_new_trip));
         titleBar.showBackButton(new View.OnClickListener() {
@@ -706,9 +704,9 @@ public class HomeMapFragment extends BaseFragment implements
             }, DateSelected.getHours(), DateSelected.getMinutes(), false);
             Date date = new Date();
             //if (DateHelper.isSameDay(DateSelected, date))
-                //   dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
-                //dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
-                dialog.show();
+            //   dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
+            //dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
+            dialog.show();
 
            /* timePicker.initTimeDialog(getDockActivity(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), new TimePickerDialog.OnTimeSetListener() {
                 @Override
@@ -1006,7 +1004,7 @@ public class HomeMapFragment extends BaseFragment implements
         promodialog.setCancelable(false);
         promodialog.showDialog();
     }
-     private LocationListener listener;
+
     private void getCurrentLocation() {
 
 
@@ -1053,7 +1051,7 @@ public class HomeMapFragment extends BaseFragment implements
             }
         };
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-           LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,listener );
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, listener);
 
             //location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 

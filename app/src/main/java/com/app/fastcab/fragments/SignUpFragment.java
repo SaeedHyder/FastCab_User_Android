@@ -1,9 +1,11 @@
 package com.app.fastcab.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +23,29 @@ import android.widget.TextView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.activities.MainActivity;
+import com.app.fastcab.entities.FacebookLoginEnt;
+import com.app.fastcab.entities.ResponseWrapper;
+import com.app.fastcab.entities.UserEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.AppConstants;
+import com.app.fastcab.global.WebServiceConstants;
 import com.app.fastcab.helpers.CameraHelper;
 import com.app.fastcab.helpers.DatePickerHelper;
+import com.app.fastcab.helpers.FacebookLoginHelper;
+import com.app.fastcab.helpers.InternetHelper;
+import com.app.fastcab.helpers.TokenUpdater;
 import com.app.fastcab.helpers.UIHelper;
+import com.app.fastcab.interfaces.FacebookLoginListener;
 import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
 import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.File;
 import java.text.ParseException;
@@ -44,14 +58,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.app.fastcab.R.id.imageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by saeedhyder on 6/20/2017.
  */
 
-public class SignUpFragment extends BaseFragment implements View.OnClickListener,ImageSetter {
+public class SignUpFragment extends BaseFragment implements View.OnClickListener, ImageSetter, FacebookLoginListener {
 
     @BindView(R.id.CircularImageSharePop)
     CircleImageView CircularImageSharePop;
@@ -117,8 +135,10 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     LinearLayout llSignUpFields;
     @BindView(R.id.sv_signup)
     ScrollView svSignup;
-
-
+    @BindView(R.id.ll_loginfacebook)
+    RelativeLayout llLoginfacebook;
+    @BindView(R.id.loginButton_fb)
+    LoginButton btnfbLogin;
     Calendar calendar;
     int Year, Month, Day;
     @BindView(R.id.iv_camera)
@@ -131,10 +151,13 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     AnyTextView txtTermCond;
     @BindView(R.id.ll_bottomText)
     LinearLayout llBottomText;
-    private Date DateSelected;
     File profilePic;
     String profilePath;
     MainActivity mainActivity;
+    private CallbackManager callbackManager;
+    private Date DateSelected;
+    private List<String> genderList;
+    private FacebookLoginEnt facebookLoginEnt;
 
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
@@ -153,17 +176,29 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
 
         setDatePickerVariables();
+        edtMobileNumber.setText(getDockActivity().getCountryCode());
         spGender();
         setListners();
         getMainActivity().setImageSetter(this);
-
+        setupFacebookLogin();
 
     }
 
+    private void setupFacebookLogin() {
+        callbackManager = CallbackManager.Factory.create();
+        btnfbLogin.setFragment(this);
+        FacebookLoginHelper facebookLoginHelper = new FacebookLoginHelper(getDockActivity(), this, this);
+        btnfbLogin.registerCallback(callbackManager, facebookLoginHelper);
+    }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void setListners() {
+        llLoginfacebook.setOnClickListener(this);
         edtDateOfBirth.setOnClickListener(this);
         btnSubmuit.setOnClickListener(this);
         txtClickHere.setTypeface(null, Typeface.BOLD);
@@ -239,9 +274,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             }
             edtConfirmPassword.setError("confirm password does not match");
             return false;
-        }
-        else if (prefHelper.isTermAccepted()){
-            UIHelper.showShortToastInCenter(getDockActivity(),"Accept Term And Condition");
+        } else if (prefHelper.isTermAccepted()) {
+            UIHelper.showShortToastInCenter(getDockActivity(), "Accept Term And Condition");
             return false;
         } else {
             return true;
@@ -251,35 +285,33 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private void spGender() {
 
-        List<String> categories = new ArrayList<>();
-        categories.add("Gender");
-        categories.add("Male");
-        categories.add("Female");
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), R.layout.spinner_item, categories){
+        genderList = new ArrayList<>();
+        genderList.add("Gender");
+        genderList.add("Male");
+        genderList.add("Female");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), R.layout.spinner_item, genderList) {
             @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
+            public boolean isEnabled(int position) {
+                if (position == 0) {
                     // Disable the first item from Spinner
                     // First item will be use for hint
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             }
+
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if(position == 0){
+                if (position == 0) {
                     // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
-                }
-                else {
+                } else {
                     tv.setTextColor(Color.BLACK);
                 }
                 return view;
@@ -330,10 +362,11 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                         }
 
                     }
-                }, "PreferredDate",1);
+                }, "PreferredDate", 1);
 
         datePickerHelper.showDate();
     }
+
     void ShowDateDialog(final AnyTextView txtView) {
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
@@ -366,7 +399,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     }
 
-
     @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
@@ -375,7 +407,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         titleBar.setSubHeading(getResources().getString(R.string.sign_up));
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -387,7 +418,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
             case R.id.btn_submuit:
                 if (isvalidate()) {
-                    getDockActivity().replaceDockableFragment(VerifyNumFragment.newInstance(), "VerifyNumFragment");
+                    if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity())) {
+                        makeUserSignup();
+                    }
                 }
                 break;
             case R.id.txt_clickHere:
@@ -400,8 +433,69 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             case R.id.iv_camera:
                 CameraHelper.uploadPhotoDialog(getMainActivity());
                 break;
+            case R.id.ll_loginfacebook:
+                btnfbLogin.performClick();
+                break;
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (DateSelected!=null){
+            String predate = new SimpleDateFormat("dd MMM yyyy").format(DateSelected.getTime());
+            edtDateOfBirth.setText(predate);
+            edtDateOfBirth.setPaintFlags(Typeface.BOLD);
+        }
+    }
+
+    private void makeUserSignup() {
+        loadingStarted();
+
+        MultipartBody.Part filePart;
+        if (profilePic != null) {
+            filePart = MultipartBody.Part.createFormData("profile_picture",
+                    profilePic.getName(), RequestBody.create(MediaType.parse("image/*"), profilePic));
+        } else {
+            filePart = MultipartBody.Part.createFormData("profile_picture", "",
+                    RequestBody.create(MediaType.parse("*/*"), ""));
+        }
+        Call<ResponseWrapper<UserEnt>> call = webService.registerUser(
+                RequestBody.create(MediaType.parse("text/plain"), edtUserName.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtemail.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), WordUtils.uncapitalize(genderList.get(spGender.getSelectedItemPosition()))),
+                RequestBody.create(MediaType.parse("text/plain"), edtMobileNumber.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtllCurrentAddress.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtzipCode.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtDateOfBirth.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtPassword.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtConfirmPassword.getText().toString()),
+                filePart
+        );
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    prefHelper.putUser(response.body().getResult());
+                    prefHelper.setUsrId(response.body().getResult().getId()+"");
+                    TokenUpdater.getInstance().UpdateToken(getDockActivity(),
+                            prefHelper.getUserId(),
+                            AppConstants.Device_Type,
+                            prefHelper.getFirebase_TOKEN());
+                    getDockActivity().replaceDockableFragment(VerifyNumFragment.newInstance(), "VerifyNumFragment");
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+                loadingFinished();
+                Log.e(LoginFragment.class.getSimpleName(), t.toString());
+            }
+        });
     }
 
     @Override
@@ -409,12 +503,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         if (imagePath != null) {
             //profilePic = new File(imagePath);
             profilePic = new File(imagePath);
-            profilePath=imagePath;
+            profilePath = imagePath;
             Picasso.with(getDockActivity())
-                    .load("file:///" +imagePath)
+                    .load("file:///" + imagePath)
                     .into(CircularImageSharePop);
-          //  ImageLoader.getInstance().displayImage(
-               //     "file:///" +imagePath, CircularImageSharePop);
+            //  ImageLoader.getInstance().displayImage(
+            //     "file:///" +imagePath, CircularImageSharePop);
         }
     }
 
@@ -426,5 +520,15 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void setVideo(String videoPath, String VideoThumbail) {
 
+    }
+
+    @Override
+    public void onSuccessfulFacebookLogin(FacebookLoginEnt loginEnt) {
+        facebookLoginEnt = loginEnt;
+        edtUserName.setText("" + loginEnt.getFacebookFirstName() + " " + loginEnt.getFacebookLastName());
+        edtDateOfBirth.setText("" + loginEnt.getFacebookEmail());
+        setImage(loginEnt.getFacebookUProfilePicture());
+        if (genderList.contains(loginEnt.getFacebookGender()))
+            spGender.setSelection(genderList.indexOf(loginEnt.getFacebookGender()));
     }
 }

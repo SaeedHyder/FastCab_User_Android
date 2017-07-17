@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scrollview_bigdaddy"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/iv_LogoIcon"
@@ -86,6 +85,7 @@
             android:layout_marginRight="@dimen/x20"
             android:layout_marginTop="@dimen/x2"
             android:background="@android:color/transparent"
+            android:hint="@string/password"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:maxLength="50"
@@ -94,7 +94,6 @@
             android:scrollbarStyle="insideInset"
             android:scrollbars="horizontal"
             android:singleLine="true"
-            android:hint="@string/password"
             android:textColor="@color/dark_grey"
             android:textSize="@dimen/x14"
             app:testType="email"
@@ -145,7 +144,6 @@
         android:textSize="@dimen/x15"
         app:typeface="Roboto-Regular.ttf" />
 
-
     <RelativeLayout
         android:id="@+id/ll_loginfacebook"
         android:layout_width="match_parent"
@@ -153,6 +151,12 @@
         android:layout_alignParentBottom="true"
         android:background="@color/facebook_button_color"
         android:orientation="horizontal">
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/loginButton_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_facebookIcon"

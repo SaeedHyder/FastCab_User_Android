@@ -2,6 +2,7 @@ package com.app.fastcab.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.fastcab.R;
+import com.app.fastcab.entities.ResponseWrapper;
+import com.app.fastcab.entities.UserEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.WebServiceConstants;
+import com.app.fastcab.helpers.InternetHelper;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -55,7 +65,7 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        edtphone.setText(getDockActivity().getCountryCode());
         setListners();
     }
 
@@ -73,7 +83,6 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
     }
 
 
-
     @Override
     public void onClick(View v) {
 
@@ -81,11 +90,38 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
 
             case R.id.btn_submit:
                 if (validated())
-                getDockActivity().replaceDockableFragment(EntryCodeFragment.newInstance(), "EntryCodeFragment");
+                    if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity())) {
+                        setupVerifyNumber();
+                    }
+
                 break;
 
         }
 
+    }
+
+    public void setupVerifyNumber() {
+        loadingStarted();
+        Call<ResponseWrapper<UserEnt>> call = webService.VerifyNumber(prefHelper.getUserId(),edtphone.getText().toString());
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
+        @Override
+        public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+            loadingFinished();
+            if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                prefHelper.putUser(response.body().getResult());
+                prefHelper.setUsrId(response.body().getResult().getId()+"");
+                getDockActivity().replaceDockableFragment(EntryCodeFragment.newInstance(), "EntryCodeFragment");
+            } else {
+                UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+            loadingFinished();
+            Log.e(VerifyNumFragment.class.getSimpleName(), t.toString());
+        }
+    });
     }
 
     private boolean validated() {

@@ -3,7 +3,7 @@ package com.app.fastcab.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +17,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.app.fastcab.R;
+import com.app.fastcab.entities.ResponseWrapper;
+import com.app.fastcab.entities.UserEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.AppConstants;
+import com.app.fastcab.global.WebServiceConstants;
 import com.app.fastcab.helpers.CameraHelper;
+import com.app.fastcab.helpers.InternetHelper;
+import com.app.fastcab.helpers.TokenUpdater;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,16 +40,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.app.fastcab.R.id.edtDateOfBirth;
-import static com.app.fastcab.R.id.edtPassword;
-import static com.app.fastcab.R.id.edtemail;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by saeedhyder on 6/21/2017.
  */
 
-public class EditProfileFragment extends BaseFragment implements View.OnClickListener,ImageSetter {
+public class EditProfileFragment extends BaseFragment implements View.OnClickListener, ImageSetter {
 
     @BindView(R.id.CircularImageSharePop)
     CircleImageView CircularImageSharePop;
@@ -98,6 +109,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     ScrollView svSignup;
     File profilePic;
     String profilePath;
+    private List<String> genderList;
 
     public static EditProfileFragment newInstance() {
         return new EditProfileFragment();
@@ -114,42 +126,84 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
+            getUserProfile();
+        else {
+            BindData(prefHelper.getUser());
+        }
         setListners();
         spGender();
         getMainActivity().setImageSetter(this);
     }
 
-    private void spGender() {
-        List<String> categories = new ArrayList<>();
-        categories.add("Gender");
-        categories.add("Male");
-        categories.add("Female");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), R.layout.spinner_item, categories){
+    public void getUserProfile() {
+        loadingStarted();
+        Call<ResponseWrapper<UserEnt>> call = webService.getProfile(prefHelper.getUserId());
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
             @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
+            public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    prefHelper.putUser(response.body().getResult());
+                    prefHelper.setUsrId(response.body().getResult().getId() + "");
+                    prefHelper.setLoginStatus(true);
+                    TokenUpdater.getInstance().UpdateToken(getDockActivity(),
+                            prefHelper.getUserId(),
+                            AppConstants.Device_Type,
+                            prefHelper.getFirebase_TOKEN());
+                    BindData(prefHelper.getUser());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+                loadingFinished();
+                Log.e(LoginFragment.class.getSimpleName(), t.toString());
+            }
+        });
+    }
+
+    private void BindData(UserEnt user) {
+        Picasso.with(getDockActivity()).load(user.getProfileImage()).into(CircularImageSharePop);
+        edtllCurrentAddress.setText(user.getAddress() + "");
+        if (genderList.contains(WordUtils.capitalize(user.getGender()) + ""))
+            spGender.setSelection(genderList.indexOf(WordUtils.capitalize(user.getGender()) + ""));
+        edtCity.setText(user.getCity() + "");
+        edtMobileNumber.setText(user.getPhoneNo() + "");
+        edtUserName.setText(user.getFullName() + "");
+        edtState.setText(user.getState() + "");
+        edtzipCode.setText(user.getZipCode() + "");
+    }
+
+    private void spGender() {
+        genderList = new ArrayList<>();
+        genderList.add("Gender");
+        genderList.add("Male");
+        genderList.add("Female");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getDockActivity(), R.layout.spinner_item, genderList) {
+            @Override
+            public boolean isEnabled(int position) {
+                if (position == 0) {
                     // Disable the first item from Spinner
                     // First item will be use for hint
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             }
+
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if(position == 0){
+                if (position == 0) {
                     // Set the hint text color gray
                     tv.setTextColor(Color.GRAY);
-                }
-                else {
+                } else {
                     tv.setTextColor(Color.BLACK);
                 }
                 return view;
@@ -170,6 +224,53 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     }
 
+    private void makeUserProfileUpdate() {
+        loadingStarted();
+
+        MultipartBody.Part filePart;
+        if (profilePic != null) {
+            filePart = MultipartBody.Part.createFormData("profile_picture",
+                    profilePic.getName(), RequestBody.create(MediaType.parse("image/*"), profilePic));
+        } else {
+            filePart = MultipartBody.Part.createFormData("profile_picture", "",
+                    RequestBody.create(MediaType.parse("*/*"), ""));
+        }
+        Call<ResponseWrapper<UserEnt>> call = webService.UpdateUser(
+                RequestBody.create(MediaType.parse("text/plain"), prefHelper.getUserId()),
+                RequestBody.create(MediaType.parse("text/plain"), edtUserName.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtMobileNumber.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtzipCode.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), WordUtils.uncapitalize(genderList.get(spGender.getSelectedItemPosition()))),
+                RequestBody.create(MediaType.parse("text/plain"), edtllCurrentAddress.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtCity.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtState.getText().toString()),
+                filePart
+        );
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    prefHelper.putUser(response.body().getResult());
+                    prefHelper.setUsrId(response.body().getResult().getId() + "");
+                    TokenUpdater.getInstance().UpdateToken(getDockActivity(),
+                            prefHelper.getUserId(),
+                            AppConstants.Device_Type,
+                            prefHelper.getFirebase_TOKEN());
+                    getDockActivity().replaceDockableFragment(ProfileFragment.newInstance(), ProfileFragment.class.getSimpleName());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+                loadingFinished();
+                Log.e(LoginFragment.class.getSimpleName(), t.toString());
+            }
+        });
+    }
+
     private boolean isvalidate() {
 
         if (edtUserName.getText() == null || (edtUserName.getText().toString().isEmpty())) {
@@ -178,15 +279,13 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             }
             edtUserName.setError(getString(R.string.enter_username));
             return false;
-        }
-        else if (edtMobileNumber.getText().toString().isEmpty()) {
+        } else if (edtMobileNumber.getText().toString().isEmpty()) {
             if (edtMobileNumber.requestFocus()) {
                 getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
             edtMobileNumber.setError(getString(R.string.enter_phone));
             return false;
-        }
-        else if (edtMobileNumber.getText().toString().length() < 11) {
+        } else if (edtMobileNumber.getText().toString().length() < 11) {
             if (edtMobileNumber.requestFocus()) {
                 getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
@@ -198,14 +297,13 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             }
             edtllCurrentAddress.setError(getString(R.string.enter_currentAddress));
             return false;
-        }
-        else if( edtCity.getText() == null || (edtCity.getText().toString().isEmpty())) {
+        } else if (edtCity.getText() == null || (edtCity.getText().toString().isEmpty())) {
             if (edtCity.requestFocus()) {
                 getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
             edtCity.setError(getString(R.string.enter_city));
             return false;
-        } else if (edtState.getText() == null || (edtState.getText().toString().isEmpty()) ) {
+        } else if (edtState.getText() == null || (edtState.getText().toString().isEmpty())) {
             if (edtState.requestFocus()) {
                 getMainActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
@@ -217,7 +315,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             }
             edtzipCode.setError(getString(R.string.enter_zipCode));
             return false;
-        }else {
+        } else {
             return true;
         }
 
@@ -232,13 +330,16 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         titleBar.showTickButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isvalidate()){
-                getDockActivity().replaceDockableFragment(ProfileFragment.newInstance(),ProfileFragment.class.getSimpleName());}
+                if (isvalidate()) {
+                    if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
+                        makeUserProfileUpdate();
+                }
             }
         });
         titleBar.setSubHeading(getString(R.string.Edit_Profile));
 
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -254,9 +355,9 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         if (imagePath != null) {
             //profilePic = new File(imagePath);
             profilePic = new File(imagePath);
-            profilePath=imagePath;
+            profilePath = imagePath;
             Picasso.with(getDockActivity())
-                    .load("file:///" +imagePath)
+                    .load("file:///" + imagePath)
                     .into(CircularImageSharePop);
             //  ImageLoader.getInstance().displayImage(
             //     "file:///" +imagePath, CircularImageSharePop);
