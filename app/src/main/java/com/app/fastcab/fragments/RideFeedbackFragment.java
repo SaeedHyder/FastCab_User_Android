@@ -78,7 +78,7 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
         userCollection.add(new RideFeedbackEnt("Navigation"));
         userCollection.add(new RideFeedbackEnt("Comfort"));
         userCollection.add(new RideFeedbackEnt("Car Quality"));
-       
+
 
         bindData(userCollection);
     }
