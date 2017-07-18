@@ -161,7 +161,7 @@ public class SideMenuFragment extends BaseFragment {
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.about_us))) {
                     getMainActivity().getResideMenu().closeMenu();
                     getDockActivity().popBackStackTillEntry(0);
-                    getDockActivity().replaceDockableFragment(AboutUsFragment.newInstance(), AboutUsFragment.class.getSimpleName());
+                    getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.invite_earn))) {
                     getMainActivity().getResideMenu().closeMenu();
                     getDockActivity().popBackStackTillEntry(0);

@@ -1,0 +1,4 @@
+#Fri Jul 14 20:50:50 PKT 2017
+base.0=D\:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\transforms\\dex\\androidTest\\debug\\folders\\1000\\1f\\main
+renamed.0=classes.dex
+file.0=D\:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\transforms\\dex\\androidTest\\debug\\folders\\1000\\1f\\main\\classes.dex

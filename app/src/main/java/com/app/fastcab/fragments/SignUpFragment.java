@@ -451,28 +451,28 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void makeUserSignup() {
-        loadingStarted();
+            loadingStarted();
 
-        MultipartBody.Part filePart;
-        if (profilePic != null) {
-            filePart = MultipartBody.Part.createFormData("profile_picture",
-                    profilePic.getName(), RequestBody.create(MediaType.parse("image/*"), profilePic));
-        } else {
-            filePart = MultipartBody.Part.createFormData("profile_picture", "",
-                    RequestBody.create(MediaType.parse("*/*"), ""));
-        }
-        Call<ResponseWrapper<UserEnt>> call = webService.registerUser(
-                RequestBody.create(MediaType.parse("text/plain"), edtUserName.getText().toString()),
-                RequestBody.create(MediaType.parse("text/plain"), edtemail.getText().toString()),
-                RequestBody.create(MediaType.parse("text/plain"), WordUtils.uncapitalize(genderList.get(spGender.getSelectedItemPosition()))),
-                RequestBody.create(MediaType.parse("text/plain"), edtMobileNumber.getText().toString()),
-                RequestBody.create(MediaType.parse("text/plain"), edtllCurrentAddress.getText().toString()),
-                RequestBody.create(MediaType.parse("text/plain"), edtzipCode.getText().toString()),
-                RequestBody.create(MediaType.parse("text/plain"), edtDateOfBirth.getText().toString()),
-                RequestBody.create(MediaType.parse("text/plain"), edtPassword.getText().toString()),
-                RequestBody.create(MediaType.parse("text/plain"), edtConfirmPassword.getText().toString()),
-                filePart
-        );
+            MultipartBody.Part filePart;
+            if (profilePic != null) {
+                filePart = MultipartBody.Part.createFormData("profile_picture",
+                        profilePic.getName(), RequestBody.create(MediaType.parse("image/*"), profilePic));
+            } else {
+                filePart = MultipartBody.Part.createFormData("profile_picture", "",
+                        RequestBody.create(MediaType.parse("*/*"), ""));
+            }
+            Call<ResponseWrapper<UserEnt>> call = webService.registerUser(
+                    RequestBody.create(MediaType.parse("text/plain"), edtUserName.getText().toString()),
+                    RequestBody.create(MediaType.parse("text/plain"), edtemail.getText().toString()),
+                    RequestBody.create(MediaType.parse("text/plain"), WordUtils.uncapitalize(genderList.get(spGender.getSelectedItemPosition()))),
+                    RequestBody.create(MediaType.parse("text/plain"), edtMobileNumber.getText().toString()),
+                    RequestBody.create(MediaType.parse("text/plain"), edtllCurrentAddress.getText().toString()),
+                    RequestBody.create(MediaType.parse("text/plain"), edtzipCode.getText().toString()),
+                    RequestBody.create(MediaType.parse("text/plain"), edtDateOfBirth.getText().toString()),
+                    RequestBody.create(MediaType.parse("text/plain"), edtPassword.getText().toString()),
+                    RequestBody.create(MediaType.parse("text/plain"), edtConfirmPassword.getText().toString()),
+                    filePart
+            );
         call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
             @Override
             public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
