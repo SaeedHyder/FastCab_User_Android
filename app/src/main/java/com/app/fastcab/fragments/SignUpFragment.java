@@ -274,8 +274,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             }
             edtConfirmPassword.setError("confirm password does not match");
             return false;
-        } else if (prefHelper.isTermAccepted()) {
-            UIHelper.showShortToastInCenter(getDockActivity(), "Accept Term And Condition");
+        } else if (!prefHelper.isTermAccepted()) {
+            UIHelper.showShortToastInCenter(getDockActivity(), "Accept Term And Condition First");
             return false;
         } else {
             return true;
@@ -443,7 +443,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onResume() {
         super.onResume();
-        if (DateSelected!=null){
+        if (DateSelected != null) {
             String predate = new SimpleDateFormat("dd MMM yyyy").format(DateSelected.getTime());
             edtDateOfBirth.setText(predate);
             edtDateOfBirth.setPaintFlags(Typeface.BOLD);
@@ -451,35 +451,38 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void makeUserSignup() {
-            loadingStarted();
+        loadingStarted();
 
-            MultipartBody.Part filePart;
-            if (profilePic != null) {
-                filePart = MultipartBody.Part.createFormData("profile_picture",
-                        profilePic.getName(), RequestBody.create(MediaType.parse("image/*"), profilePic));
-            } else {
-                filePart = MultipartBody.Part.createFormData("profile_picture", "",
-                        RequestBody.create(MediaType.parse("*/*"), ""));
-            }
-            Call<ResponseWrapper<UserEnt>> call = webService.registerUser(
-                    RequestBody.create(MediaType.parse("text/plain"), edtUserName.getText().toString()),
-                    RequestBody.create(MediaType.parse("text/plain"), edtemail.getText().toString()),
-                    RequestBody.create(MediaType.parse("text/plain"), WordUtils.uncapitalize(genderList.get(spGender.getSelectedItemPosition()))),
-                    RequestBody.create(MediaType.parse("text/plain"), edtMobileNumber.getText().toString()),
-                    RequestBody.create(MediaType.parse("text/plain"), edtllCurrentAddress.getText().toString()),
-                    RequestBody.create(MediaType.parse("text/plain"), edtzipCode.getText().toString()),
-                    RequestBody.create(MediaType.parse("text/plain"), edtDateOfBirth.getText().toString()),
-                    RequestBody.create(MediaType.parse("text/plain"), edtPassword.getText().toString()),
-                    RequestBody.create(MediaType.parse("text/plain"), edtConfirmPassword.getText().toString()),
-                    filePart
-            );
+        MultipartBody.Part filePart;
+        if (profilePic != null) {
+            filePart = MultipartBody.Part.createFormData("profile_picture",
+                    profilePic.getName(), RequestBody.create(MediaType.parse("image/*"), profilePic));
+        } else {
+            filePart = MultipartBody.Part.createFormData("profile_picture", "",
+                    RequestBody.create(MediaType.parse("*/*"), ""));
+        }
+        Call<ResponseWrapper<UserEnt>> call = webService.registerUser(
+                RequestBody.create(MediaType.parse("text/plain"), edtUserName.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtemail.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), WordUtils.uncapitalize(genderList.get(spGender.getSelectedItemPosition()))),
+                RequestBody.create(MediaType.parse("text/plain"), edtMobileNumber.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtllCurrentAddress.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtzipCode.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtDateOfBirth.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtPassword.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), edtConfirmPassword.getText().toString()),
+                RequestBody.create(MediaType.parse("text/plain"), facebookLoginEnt != null ? facebookLoginEnt.getFacebookUID() : ""),
+                RequestBody.create(MediaType.parse("text/plain"), facebookLoginEnt != null ? AppConstants.SOCIAL_MEDIA_TYPE : ""),
+                filePart
+        );
+
         call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
             @Override
             public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
                 loadingFinished();
                 if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
                     prefHelper.putUser(response.body().getResult());
-                    prefHelper.setUsrId(response.body().getResult().getId()+"");
+                    prefHelper.setUsrId(response.body().getResult().getId() + "");
                     TokenUpdater.getInstance().UpdateToken(getDockActivity(),
                             prefHelper.getUserId(),
                             AppConstants.Device_Type,
@@ -511,6 +514,18 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             //     "file:///" +imagePath, CircularImageSharePop);
         }
     }
+    private void SetFaceBookImage(String imagePath){
+        if (imagePath != null) {
+            //profilePic = new File(imagePath);
+            profilePic = new File(imagePath);
+            profilePath = imagePath;
+            Picasso.with(getDockActivity())
+                    .load(imagePath)
+                    .into(CircularImageSharePop);
+            //  ImageLoader.getInstance().displayImage(
+            //     "file:///" +imagePath, CircularImageSharePop);
+        }
+    }
 
     @Override
     public void setFilePath(String filePath) {
@@ -525,9 +540,10 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onSuccessfulFacebookLogin(FacebookLoginEnt loginEnt) {
         facebookLoginEnt = loginEnt;
-        edtUserName.setText("" + loginEnt.getFacebookFirstName() + " " + loginEnt.getFacebookLastName());
-        edtDateOfBirth.setText("" + loginEnt.getFacebookEmail());
-        setImage(loginEnt.getFacebookUProfilePicture());
+        edtUserName.setText(checkForNullOREmpty(loginEnt.getFacebookFullName()));
+        edtDateOfBirth.setText(checkForNullOREmpty(loginEnt.getFacebookBirthday()));
+        edtemail.setText(checkForNullOREmpty(loginEnt.getFacebookEmail()));
+        SetFaceBookImage(loginEnt.getFacebookUProfilePicture());
         if (genderList.contains(loginEnt.getFacebookGender()))
             spGender.setSelection(genderList.indexOf(loginEnt.getFacebookGender()));
     }

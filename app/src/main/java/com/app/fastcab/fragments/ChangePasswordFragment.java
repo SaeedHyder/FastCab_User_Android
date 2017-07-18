@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,23 @@ import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import com.app.fastcab.R;
+import com.app.fastcab.entities.ResponseWrapper;
+import com.app.fastcab.entities.UserEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.AppConstants;
+import com.app.fastcab.global.WebServiceConstants;
+import com.app.fastcab.helpers.InternetHelper;
+import com.app.fastcab.helpers.TokenUpdater;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by saeedhyder on 6/22/2017.
@@ -107,7 +118,8 @@ public class ChangePasswordFragment extends BaseFragment implements View.OnClick
         switch (v.getId()) {
             case R.id.UpdateButton:
                 if (isvalidate()) {
-                    getDockActivity().replaceDockableFragment(SettingFragment.newInstance(), SettingFragment.class.getSimpleName());
+                    if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
+                    ChangeUserPassword();
                 }
                 break;
 
@@ -143,6 +155,33 @@ public class ChangePasswordFragment extends BaseFragment implements View.OnClick
 
 
         }
+    }
+
+    public void ChangeUserPassword() {
+        loadingStarted();
+        Call<ResponseWrapper<UserEnt>> call = webService.ChangePassword(edtcurrentPassword.getText().toString(),
+                editNewPassword.getText().toString(),
+                editConfirmPassword.getText().toString(),
+                prefHelper.getUserId());
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    prefHelper.putUser(response.body().getResult());
+                    prefHelper.setUsrId(response.body().getResult().getId() + "");
+                    getDockActivity().replaceDockableFragment(SettingFragment.newInstance(), SettingFragment.class.getSimpleName());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+                loadingFinished();
+                Log.e(LoginFragment.class.getSimpleName(), t.toString());
+            }
+        });
     }
 
     @Override

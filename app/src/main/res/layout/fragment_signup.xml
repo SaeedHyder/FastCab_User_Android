@@ -482,7 +482,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="@string/login_with_facebook"
+                android:text="@string/sign_with_facebook"
                 android:textColor="@color/white"
                 android:textSize="@dimen/x15"
                 app:testType="email"

@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.app.fastcab.R;
+import com.app.fastcab.entities.CancelReasonEnt;
 
 import java.util.ArrayList;
 
@@ -19,13 +20,13 @@ import java.util.ArrayList;
 public class ReasonCancelListViewAdapter extends BaseAdapter {
     String item;
     private Context context;
-    private ArrayList<String> arrayList;
+    private ArrayList<CancelReasonEnt> arrayList;
     private LayoutInflater inflater;
     private boolean isListView;
     private int selectedPosition = -1;
 
 
-    public ReasonCancelListViewAdapter(Context context, ArrayList<String> arrayList, boolean isListView) {
+    public ReasonCancelListViewAdapter(Context context, ArrayList<CancelReasonEnt> arrayList, boolean isListView) {
         this.context = context;
         this.arrayList = arrayList;
         this.isListView = isListView;
@@ -62,7 +63,7 @@ public class ReasonCancelListViewAdapter extends BaseAdapter {
         } else
             viewHolder = (ViewHolder) view.getTag();
 
-        viewHolder.label.setText(arrayList.get(i));
+        viewHolder.label.setText(arrayList.get(i).getTitle());
         if (selectedPosition == -1 && i == 0) {
             viewHolder.radioButton.setChecked(true);
 
@@ -116,8 +117,8 @@ public class ReasonCancelListViewAdapter extends BaseAdapter {
     public String getSelectedItem() {
         if (selectedPosition != -1) {
             // Toast.makeText(context, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
-            item = arrayList.get(selectedPosition);
-            return arrayList.get(selectedPosition);
+            item = arrayList.get(selectedPosition).getTitle();
+            return arrayList.get(selectedPosition).getTitle();
         }
 
         return "";

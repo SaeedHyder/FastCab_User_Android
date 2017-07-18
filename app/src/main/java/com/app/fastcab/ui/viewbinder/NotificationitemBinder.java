@@ -7,12 +7,13 @@ import android.widget.ImageView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.entities.NotificationEnt;
+import com.app.fastcab.entities.NotificationListEnt;
 import com.app.fastcab.ui.viewbinders.abstracts.ViewBinder;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 
-public class NotificationitemBinder extends ViewBinder<NotificationEnt> {
+public class NotificationitemBinder extends ViewBinder<NotificationListEnt> {
 
 
 
@@ -27,12 +28,12 @@ public class NotificationitemBinder extends ViewBinder<NotificationEnt> {
     }
 
     @Override
-    public void bindView(final NotificationEnt entity, int position, int grpPosition, View view, Activity activity) {
+    public void bindView(final NotificationListEnt entity, int position, int grpPosition, View view, Activity activity) {
 
         NotificationitemBinder.ViewHolder viewHolder = (NotificationitemBinder.ViewHolder) view.getTag();
 
-        viewHolder.iv_Notificationlogo.setImageResource(entity.getNotificationlogo());
-        viewHolder.txt_Notification.setText(entity.getNotificationTxt());
+        viewHolder.iv_Notificationlogo.setImageResource(R.drawable.logo_a);
+        viewHolder.txt_Notification.setText(entity.getMessage());
 
 
     }

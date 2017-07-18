@@ -15,6 +15,7 @@ public class FacebookLoginEnt {
     private String FacebookBirthday;
     private String FacebookLocation;
     private String FacebookLink;
+    private String FacebookFullName;
 
     public String getFacebookUID() {
         return FacebookUID;
@@ -94,5 +95,13 @@ public class FacebookLoginEnt {
 
     public void setFacebookLink(String facebookLink) {
         FacebookLink = facebookLink;
+    }
+
+    public String getFacebookFullName() {
+        return FacebookFullName;
+    }
+
+    public void setFacebookFullName(String facebookFullName) {
+        FacebookFullName = facebookFullName;
     }
 }

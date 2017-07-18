@@ -262,9 +262,10 @@
     <string name="type">Type</string>
     <string name="gender">Gender</string>
     <!--FACEBOOK APP-->
-    <string name="facebook_app_id">203668093495747</string>
-    <string name="fb_login_protocol_scheme">fb203668093495747</string>
+    <string name="facebook_app_id">1299340556831655</string>
+    <string name="fb_login_protocol_scheme">fb1299340556831655</string>
     <string name="entrycode_error">Enter Valid Code</string>
+    <string name="sign_with_facebook">SIGN UP WITH FACEBOOK</string>
     <!--COUNTRY CODE-->
     <string-array name="CountryCodes" >
         <item>93,AF</item>
