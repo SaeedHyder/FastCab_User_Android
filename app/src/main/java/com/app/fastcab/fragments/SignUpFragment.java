@@ -475,6 +475,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                 RequestBody.create(MediaType.parse("text/plain"), facebookLoginEnt != null ? AppConstants.SOCIAL_MEDIA_TYPE : ""),
                 filePart
         );
+
         call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
             @Override
             public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {

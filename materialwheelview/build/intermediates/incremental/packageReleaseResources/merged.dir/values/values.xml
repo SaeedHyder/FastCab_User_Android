@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="btn_cancel_color">#999999</color>
+    <color name="btn_confirm_color">#303F9F</color>
+    <declare-styleable name="DatePickerWheelView"><attr format="dimension" name="datePickerWheelViewTextSize"/><attr format="string" name="datePickerWheelViewInitialDate"/><attr format="color" name="datePickerWheelViewLineColor"/><attr format="color" name="datePickerWheelViewOverflowTextColor"/><attr format="color" name="datePickerWheelViewContentTextColor"/><attr format="integer" name="datePickerWheelViewMinYear"/><attr format="integer" name="datePickerWheelViewMaxYear"/><attr format="boolean" name="datePickerWheelViewShowShortMonths"/><attr format="boolean" name="datePickerWheelViewShowDayMonthYear"/></declare-styleable>
+    <declare-styleable name="WheelView"><attr format="color" name="wheelViewLineColor"/><attr format="color" name="wheelViewOverflowTextColor"/><attr format="color" name="wheelViewContentTextColor"/><attr format="dimension" name="wheelViewTextSize"/><attr format="boolean" name="wheelViewIsLoopEnabled"/><attr format="integer" name="wheelViewInitialPosition"/><attr format="integer" name="wheelViewDrawItemCount"/></declare-styleable>
+    <dimen name="btn_text_size">16sp</dimen>
+    <dimen name="view_text_size">10sp</dimen>
+    <string name="app_name">materialwheelview</string>
+    <style name="FadeInPopWin">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="@android:windowEnterAnimation">@anim/pop_win_content_fade_in</item>
+        <item name="@android:windowExitAnimation">@anim/pop_win_content_fade_out</item>
+    </style>
+</resources>

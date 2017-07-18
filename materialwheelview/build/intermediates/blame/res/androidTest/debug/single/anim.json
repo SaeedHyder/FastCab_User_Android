@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_fade_out.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_fade_out.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_popup_enter.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_popup_enter.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_in_top.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_slide_in_top.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_shrink_fade_out_from_bottom.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_fade_in.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_fade_in.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_in_bottom.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\pop_win_content_fade_out.xml",
+        "source": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\bundles\\debug\\res\\anim\\pop_win_content_fade_out.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_out_top.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_slide_out_top.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_grow_fade_in_from_bottom.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_popup_exit.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_popup_exit.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\abc_slide_out_bottom.xml",
+        "source": "C:\\Users\\saeedhyder\\.android\\build-cache\\f4270daf4cf945b3db8ec346091c142f25a73535\\output\\res\\anim\\abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim\\pop_win_content_fade_in.xml",
+        "source": "D:\\WorkSpace\\Fastcab_user\\FastCab_User\\materialwheelview\\build\\intermediates\\bundles\\debug\\res\\anim\\pop_win_content_fade_in.xml"
+    }
+]
