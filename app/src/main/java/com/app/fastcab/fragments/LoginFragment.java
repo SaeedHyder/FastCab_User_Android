@@ -31,6 +31,7 @@ import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 
 import butterknife.BindView;
@@ -192,6 +193,33 @@ public class LoginFragment extends BaseFragment implements FacebookLoginListener
 
     @Override
     public void onSuccessfulFacebookLogin(FacebookLoginEnt LoginEnt) {
+        loadingStarted();
+        Call<ResponseWrapper<UserEnt>> call = webService.loginFacebookUser(LoginEnt.getFacebookUID(),AppConstants.SOCIAL_MEDIA_TYPE);
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    prefHelper.putUser(response.body().getResult());
+                    prefHelper.setUsrId(response.body().getResult().getId()+"");
+                    prefHelper.setLoginStatus(true);
+                    TokenUpdater.getInstance().UpdateToken(getDockActivity(),
+                            prefHelper.getUserId(),
+                            AppConstants.Device_Type,
+                            prefHelper.getFirebase_TOKEN());
+                    getDockActivity().popBackStackTillEntry(0);
+                    getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+                } else {
+                    LoginManager.getInstance().logOut();
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+                loadingFinished();
+                Log.e(LoginFragment.class.getSimpleName(), t.toString());
+            }
+        });
     }
 }

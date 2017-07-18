@@ -41,7 +41,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     }
 
     public void setTermStatus( boolean isAgree ) {
-        putBooleanPreference( context, FILENAME, KEY_LOGIN_STATUS, isAgree );
+        putBooleanPreference( context, FILENAME, KEY_Term_STATUS, isAgree );
     }
 
     public boolean isTermAccepted() {

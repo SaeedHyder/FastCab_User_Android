@@ -21,6 +21,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +47,7 @@ import android.widget.TimePicker;
 
 import com.app.fastcab.R;
 import com.app.fastcab.activities.PickupSelectionactivity;
+import com.app.fastcab.entities.CancelReasonEnt;
 import com.app.fastcab.entities.LocationEnt;
 import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
@@ -52,9 +55,11 @@ import com.app.fastcab.helpers.BottomSheetDialogHelper;
 import com.app.fastcab.helpers.DateHelper;
 import com.app.fastcab.helpers.DatePickerHelper;
 import com.app.fastcab.helpers.DialogHelper;
+import com.app.fastcab.helpers.HomeServiceHelper;
 import com.app.fastcab.helpers.TimePickerHelper;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.OnSettingActivateListener;
+import com.app.fastcab.interfaces.webServiceResponseLisener;
 import com.app.fastcab.ui.adapters.ReasonCancelListViewAdapter;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
@@ -81,7 +86,12 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -98,7 +108,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.os.ParcelFileDescriptor.MODE_WORLD_READABLE;
 import static com.app.fastcab.R.drawable.location;
+import static com.app.fastcab.global.WebServiceConstants.CANCELREASON;
 
 /**
  * Created on 6/29/2017.
@@ -108,11 +120,10 @@ public class HomeMapFragment extends BaseFragment implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnMarkerClickListener,
         DirectionFinderListener,
-        OnSettingActivateListener {
+        OnSettingActivateListener,
+        webServiceResponseLisener {
+
     @BindView(R.id.txt_locationtype)
     TextView txtLocationtype;
     @BindView(R.id.img_icon)
@@ -131,11 +142,6 @@ public class HomeMapFragment extends BaseFragment implements
     Button btnCancelRide;
     @BindView(R.id.btn_done_selection)
     Button btndoneselection;
-    GoogleMap googleMap;
-    GoogleApiClient googleApiClient;
-    double latitude;
-    double longitude;
-    SupportMapFragment map;
     @BindView(R.id.custom_marker_view)
     RelativeLayout customMarkerView;
     @BindView(R.id.layout_pick)
@@ -155,19 +161,32 @@ public class HomeMapFragment extends BaseFragment implements
     View viewParent;
     @BindView(R.id.ll_source_destination)
     LinearLayout llSourceDestination;
-    Location Mylocation;
+
+    GoogleMap googleMap;
+    GoogleApiClient googleApiClient;
+    SupportMapFragment map;
+
+    private double latitude;
+    private double longitude;
+    private Location Mylocation;
     private LocationEnt origin;
     private LocationEnt destination;
+
+    private Date DateSelected;
+    private Date TimeSelected;
+
+    private TitleBar titleBar;
+    private boolean mIsTitleBarChanged = false;
+
+    private boolean isCurrentLocationMove;
+
+    private ArrayList<SelectCarEnt> carTypeList;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
-    private Date DateSelected;
-    private Date TimeSelected;
-    private TitleBar titleBar;
-    private boolean mIsTitleBarChanged = false;
-    private boolean isCurrentLocationMove;
-    private ArrayList<SelectCarEnt> carTypeList;
+
     private LocationListener listener;
+    private HomeServiceHelper serviceHelper;
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
@@ -176,6 +195,7 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        serviceHelper = new HomeServiceHelper(this, getDockActivity(), webService);
         //BaseApplication.getBus().register(this);
 
     }
@@ -232,6 +252,119 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     @Override
+    public void onMapReady(GoogleMap googlemap) {
+        googleMap = googlemap;
+       /* googleMap.setMyLocationEnabled(true);
+        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+
+                    if (getMainActivity().statusCheck())
+                        getCurrentLocation();
+                return true;
+            }
+        });
+       // getCurrentLocation();
+        View locationButton = map.getView().findViewById(0x2);
+
+// and next place it, for exemple, on bottom right (as Google Maps app)
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+// position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.x100));
+        googleMap.setOnMarkerDragListener(this);
+        googleMap.setOnMapLongClickListener(this);
+        googlemap.setOnMarkerClickListener(this);*/
+        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                String address = getCurrentAddress(cameraPosition.target.latitude, cameraPosition.target.longitude);
+                if (address != null) {
+                    origin = new LocationEnt(address,
+                            cameraPosition.target);
+                } else {
+                    //  origin = new LocationEnt("Un Named Street",cameraPosition.target);
+                }
+                //UIHelper.showShortToastInCenter(getDockActivity(), cameraPosition.target.toString());
+            }
+        });
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
+            getCurrentLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String title, int ColorID) {
+
+        View customMarkerView = ((LayoutInflater) getMainActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
+        ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.img_icon);
+        TextView textView = (TextView) customMarkerView.findViewById(R.id.txt_pick_text);
+        textView.setText(title);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        textView.setBackgroundColor(getResources().getColor(R.color.white));
+        markerImageView.setImageResource(resId);
+        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
+        customMarkerView.buildDrawingCache();
+        Bitmap returnedBitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        Drawable drawable = customMarkerView.getBackground();
+        if (drawable != null)
+            drawable.draw(canvas);
+        customMarkerView.draw(canvas);
+        return returnedBitmap;
+    }
+
+    @Override
+    public void onStart() {
+        googleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
+                .getWindow().getDecorView());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
+                .getWindow().getDecorView());
+        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0))) {
+            customMarkerView.setVisibility(View.GONE);
+            llDestination.setVisibility(View.GONE);
+            getMainActivity().statusCheck();
+            //getCurrentLocation();
+        }
+
+
+    }
+
+    @Override
     public void setTitleBar(TitleBar titleBar) {
         super.setTitleBar(titleBar);
         this.titleBar = titleBar;
@@ -247,17 +380,41 @@ public class HomeMapFragment extends BaseFragment implements
 
     }
 
-    @Override
-    public void onLocationActivateListener() {
-        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
-            getCurrentLocation();
+    public void adjustTitleBar() {
+        titleBar.hideButtons();
+        titleBar.showMenuButton();
+        titleBar.showMessageButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDockActivity().replaceDockableFragment(MessagesFragment.newInstance(), MessagesFragment.class.getSimpleName());
+            }
+        });
+        titleBar.showCallButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel: 999888555222"));
+                startActivity(intent);
+            }
+        });
+        titleBar.setSubHeading(getResources().getString(R.string.your_ride));
     }
 
-    @Override
-    public void onNetworkActivateListener() {
-        if (origin == null) {
-            // getMainActivity().statusCheck();
-            //  getCurrentLocation();
+    private void sendRequest(String origin, String destination) {
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setRoute() {
+        if (origin != null && destination != null) {
+            LatLng pick = origin.getLatlng();
+            LatLng destinat = destination.getLatlng();
+            String origin_string = String.valueOf(pick.latitude) + "," + String.valueOf(pick.longitude);
+            String destination_string = String.valueOf(destinat.latitude) + "," + String.valueOf(destinat.longitude);
+            sendRequest(origin_string, destination_string);
         }
     }
 
@@ -318,6 +475,22 @@ public class HomeMapFragment extends BaseFragment implements
             //moveMap(null);
             polylinePaths.add(googleMap.addPolyline(polylineOptions));
 
+            captureScreen();
+
+        }
+    }
+
+    @Override
+    public void onLocationActivateListener() {
+        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
+            getCurrentLocation();
+    }
+
+    @Override
+    public void onNetworkActivateListener() {
+        if (origin == null) {
+            // getMainActivity().statusCheck();
+            //  getCurrentLocation();
         }
     }
 
@@ -346,120 +519,100 @@ public class HomeMapFragment extends BaseFragment implements
         });
     }
 
-    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId, String title, int ColorID) {
+    private void movemap(LatLng latlng) {
 
-        View customMarkerView = ((LayoutInflater) getMainActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
-        ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.img_icon);
-        TextView textView = (TextView) customMarkerView.findViewById(R.id.txt_pick_text);
-        textView.setText(title);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        textView.setBackgroundColor(getResources().getColor(R.color.white));
-        markerImageView.setImageResource(resId);
-        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
-        customMarkerView.buildDrawingCache();
-        Bitmap returnedBitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(returnedBitmap);
-        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
-        Drawable drawable = customMarkerView.getBackground();
-        if (drawable != null)
-            drawable.draw(canvas);
-        customMarkerView.draw(canvas);
-        return returnedBitmap;
-    }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0)))
-            getCurrentLocation();
-    }
+      /*  CameraUpdate center = CameraUpdateFactory.newLatLng(latlng);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
+>>>>>>> f89e593cd6182c6ba33fabb11b9f8726c1c4d18b
 
-    @Override
-    public void onConnectionSuspended(int i) {
+        googleMap.moveCamera(center);
+        googleMap.animateCamera(zoom);*/
 
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onMapLongClick(LatLng latLng) {
-
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
-
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-
-    }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googlemap) {
-        googleMap = googlemap;
-       /* googleMap.setMyLocationEnabled(true);
-        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-
-                    if (getMainActivity().statusCheck())
-                        getCurrentLocation();
-                return true;
-            }
-        });
-       // getCurrentLocation();
-        View locationButton = map.getView().findViewById(0x2);
-
-// and next place it, for exemple, on bottom right (as Google Maps app)
-        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-// position on right bottom
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-        rlp.setMargins(0, 0, 0, (int) getResources().getDimension(R.dimen.x100));
-        googleMap.setOnMarkerDragListener(this);
-        googleMap.setOnMapLongClickListener(this);
-        googlemap.setOnMarkerClickListener(this);*/
-        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                String address = getCurrentAddress(cameraPosition.target.latitude, cameraPosition.target.longitude);
-                if (address != null) {
-                    origin = new LocationEnt(address,
-                            cameraPosition.target);
-                } else {
-                    //  origin = new LocationEnt("Un Named Street",cameraPosition.target);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(latlng.latitude, latlng.longitude))
+                .zoom(13)
+                .bearing(0)
+                .tilt(45)
+                .build();
+        if (isCurrentLocationMove) {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            isCurrentLocationMove = false;
+        } else {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        /*if (isCurrentLocationMove) {
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    customMarkerView.setVisibility(View.VISIBLE);
+                    llDestination.setVisibility(View.VISIBLE);
+                    isCurrentLocationMove = false;
                 }
-                //UIHelper.showShortToastInCenter(getDockActivity(), cameraPosition.target.toString());
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+        }else
+        {*/
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        // }
+        //googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+    }
+
+    private void getCurrentLocation() {
+
+
+        if (googleMap != null) {
+            googleMap.clear();
+        }
+        if (ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (Mylocation == null) {
+            locationRequest.setInterval(1000);
+        }
+        listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location mlocation) {
+                if (mlocation != null) {
+                    Mylocation = mlocation;
+                    listener = null;
+                    if (Mylocation != null) {
+                        //Getting longitude and latitude
+                        longitude = Mylocation.getLongitude();
+                        latitude = Mylocation.getLatitude();
+                        // origin = new LatLng(latitude, longitude);
+                        String Address = getCurrentAddress(latitude, longitude);
+                        customMarkerView.setVisibility(View.VISIBLE);
+                        llDestination.setVisibility(View.VISIBLE);
+                        if (Address != null) {
+
+                            origin = new LocationEnt(Address, new LatLng(latitude, longitude));
+                        } else {
+                            origin = new LocationEnt("Un Named Street", new LatLng(latitude, longitude));
+                        }
+                        isCurrentLocationMove = true;
+                        movemap(origin.getLatlng());
+                        // moveMap(new LatLng(latitude, longitude));
+                    } else {
+                        UIHelper.showShortToastInCenter(getDockActivity(), "Can't get your Location Try getting using Location Button");
+                    }
+                }
             }
-        });
-    }
+        };
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, listener);
 
-    @Override
-    public void onStart() {
-        googleApiClient.connect();
-        super.onStart();
-    }
+            //location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-    @Override
-    public void onStop() {
-        googleApiClient.disconnect();
-        super.onStop();
+        }
     }
 
     private String getCurrentAddress(double lat, double lng) {
@@ -486,7 +639,28 @@ public class HomeMapFragment extends BaseFragment implements
         return null;
     }
 
-    @OnClick({R.id.txt_pick_text, R.id.btn_done_selection, R.id.txt_destination_text, R.id.btn_location, R.id.ll_destination, R.id.btn_ridenow, R.id.btn_ridelater, R.id.btn_cancel_ride, R.id.txt_locationtype})
+    public LatLng translateCoordinates(final double distance, final LatLng origpoint, final double angle) {
+        final double distanceNorth = Math.sin(angle) * distance;
+        final double distanceEast = Math.cos(angle) * distance;
+
+        final double earthRadius = 6371000;
+
+        final double newLat = origpoint.latitude + (distanceNorth / earthRadius) * 180 / Math.PI;
+        final double newLon = origpoint.longitude + (distanceEast / (earthRadius * Math.cos(newLat * 180 / Math.PI))) * 180 / Math.PI;
+
+        return new LatLng(newLat, newLon);
+    }
+
+    private void StartPickupActivity(int Id) {
+        Intent i = new Intent(getActivity(), PickupSelectionactivity.class);
+        Bundle args = new Bundle();
+        args.putString("origin", new Gson().toJson(origin));
+        args.putString("destination", new Gson().toJson(destination));
+        i.putExtra("route", args);
+        startActivityForResult(i, Id);
+    }
+
+    @OnClick({R.id.txt_Schedule_text, R.id.txt_pick_text, R.id.btn_done_selection, R.id.txt_destination_text, R.id.btn_location, R.id.ll_destination, R.id.btn_ridenow, R.id.btn_ridelater, R.id.btn_cancel_ride, R.id.txt_locationtype})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.txt_pick_text:
@@ -519,6 +693,9 @@ public class HomeMapFragment extends BaseFragment implements
             case R.id.btn_location:
                 if (getMainActivity().statusCheck())
                     getCurrentLocation();
+                break;
+            case R.id.txt_Schedule_text:
+                setupScheduleDialog();
                 break;
         }
     }
@@ -666,111 +843,6 @@ public class HomeMapFragment extends BaseFragment implements
         scheduleDialog.showDialog();
     }
 
-    private void hideScheduleViews() {
-        btnRidenow.setVisibility(View.VISIBLE);
-        btnRidelater.setVisibility(View.VISIBLE);
-        layoutSchedule.setVisibility(View.GONE);
-        llSourceDestination.setVisibility(View.VISIBLE);
-        titleBar.hideButtons();
-        titleBar.showMenuButton();
-        titleBar.setSubHeading(getResources().getString(R.string.home));
-    }
-
-    private void initTimePicker(final TextView textView) {
-        final Calendar calendar = Calendar.getInstance();
-        final TimePickerHelper timePicker = new TimePickerHelper();
-        if (DateSelected != null) {
-            TimePickerDialog dialog = new TimePickerDialog(getDockActivity(), new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    Date date = new Date();
-                    if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
-                        UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
-                    } else {
-                        Calendar c = Calendar.getInstance();
-                        int year = c.get(Calendar.YEAR);
-                        int month = c.get(Calendar.MONTH);
-                        int day = c.get(Calendar.DAY_OF_MONTH);
-                        c.set(year, month, day, hourOfDay, minute);
-                        TimeSelected = c.getTime();
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(year, month, day, hourOfDay, minute + 15);
-                        String preTime = new SimpleDateFormat("HH:mm a").format(c.getTime()) + " - " +
-                                new SimpleDateFormat("HH:mm a").format(cal.getTime());
-                        textView.setText(preTime);
-                        textView.setPaintFlags(Typeface.BOLD);
-                    }
-                }
-            }, DateSelected.getHours(), DateSelected.getMinutes(), false);
-            Date date = new Date();
-            //if (DateHelper.isSameDay(DateSelected, date))
-            //   dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
-            //dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
-            dialog.show();
-
-           /* timePicker.initTimeDialog(getDockActivity(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    Date date = new Date();
-                    if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
-                        UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
-                    } else {
-                        Calendar c = Calendar.getInstance();
-                        int year = c.get(Calendar.YEAR);
-                        int month = c.get(Calendar.MONTH);
-                        int day = c.get(Calendar.DAY_OF_MONTH);
-                        c.set(year, month, day, hourOfDay, minute);
-                        TimeSelected = c.getTime();
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(year, month, day, hourOfDay, minute + 15);
-                        String preTime = new SimpleDateFormat("HH:mm a").format(c.getTime()) + " - " +
-                                new SimpleDateFormat("HH:mm a").format(cal.getTime());
-                        textView.setText(preTime);
-                        textView.setPaintFlags(Typeface.BOLD);
-                    }
-                }
-            }, DateFormat.is24HourFormat(getMainActivity()));
-            timePicker.showTime();*/
-        } else {
-            UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_pickup_date_first));
-        }
-    }
-
-    private void initDatePicker(final TextView textView) {
-        Calendar calendar = Calendar.getInstance();
-        final DatePickerHelper datePickerHelper = new DatePickerHelper();
-        datePickerHelper.initDateDialog(
-                getDockActivity(),
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-                , new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Date date = new Date();
-                        Calendar c = Calendar.getInstance();
-                        c.set(Calendar.YEAR, year);
-                        c.set(Calendar.MONTH, month);
-                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-// and get that as a Date
-                        Date dateSpecified = c.getTime();
-                        if (dateSpecified.before(date)) {
-                            UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.date_before_error));
-                        } else {
-                            DateSelected = dateSpecified;
-                            String predate = new SimpleDateFormat("EEE,MMM d").format(c.getTime());
-
-                            textView.setText(predate);
-                            textView.setPaintFlags(Typeface.BOLD);
-                        }
-
-                    }
-                }, "PreferredDate");
-
-        datePickerHelper.showDate();
-    }
-
     private void setcanceldialog() {
         final DialogHelper canceldialog = new DialogHelper(getDockActivity());
         canceldialog.cancelRide(R.layout.cancel_ride_dialog, new View.OnClickListener() {
@@ -784,7 +856,8 @@ public class HomeMapFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 canceldialog.hideDialog();
-                setRequestCancelDialog();
+                serviceHelper.enqueueCall(webService.getCancelReasons(), CANCELREASON);
+
             }
         }, new View.OnClickListener() {
             @Override
@@ -796,7 +869,59 @@ public class HomeMapFragment extends BaseFragment implements
         canceldialog.showDialog();
     }
 
-    private void setRequestCancelDialog() {
+    private void ShowrideReachingDialog() {
+        googleMap.clear();
+        findingRide.setVisibility(View.GONE);
+        btnCancelRide.setVisibility(View.GONE);
+        setRoute();
+        final BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
+        rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setcanceldialog();
+            }
+        });
+
+        rideReaching.showDialog();
+        mIsTitleBarChanged = true;
+        adjustTitleBar();
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_submit_rating);
+                ratingDialog.initRatingDialog(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rideReaching.hideDialog();
+                        ratingDialog.hideDialog();
+                        getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
+                    }
+                });
+                ratingDialog.showDialog();
+                titleBar.hideButtons();
+                titleBar.setSubHeading(getResources().getString(R.string.rate_title));
+            }
+        }, 10000);*/
+    }
+
+    private void initPromoCodeDialog() {
+        final DialogHelper promodialog = new DialogHelper(getDockActivity());
+        promodialog.promoCode(R.layout.promo_code_dialog, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promodialog.hideDialog();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promodialog.hideDialog();
+            }
+        });
+        promodialog.setCancelable(false);
+        promodialog.showDialog();
+    }
+
+    private void setRequestCancelDialog(ArrayList<CancelReasonEnt> arrayList) {
         final Dialog dialog = new Dialog(getDockActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -804,10 +929,11 @@ public class HomeMapFragment extends BaseFragment implements
         Button okbutton = (Button) dialog.findViewById(R.id.btn_ok);
         ListView listView = (ListView) dialog.findViewById(R.id.lv_listview);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel);
-        ArrayList<String> arrayList = new ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
+
+
+     /*   for (int i = 1; i <= 8; i++) {
             arrayList.add("I'm getting late");
-        }
+        }*/
 
 
         ReasonCancelListViewAdapter adapter = new ReasonCancelListViewAdapter(getDockActivity(), arrayList, true);
@@ -921,228 +1047,14 @@ public class HomeMapFragment extends BaseFragment implements
 
     }
 
-    private void ShowrideReachingDialog() {
-        googleMap.clear();
-        findingRide.setVisibility(View.GONE);
-        btnCancelRide.setVisibility(View.GONE);
-        setRoute();
-        final BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
-        rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setcanceldialog();
-            }
-        });
-
-        rideReaching.showDialog();
-        mIsTitleBarChanged = true;
-        adjustTitleBar();
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_submit_rating);
-                ratingDialog.initRatingDialog(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        rideReaching.hideDialog();
-                        ratingDialog.hideDialog();
-                        getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
-                    }
-                });
-                ratingDialog.showDialog();
-                titleBar.hideButtons();
-                titleBar.setSubHeading(getResources().getString(R.string.rate_title));
-            }
-        }, 10000);*/
-    }
-
-    public void adjustTitleBar() {
+    private void hideScheduleViews() {
+        btnRidenow.setVisibility(View.VISIBLE);
+        btnRidelater.setVisibility(View.VISIBLE);
+        layoutSchedule.setVisibility(View.GONE);
+        llSourceDestination.setVisibility(View.VISIBLE);
         titleBar.hideButtons();
         titleBar.showMenuButton();
-        titleBar.showMessageButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDockActivity().replaceDockableFragment(MessagesFragment.newInstance(), MessagesFragment.class.getSimpleName());
-            }
-        });
-        titleBar.showCallButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel: 999888555222"));
-                startActivity(intent);
-            }
-        });
-        titleBar.setSubHeading(getResources().getString(R.string.your_ride));
-    }
-
-    public LatLng translateCoordinates(final double distance, final LatLng origpoint, final double angle) {
-        final double distanceNorth = Math.sin(angle) * distance;
-        final double distanceEast = Math.cos(angle) * distance;
-
-        final double earthRadius = 6371000;
-
-        final double newLat = origpoint.latitude + (distanceNorth / earthRadius) * 180 / Math.PI;
-        final double newLon = origpoint.longitude + (distanceEast / (earthRadius * Math.cos(newLat * 180 / Math.PI))) * 180 / Math.PI;
-
-        return new LatLng(newLat, newLon);
-    }
-
-    private void initPromoCodeDialog() {
-        final DialogHelper promodialog = new DialogHelper(getDockActivity());
-        promodialog.promoCode(R.layout.promo_code_dialog, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                promodialog.hideDialog();
-            }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                promodialog.hideDialog();
-            }
-        });
-        promodialog.setCancelable(false);
-        promodialog.showDialog();
-    }
-
-    private void getCurrentLocation() {
-
-
-        if (googleMap != null) {
-            googleMap.clear();
-        }
-        if (ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        if (Mylocation == null) {
-            locationRequest.setInterval(1000);
-        }
-        listener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location mlocation) {
-                if (mlocation != null) {
-                    Mylocation = mlocation;
-                    listener = null;
-                    if (Mylocation != null) {
-                        //Getting longitude and latitude
-                        longitude = Mylocation.getLongitude();
-                        latitude = Mylocation.getLatitude();
-                        // origin = new LatLng(latitude, longitude);
-                        String Address = getCurrentAddress(latitude, longitude);
-                        customMarkerView.setVisibility(View.VISIBLE);
-                        llDestination.setVisibility(View.VISIBLE);
-                        if (Address != null) {
-
-                            origin = new LocationEnt(Address, new LatLng(latitude, longitude));
-                        } else {
-                            origin = new LocationEnt("Un Named Street", new LatLng(latitude, longitude));
-                        }
-                        isCurrentLocationMove = true;
-                        movemap(origin.getLatlng());
-                        // moveMap(new LatLng(latitude, longitude));
-                    } else {
-                        UIHelper.showShortToastInCenter(getDockActivity(), "Can't get your Location Try getting using Location Button");
-                    }
-                }
-            }
-        };
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, listener);
-
-            //location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-
-        }
-    }
-
-    private void movemap(LatLng latlng) {
-
-
-      /*  CameraUpdate center = CameraUpdateFactory.newLatLng(latlng);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
->>>>>>> f89e593cd6182c6ba33fabb11b9f8726c1c4d18b
-
-        googleMap.moveCamera(center);
-        googleMap.animateCamera(zoom);*/
-
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(latlng.latitude, latlng.longitude))
-                .zoom(13)
-                .bearing(0)
-                .tilt(45)
-                .build();
-        if (isCurrentLocationMove) {
-            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            isCurrentLocationMove = false;
-        } else {
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
-        /*if (isCurrentLocationMove) {
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-                    customMarkerView.setVisibility(View.VISIBLE);
-                    llDestination.setVisibility(View.VISIBLE);
-                    isCurrentLocationMove = false;
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
-        }else
-        {*/
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        // }
-        //googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-    }
-
-    private void sendRequest(String origin, String destination) {
-        try {
-            new DirectionFinder(this, origin, destination).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setRoute() {
-        if (origin != null && destination != null) {
-            LatLng pick = origin.getLatlng();
-            LatLng destinat = destination.getLatlng();
-            String origin_string = String.valueOf(pick.latitude) + "," + String.valueOf(pick.longitude);
-            String destination_string = String.valueOf(destinat.latitude) + "," + String.valueOf(destinat.longitude);
-            sendRequest(origin_string, destination_string);
-        }
-    }
-
-    private void StartPickupActivity(int Id) {
-        Intent i = new Intent(getActivity(), PickupSelectionactivity.class);
-        Bundle args = new Bundle();
-        args.putString("origin", new Gson().toJson(origin));
-        args.putString("destination", new Gson().toJson(destination));
-        i.putExtra("route", args);
-        startActivityForResult(i, Id);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            Bundle b = data.getBundleExtra("route");
-            if (b != null) {
-                origin = new Gson().fromJson(b.getString("origin"), LocationEnt.class);
-                destination = new Gson().fromJson(b.getString("destination"), LocationEnt.class);
-                boolean setonMap = b.getBoolean("setonMap");
-                if (setonMap) {
-                    initdestinationLocationSelect();
-                } else
-                    initRideStatus();
-            }
-        }
+        titleBar.setSubHeading(getResources().getString(R.string.home));
     }
 
     private void initdestinationLocationSelect() {
@@ -1212,31 +1124,178 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
-                .getWindow().getDecorView());
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            Bundle b = data.getBundleExtra("route");
+            if (b != null) {
+                origin = new Gson().fromJson(b.getString("origin"), LocationEnt.class);
+                destination = new Gson().fromJson(b.getString("destination"), LocationEnt.class);
+                boolean setonMap = b.getBoolean("setonMap");
+                if (setonMap) {
+                    initdestinationLocationSelect();
+                } else
+                    initRideStatus();
+            }
+        }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
-                .getWindow().getDecorView());
-        if (origin == null || origin.getLatlng().equals(new LatLng(0, 0))) {
-            customMarkerView.setVisibility(View.GONE);
-            llDestination.setVisibility(View.GONE);
-            getMainActivity().statusCheck();
-            //getCurrentLocation();
+    public void ResponseSuccess(Object result, String Tag) throws ClassCastException {
+
+        switch (Tag) {
+            case CANCELREASON:
+                setRequestCancelDialog((ArrayList<CancelReasonEnt>) result);
+                break;
         }
-
-
     }
 
-    @OnClick(R.id.txt_Schedule_text)
-    public void onViewClicked() {
-        setupScheduleDialog();
+    @Override
+    public void ResponseFailure(String tag) {
+        loadingFinished();
     }
 
+    private void initTimePicker(final TextView textView) {
+        final Calendar calendar = Calendar.getInstance();
+        final TimePickerHelper timePicker = new TimePickerHelper();
+        if (DateSelected != null) {
+            TimePickerDialog dialog = new TimePickerDialog(getDockActivity(), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    Date date = new Date();
+                    if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
+                        UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
+                    } else {
+                        Calendar c = Calendar.getInstance();
+                        int year = c.get(Calendar.YEAR);
+                        int month = c.get(Calendar.MONTH);
+                        int day = c.get(Calendar.DAY_OF_MONTH);
+                        c.set(year, month, day, hourOfDay, minute);
+                        TimeSelected = c.getTime();
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(year, month, day, hourOfDay, minute + 15);
+                        String preTime = new SimpleDateFormat("HH:mm a").format(c.getTime()) + " - " +
+                                new SimpleDateFormat("HH:mm a").format(cal.getTime());
+                        textView.setText(preTime);
+                        textView.setPaintFlags(Typeface.BOLD);
+                    }
+                }
+            }, DateSelected.getHours(), DateSelected.getMinutes(), false);
+            Date date = new Date();
+            //if (DateHelper.isSameDay(DateSelected, date))
+            //   dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
+            //dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
+            dialog.show();
 
+           /* timePicker.initTimeDialog(getDockActivity(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    Date date = new Date();
+                    if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
+                        UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
+                    } else {
+                        Calendar c = Calendar.getInstance();
+                        int year = c.get(Calendar.YEAR);
+                        int month = c.get(Calendar.MONTH);
+                        int day = c.get(Calendar.DAY_OF_MONTH);
+                        c.set(year, month, day, hourOfDay, minute);
+                        TimeSelected = c.getTime();
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(year, month, day, hourOfDay, minute + 15);
+                        String preTime = new SimpleDateFormat("HH:mm a").format(c.getTime()) + " - " +
+                                new SimpleDateFormat("HH:mm a").format(cal.getTime());
+                        textView.setText(preTime);
+                        textView.setPaintFlags(Typeface.BOLD);
+                    }
+                }
+            }, DateFormat.is24HourFormat(getMainActivity()));
+            timePicker.showTime();*/
+        } else {
+            UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_pickup_date_first));
+        }
+    }
+
+    private void initDatePicker(final TextView textView) {
+        Calendar calendar = Calendar.getInstance();
+        final DatePickerHelper datePickerHelper = new DatePickerHelper();
+        datePickerHelper.initDateDialog(
+                getDockActivity(),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+                , new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Date date = new Date();
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.YEAR, year);
+                        c.set(Calendar.MONTH, month);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+// and get that as a Date
+                        Date dateSpecified = c.getTime();
+                        if (dateSpecified.before(date)) {
+                            UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.date_before_error));
+                        } else {
+                            DateSelected = dateSpecified;
+                            String predate = new SimpleDateFormat("EEE,MMM d").format(c.getTime());
+
+                            textView.setText(predate);
+                            textView.setPaintFlags(Typeface.BOLD);
+                        }
+
+                    }
+                }, "PreferredDate");
+
+        datePickerHelper.showDate();
+    }
+
+    public void captureScreen() {
+
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                final Bitmap bitmap;
+                // TODO Auto-generated method stub
+                bitmap = snapshot;
+
+                OutputStream fout = null;
+
+                String filePath = System.currentTimeMillis() + ".jpeg";
+
+                try {
+                    saveImage(snapshot);
+
+                    // Write the string to the file
+                   // bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
+
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    Log.d("ImageCapture", "FileNotFoundException");
+                    Log.d("ImageCapture", e.getMessage());
+                    filePath = "";
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    Log.d("ImageCapture", "IOException");
+                    Log.d("ImageCapture", e.getMessage());
+                    filePath = "";
+                }
+
+                //openShareImageDialog(filePath);
+            }
+            private void saveImage(Bitmap bitmap) throws IOException {
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+                File f = new File(Environment.getExternalStorageDirectory() + File.separator + "test.png");
+                f.createNewFile();
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            }
+
+            };
+
+        googleMap.snapshot(callback);
+    }
 }

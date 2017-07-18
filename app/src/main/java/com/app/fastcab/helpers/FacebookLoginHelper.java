@@ -47,7 +47,7 @@ public class FacebookLoginHelper implements FacebookCallback<LoginResult> {
 
         });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id, first_name, last_name, email,gender, birthday,link");
+        parameters.putString("fields", "id, name, first_name, last_name, email,gender, birthday,link");
         request.setParameters(parameters);
         request.executeAsync();
     }
@@ -87,6 +87,10 @@ public class FacebookLoginHelper implements FacebookCallback<LoginResult> {
             loginEnt.setFacebookUID(id);
             bundle.putString("tokenFacebook", accessToken.getToken());
             loginEnt.setFacebookToken(accessToken.getToken());
+            if (object.has("name")) {
+                loginEnt.setFacebookFullName(object.getString("name"));
+                bundle.putString("name", object.getString("name"));
+            }
             if (object.has("first_name")) {
                 loginEnt.setFacebookFirstName(object.getString("first_name"));
                 bundle.putString("first_name", object.getString("first_name"));
@@ -126,7 +130,6 @@ public class FacebookLoginHelper implements FacebookCallback<LoginResult> {
 
 
     }
-
 
 
 }
