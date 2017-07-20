@@ -4,10 +4,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created on 7/15/2017.
+ * Created on 7/19/2017.
  */
 
-public class UserEnt {
+public class DriverEnt {
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -34,7 +35,7 @@ public class UserEnt {
     private String dob;
     @SerializedName("gender")
     @Expose
-    private String gender;
+    private Object gender;
     @SerializedName("city")
     @Expose
     private String city;
@@ -76,7 +77,7 @@ public class UserEnt {
     private String code;
     @SerializedName("social_media_id")
     @Expose
-    private String socialMediaId;
+    private Integer socialMediaId;
     @SerializedName("social_media_platform")
     @Expose
     private String socialMediaPlatform;
@@ -89,6 +90,9 @@ public class UserEnt {
     @SerializedName("longitude")
     @Expose
     private String longitude;
+    @SerializedName("promo_code")
+    @Expose
+    private String promoCode;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -103,10 +107,7 @@ public class UserEnt {
     private Integer totalRide;
     @SerializedName("total_distance")
     @Expose
-    private String totalDistance;
-    @SerializedName("promo_code")
-    @Expose
-    private String promoCode;
+    private Double totalDistance;
 
     public Integer getId() {
         return id;
@@ -172,11 +173,11 @@ public class UserEnt {
         this.dob = dob;
     }
 
-    public String getGender() {
+    public Object getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Object gender) {
         this.gender = gender;
     }
 
@@ -284,11 +285,11 @@ public class UserEnt {
         this.code = code;
     }
 
-    public String getSocialMediaId() {
+    public Integer getSocialMediaId() {
         return socialMediaId;
     }
 
-    public void setSocialMediaId(String socialMediaId) {
+    public void setSocialMediaId(Integer socialMediaId) {
         this.socialMediaId = socialMediaId;
     }
 
@@ -324,6 +325,14 @@ public class UserEnt {
         this.longitude = longitude;
     }
 
+    public String getPromoCode() {
+        return promoCode;
+    }
+
+    public void setPromoCode(String promoCode) {
+        this.promoCode = promoCode;
+    }
+
     public String getCreatedAt() {
         return createdAt;
     }
@@ -356,19 +365,11 @@ public class UserEnt {
         this.totalRide = totalRide;
     }
 
-    public String getTotalDistance() {
+    public Double getTotalDistance() {
         return totalDistance;
     }
 
-    public void setTotalDistance(String totalDistance) {
+    public void setTotalDistance(Double totalDistance) {
         this.totalDistance = totalDistance;
-    }
-
-    public String getPromoCode() {
-        return promoCode;
-    }
-
-    public void setPromoCode(String promoCode) {
-        this.promoCode = promoCode;
     }
 }

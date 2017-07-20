@@ -1,7 +1,6 @@
 package com.app.fastcab.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.activities.DockActivity;
-import com.app.fastcab.entities.RideEnt;
+import com.app.fastcab.entities.CarRide;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -21,9 +20,9 @@ import java.util.List;
 public class RideSelectionAdapter extends RecyclerView.Adapter<RideSelectionAdapter.MyViewHolder>  {
     private DockActivity context;
     private ImageLoader imageLoader;
-    private List<RideEnt> rideEntList;
+    private List<CarRide> rideEntList;
 
-    public RideSelectionAdapter(DockActivity context, List<RideEnt> rideEntList) {
+    public RideSelectionAdapter(DockActivity context, List<CarRide> rideEntList) {
         this.context = context;
         this.rideEntList = rideEntList;
     }

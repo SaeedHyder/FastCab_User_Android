@@ -5,8 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
+import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.entities.UserEnt;
 import com.app.fastcab.retrofit.GsonFactory;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BasePreferenceHelper extends PreferenceHelper {
@@ -20,7 +25,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     protected static final String USERNAME = "userName";
     protected static final String USERID = "userId";
     protected static final String KEY_USER = "key_user";
-
+    protected static final String KEY_CARTYPES = "KEY_CARTYPES";
 
 
 
@@ -81,6 +86,15 @@ public class BasePreferenceHelper extends PreferenceHelper {
     public void putUser(UserEnt user) {
         putStringPreference(context, FILENAME, KEY_USER, GsonFactory
                 .getConfiguredGson().toJson(user));
+    }
+    public ArrayList<SelectCarEnt> getCarTypes() {
+        return GsonFactory.getConfiguredGson().fromJson(
+                getStringPreference(context, FILENAME, KEY_CARTYPES), new TypeToken<List<SelectCarEnt>>(){}.getType());
+    }
+
+    public void putCarTypes(ArrayList<SelectCarEnt> CarTypes) {
+        putStringPreference(context, FILENAME, KEY_CARTYPES, GsonFactory
+                .getConfiguredGson().toJson(CarTypes));
     }
 
 }

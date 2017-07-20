@@ -555,6 +555,11 @@ public class HomeFragment extends BaseFragment implements
     }
 
     @Override
+    public void onDirectionFinderSuccess(List<Route> route, View view, Object object) {
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (origin == null) {

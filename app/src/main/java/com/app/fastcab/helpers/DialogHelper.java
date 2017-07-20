@@ -161,12 +161,15 @@ public class DialogHelper {
         CustomRatingBar ratingBar = (CustomRatingBar) dialog.findViewById(ratingBarID);
         return ratingBar.getScore();
     }
-
+*/
     public String getEditText(int editTextID) {
         AnyEditTextView editTextView = (AnyEditTextView) dialog.findViewById(editTextID);
-        KeyboardHide.hideSoftKeyboard(dialog.getContext(), editTextView);
+        UIHelper.hideSoftKeyboard(dialog.getContext(), editTextView);
+        if (editTextView.getText().toString().equals("")){
+            editTextView.setError("Enter Correct Promo Code");
+        }
         return editTextView.getText().toString();
-    }*/
+    }
 
     public void showDialog(){
 

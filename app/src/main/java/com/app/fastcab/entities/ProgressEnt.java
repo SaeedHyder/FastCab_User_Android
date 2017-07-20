@@ -4,20 +4,20 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created on 7/18/2017.
+ * Created on 7/20/2017.
  */
 
-public class RideEnt {
+public class ProgressEnt {
 
     @SerializedName("id")
     @Expose
     private Integer id;
     @SerializedName("user_id")
     @Expose
-    private String userId;
+    private Integer userId;
     @SerializedName("cancel_id")
     @Expose
-    private String cancelId;
+    private Integer cancelId;
     @SerializedName("pickup_latitude")
     @Expose
     private String pickupLatitude;
@@ -45,9 +45,6 @@ public class RideEnt {
     @SerializedName("vehicle_id")
     @Expose
     private Integer vehicleId;
-    @SerializedName("promo_id")
-    @Expose
-    private Integer promoId;
     @SerializedName("date")
     @Expose
     private String date;
@@ -59,7 +56,7 @@ public class RideEnt {
     private String rideStatus;
     @SerializedName("status")
     @Expose
-    private String status;
+    private Integer status;
     @SerializedName("estimate_fare")
     @Expose
     private String estimateFare;
@@ -75,6 +72,18 @@ public class RideEnt {
     @SerializedName("distance")
     @Expose
     private String distance;
+    @SerializedName("rate_user")
+    @Expose
+    private Integer rateUser;
+    @SerializedName("user_detail")
+    @Expose
+    private UserEnt userDetail;
+    @SerializedName("cancel_detail")
+    @Expose
+    private CancelReasonEnt cancelDetail;
+    @SerializedName("vechicle_detail")
+    @Expose
+    private SelectCarEnt vechicleDetail;
 
     public Integer getId() {
         return id;
@@ -84,19 +93,19 @@ public class RideEnt {
         this.id = id;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public String getCancelId() {
+    public Integer getCancelId() {
         return cancelId;
     }
 
-    public void setCancelId(String cancelId) {
+    public void setCancelId(Integer cancelId) {
         this.cancelId = cancelId;
     }
 
@@ -172,14 +181,6 @@ public class RideEnt {
         this.vehicleId = vehicleId;
     }
 
-    public Integer getPromoId() {
-        return promoId;
-    }
-
-    public void setPromoId(Integer promoId) {
-        this.promoId = promoId;
-    }
-
     public String getDate() {
         return date;
     }
@@ -204,11 +205,11 @@ public class RideEnt {
         this.rideStatus = rideStatus;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -252,4 +253,35 @@ public class RideEnt {
         this.distance = distance;
     }
 
+    public Integer getRateUser() {
+        return rateUser;
+    }
+
+    public void setRateUser(Integer rateUser) {
+        this.rateUser = rateUser;
+    }
+
+    public UserEnt getUserDetail() {
+        return userDetail;
+    }
+
+    public void setUserDetail(UserEnt userDetail) {
+        this.userDetail = userDetail;
+    }
+
+    public CancelReasonEnt getCancelDetail() {
+        return cancelDetail;
+    }
+
+    public void setCancelDetail(CancelReasonEnt cancelDetail) {
+        this.cancelDetail = cancelDetail;
+    }
+
+    public SelectCarEnt getVechicleDetail() {
+        return vechicleDetail;
+    }
+
+    public void setVechicleDetail(SelectCarEnt vechicleDetail) {
+        this.vechicleDetail = vechicleDetail;
+    }
 }

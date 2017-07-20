@@ -25,19 +25,27 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.app.fastcab.R;
+import com.app.fastcab.entities.ResponseWrapper;
+import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.fragments.HomeMapFragment;
 import com.app.fastcab.fragments.LoginFragment;
 import com.app.fastcab.fragments.SideMenuFragment;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.AppConstants;
 import com.app.fastcab.global.SideMenuChooser;
 import com.app.fastcab.global.SideMenuDirection;
+import com.app.fastcab.global.WebServiceConstants;
 import com.app.fastcab.helpers.ScreenHelper;
+import com.app.fastcab.helpers.TokenUpdater;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.interfaces.OnSettingActivateListener;
 import com.app.fastcab.residemenu.ResideMenu;
+import com.app.fastcab.retrofit.WebService;
+import com.app.fastcab.retrofit.WebServiceFactory;
 import com.app.fastcab.ui.views.TitleBar;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -56,8 +64,13 @@ import com.kbeanie.imagechooser.api.FileChooserManager;
 import com.kbeanie.imagechooser.api.ImageChooserListener;
 import com.kbeanie.imagechooser.api.ImageChooserManager;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends DockActivity implements OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,ImageChooserListener {
@@ -97,6 +110,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_dock);
         ButterKnife.bind(this);
+        getVehicleTypes();
         titleBar = header_main;
         // setBehindContentView(R.layout.fragment_frame);
         mContext = this;
@@ -144,7 +158,25 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
             initFragment();
 
     }
+    private void getVehicleTypes() {
+       WebService webService =  WebServiceFactory.getWebServiceInstanceWithCustomInterceptor(getDockActivity(), WebServiceConstants.SERVICE_URL);
+        Call<ResponseWrapper<ArrayList<SelectCarEnt>>> call= webService.getVehicles();
+        call.enqueue(new Callback<ResponseWrapper<ArrayList<SelectCarEnt>>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<ArrayList<SelectCarEnt>>> call, Response<ResponseWrapper<ArrayList<SelectCarEnt>>> response) {
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                   prefHelper.putCarTypes(response.body().getResult());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ResponseWrapper<ArrayList<SelectCarEnt>>> call, Throwable t) {
+                Log.e(LoginFragment.class.getSimpleName(), t.toString());
+            }
+        });
+    }
     public void setImageSetter(ImageSetter imageSetter) {
         this.imageSetter = imageSetter;
     }

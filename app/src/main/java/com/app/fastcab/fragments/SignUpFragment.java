@@ -41,6 +41,7 @@ import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
 import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 import com.squareup.picasso.Picasso;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -277,9 +278,16 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         } else if (!prefHelper.isTermAccepted()) {
             UIHelper.showShortToastInCenter(getDockActivity(), "Accept Term And Condition First");
             return false;
+        } else if (profilePic == null) {
+            UIHelper.showShortToastInCenter(getDockActivity(), "Select a Profile Picture");
+            return false;
+        } else if (spGender.getSelectedItemPosition() == 0) {
+            UIHelper.showShortToastInCenter(getDockActivity(), "Select a Gender");
+            return false;
         } else {
             return true;
         }
+
 
     }
 
@@ -480,7 +488,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
                 loadingFinished();
+
                 if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    LoginManager.getInstance().logOut();
                     prefHelper.putUser(response.body().getResult());
                     prefHelper.setUsrId(response.body().getResult().getId() + "");
                     TokenUpdater.getInstance().UpdateToken(getDockActivity(),
@@ -489,6 +499,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                             prefHelper.getFirebase_TOKEN());
                     getDockActivity().replaceDockableFragment(VerifyNumFragment.newInstance(), "VerifyNumFragment");
                 } else {
+                    LoginManager.getInstance().logOut();
                     UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
                 }
             }
@@ -514,7 +525,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             //     "file:///" +imagePath, CircularImageSharePop);
         }
     }
-    private void SetFaceBookImage(String imagePath){
+
+    private void SetFaceBookImage(String imagePath) {
         if (imagePath != null) {
             //profilePic = new File(imagePath);
             profilePic = new File(imagePath);
@@ -543,8 +555,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         edtUserName.setText(checkForNullOREmpty(loginEnt.getFacebookFullName()));
         edtDateOfBirth.setText(checkForNullOREmpty(loginEnt.getFacebookBirthday()));
         edtemail.setText(checkForNullOREmpty(loginEnt.getFacebookEmail()));
-        SetFaceBookImage(loginEnt.getFacebookUProfilePicture());
+        // SetFaceBookImage(loginEnt.getFacebookUProfilePicture());
         if (genderList.contains(loginEnt.getFacebookGender()))
             spGender.setSelection(genderList.indexOf(loginEnt.getFacebookGender()));
+
     }
 }

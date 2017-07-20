@@ -1,83 +1,113 @@
 package com.app.fastcab.entities;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by saeedhyder on 7/14/2017.
  */
 
 public class SelectCarEnt {
 
-    private String unselectedCarImage;
-    private Integer unselectedCarBackground;
-    private String carName;
-    private Integer selectedTextColor;
-    private Integer UnseelectedTextColor;
-    private String selectedCarImage;
-    private Integer selectedCarBackground;
-    public SelectCarEnt(String unselectedCarImage, Integer unselectedCarBackground, String carName, Integer selectedTextColor, Integer unseelectedTextColor, String selectedCarImage, Integer selectedCarBackground) {
-        this.unselectedCarImage = unselectedCarImage;
-        this.unselectedCarBackground = unselectedCarBackground;
-        this.carName = carName;
-        this.selectedTextColor = selectedTextColor;
-        UnseelectedTextColor = unseelectedTextColor;
-        this.selectedCarImage = selectedCarImage;
-        this.selectedCarBackground = selectedCarBackground;
+
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("type")
+    @Expose
+    private String type;
+    @SerializedName("vehicle_charges")
+    @Expose
+    private String vehicleCharges;
+    @SerializedName("kilometer_charges")
+    @Expose
+    private String kilometerCharges;
+    @SerializedName("capacity")
+    @Expose
+    private String capacity;
+    @SerializedName("vehicle_picture_one")
+    @Expose
+    private String vehiclePictureOne;
+    @SerializedName("vehicle_picture_two")
+    @Expose
+    private String vehiclePictureTwo;
+    @SerializedName("vehicle_image_one")
+    @Expose
+    private String vehicleImageOne;
+    @SerializedName("vehicle_image_two")
+    @Expose
+    private String vehicleImageTwo;
+
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getUnselectedCarBackground() {
-        return unselectedCarBackground;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setUnselectedCarBackground(Integer unselectedCarBackground) {
-        this.unselectedCarBackground = unselectedCarBackground;
+    public String getType() {
+        return type;
     }
 
-    public Integer getSelectedTextColor() {
-        return selectedTextColor;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setSelectedTextColor(Integer selectedTextColor) {
-        this.selectedTextColor = selectedTextColor;
+    public String getVehicleCharges() {
+        return vehicleCharges;
     }
 
-    public Integer getUnseelectedTextColor() {
-        return UnseelectedTextColor;
+    public void setVehicleCharges(String vehicleCharges) {
+        this.vehicleCharges = vehicleCharges;
     }
 
-    public void setUnseelectedTextColor(Integer unseelectedTextColor) {
-        UnseelectedTextColor = unseelectedTextColor;
+    public String getKilometerCharges() {
+        return kilometerCharges;
     }
 
-    public String getSelectedCarImage() {
-        return selectedCarImage;
+    public void setKilometerCharges(String kilometerCharges) {
+        this.kilometerCharges = kilometerCharges;
     }
 
-    public void setSelectedCarImage(String selectedCarImage) {
-        this.selectedCarImage = selectedCarImage;
+    public String getCapacity() {
+        return capacity;
     }
 
-    public Integer getSelectedCarBackground() {
-        return selectedCarBackground;
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
     }
 
-    public void setSelectedCarBackground(Integer selectedCarBackground) {
-        this.selectedCarBackground = selectedCarBackground;
+    public String getVehiclePictureOne() {
+        return vehiclePictureOne;
     }
 
-
-
-    public String getUnselectedCarImage() {
-        return unselectedCarImage;
+    public void setVehiclePictureOne(String vehiclePictureOne) {
+        this.vehiclePictureOne = vehiclePictureOne;
     }
 
-    public void setUnselectedCarImage(String unselectedCarImage) {
-        this.unselectedCarImage = unselectedCarImage;
+    public String getVehiclePictureTwo() {
+        return vehiclePictureTwo;
     }
 
-    public String getCarName() {
-        return carName;
+    public void setVehiclePictureTwo(String vehiclePictureTwo) {
+        this.vehiclePictureTwo = vehiclePictureTwo;
     }
 
-    public void setCarName(String carName) {
-        this.carName = carName;
+    public String getVehicleImageOne() {
+        return vehicleImageOne;
     }
+
+    public void setVehicleImageOne(String vehicleImageOne) {
+        this.vehicleImageOne = vehicleImageOne;
+    }
+
+    public String getVehicleImageTwo() {
+        return vehicleImageTwo;
+    }
+
+    public void setVehicleImageTwo(String vehicleImageTwo) {
+        this.vehicleImageTwo = vehicleImageTwo;
+    }
+
 }

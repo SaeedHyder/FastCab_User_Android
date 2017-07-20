@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import com.app.fastcab.R;
+import com.app.fastcab.retrofit.WebService;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,7 +38,10 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
     }
+
+
 
     @Override
     public void onResume() {

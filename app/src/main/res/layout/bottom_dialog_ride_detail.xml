@@ -97,10 +97,12 @@
                 app:typeface="Roboto-Regular.ttf" />
 
             <com.app.fastcab.ui.views.CustomRatingBar
+                android:id="@+id/rb_rating"
                 android:layout_width="@dimen/x70"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_drivername"
                 android:layout_centerHorizontal="true"
+                app:onlyForDisplay="true"
                 app:maxStars="5"
                 android:layout_marginBottom="@dimen/x5"
                 app:stars="5" />

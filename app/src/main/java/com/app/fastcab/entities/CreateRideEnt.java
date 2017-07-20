@@ -4,20 +4,14 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created on 7/18/2017.
+ * Created on 7/20/2017.
  */
 
-public class RideEnt {
+public class CreateRideEnt {
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
     @SerializedName("user_id")
     @Expose
     private String userId;
-    @SerializedName("cancel_id")
-    @Expose
-    private String cancelId;
     @SerializedName("pickup_latitude")
     @Expose
     private String pickupLatitude;
@@ -44,45 +38,28 @@ public class RideEnt {
     private String destinationPlace;
     @SerializedName("vehicle_id")
     @Expose
-    private Integer vehicleId;
-    @SerializedName("promo_id")
+    private String vehicleId;
+    @SerializedName("status")
     @Expose
-    private Integer promoId;
+    private String status;
+    @SerializedName("ride_status")
+    @Expose
+    private String rideStatus;
+    @SerializedName("estimate_fare")
+    @Expose
+    private String estimateFare;
+    @SerializedName("distance")
+    @Expose
+    private String distance;
     @SerializedName("date")
     @Expose
     private String date;
     @SerializedName("time")
     @Expose
     private String time;
-    @SerializedName("ride_status")
+    @SerializedName("id")
     @Expose
-    private String rideStatus;
-    @SerializedName("status")
-    @Expose
-    private String status;
-    @SerializedName("estimate_fare")
-    @Expose
-    private String estimateFare;
-    @SerializedName("payment_type")
-    @Expose
-    private String paymentType;
-    @SerializedName("total_amount")
-    @Expose
-    private String totalAmount;
-    @SerializedName("paid")
-    @Expose
-    private String paid;
-    @SerializedName("distance")
-    @Expose
-    private String distance;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private Integer id;
 
     public String getUserId() {
         return userId;
@@ -90,14 +67,6 @@ public class RideEnt {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getCancelId() {
-        return cancelId;
-    }
-
-    public void setCancelId(String cancelId) {
-        this.cancelId = cancelId;
     }
 
     public String getPickupLatitude() {
@@ -164,20 +133,44 @@ public class RideEnt {
         this.destinationPlace = destinationPlace;
     }
 
-    public Integer getVehicleId() {
+    public String getVehicleId() {
         return vehicleId;
     }
 
-    public void setVehicleId(Integer vehicleId) {
+    public void setVehicleId(String vehicleId) {
         this.vehicleId = vehicleId;
     }
 
-    public Integer getPromoId() {
-        return promoId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setPromoId(Integer promoId) {
-        this.promoId = promoId;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRideStatus() {
+        return rideStatus;
+    }
+
+    public void setRideStatus(String rideStatus) {
+        this.rideStatus = rideStatus;
+    }
+
+    public String getEstimateFare() {
+        return estimateFare;
+    }
+
+    public void setEstimateFare(String estimateFare) {
+        this.estimateFare = estimateFare;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 
     public String getDate() {
@@ -196,60 +189,12 @@ public class RideEnt {
         this.time = time;
     }
 
-    public String getRideStatus() {
-        return rideStatus;
+    public Integer getId() {
+        return id;
     }
 
-    public void setRideStatus(String rideStatus) {
-        this.rideStatus = rideStatus;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getEstimateFare() {
-        return estimateFare;
-    }
-
-    public void setEstimateFare(String estimateFare) {
-        this.estimateFare = estimateFare;
-    }
-
-    public String getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    public String getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getPaid() {
-        return paid;
-    }
-
-    public void setPaid(String paid) {
-        this.paid = paid;
-    }
-
-    public String getDistance() {
-        return distance;
-    }
-
-    public void setDistance(String distance) {
-        this.distance = distance;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
 }

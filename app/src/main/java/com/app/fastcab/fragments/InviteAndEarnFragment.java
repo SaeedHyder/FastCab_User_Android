@@ -1,5 +1,6 @@
 package com.app.fastcab.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -54,7 +55,7 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        txtPinEntry.setText(prefHelper.getUser().getPromoCode()+"");
         setListners();
     }
 
@@ -69,11 +70,23 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_messenger:
-                UIHelper.showShortToastInCenter(getDockActivity(),"Will be implemented in Beta Version");
+                ShareMyPromoCode("com.facebook.orca",getString(R.string.messenger_share_error),getString(R.string.Share_message)+prefHelper.getUser().getPromoCode()+"");
                 break;
             case R.id.iv_whatsup:
-                UIHelper.showShortToastInCenter(getDockActivity(),"Will be implemented in Beta Version");
+                ShareMyPromoCode("com.whatsapp",getString(R.string.whatsapp_share_error),getString(R.string.Share_message)+prefHelper.getUser().getPromoCode()+"");
+                //UIHelper.showShortToastInCenter(getDockActivity(),"Will be implemented in Beta Version");
                 break;
+        }
+    }
+    private void ShareMyPromoCode(String packageName,String ErrorMessage,String Message){
+        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+        whatsappIntent.setType("text/plain");
+        whatsappIntent.setPackage(packageName);
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, Message);
+        try {
+            this.startActivity(whatsappIntent);
+        } catch (android.content.ActivityNotFoundException ex) {
+            UIHelper.showShortToastInCenter(getDockActivity(),ErrorMessage);
         }
     }
 

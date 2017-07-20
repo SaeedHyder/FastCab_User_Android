@@ -705,6 +705,20 @@ public class DateHelper {
 		SimpleDateFormat timeFormat = new SimpleDateFormat( "h:mm a" , Locale.US );
 		return timeFormat.format( mDate );
 	}
+	public static String getDesireFormatDate(String OurDate,String inFormat,String toFormat) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat(inFormat);
+			Date value = formatter.parse(OurDate);
+
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(toFormat);//this format changeable
+			OurDate = dateFormatter.format(value);
+
+			//Log.d("OurDate", OurDate);
+		} catch (Exception e) {
+			OurDate = "00-00-0000 00:00";
+		}
+		return OurDate;
+	}
 
 	public static String getFormattedTime24Hrs( Date mDate ) {
 

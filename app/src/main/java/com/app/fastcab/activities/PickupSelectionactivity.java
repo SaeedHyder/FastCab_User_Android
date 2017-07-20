@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -21,8 +22,13 @@ import android.widget.Toast;
 
 import com.app.fastcab.R;
 import com.app.fastcab.entities.LocationEnt;
+import com.app.fastcab.entities.ResponseWrapper;
+import com.app.fastcab.entities.RideEnt;
+import com.app.fastcab.global.WebServiceConstants;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.OnReceivePlaceListener;
+import com.app.fastcab.retrofit.WebService;
+import com.app.fastcab.retrofit.WebServiceFactory;
 import com.app.fastcab.ui.adapters.ArrayListAdapter;
 import com.app.fastcab.ui.adapters.AutoCompleteListAdapter;
 import com.app.fastcab.ui.viewbinder.RecentPlaceViewBinder;
@@ -43,12 +49,16 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PickupSelectionactivity extends DockActivity implements
         View.OnFocusChangeListener,
         OnReceivePlaceListener,
         AdapterView.OnItemClickListener {
 
+    private static final String TAG = PickupSelectionactivity.class.getSimpleName();
     @BindView(R.id.iv_pickIcon)
     ImageView ivPickIcon;
     @BindView(R.id.edt_pickup)
@@ -77,14 +87,14 @@ public class PickupSelectionactivity extends DockActivity implements
     ProgressBar progressBar;
     @BindView(R.id.dividerView)
     View dividerView;
+    ArrayListAdapter<LocationEnt> recentPlacesAdapter;
+    ArrayList<LocationEnt> userCollection;
     private AutoCompleteListAdapter madapter;
     private GoogleApiClient mGoogleApiClient;
     private LocationEnt origin;
     private LocationEnt destination;
     private String currentFocus = "";
-
-    ArrayListAdapter<LocationEnt> recentPlacesAdapter;
-    ArrayList<LocationEnt> userCollection;
+    private WebService webService;
 
     /**** Method for Setting the Height of the ListView dynamically.
      **** Hack to fix the issue of not showing all the items of the ListView
@@ -117,7 +127,7 @@ public class PickupSelectionactivity extends DockActivity implements
         setContentView(R.layout.fragment_pickup_location);
 
         recentPlacesAdapter = new ArrayListAdapter<LocationEnt>(this, new RecentPlaceViewBinder());
-
+        webService = WebServiceFactory.getWebServiceInstanceWithCustomInterceptor(getDockActivity(), WebServiceConstants.SERVICE_URL);
         ButterKnife.bind(this);
         if (getIntent() != null) {
             Bundle b = getIntent().getBundleExtra("route");
@@ -126,20 +136,42 @@ public class PickupSelectionactivity extends DockActivity implements
                 destination = new Gson().fromJson(b.getString("destination"), LocationEnt.class);
             }
         }
+        getHistory();
         bindData();
-        setRecentPlacesData();
         setAutocomplete();
         setListeners();
         settitlebar();
     }
 
-    private void setRecentPlacesData() {
+    private void getHistory() {
+        Call<ResponseWrapper<ArrayList<RideEnt>>> call = webService.getUserRideHistory(prefHelper.getUserId());
+        call.enqueue(new Callback<ResponseWrapper<ArrayList<RideEnt>>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<ArrayList<RideEnt>>> call, Response<ResponseWrapper<ArrayList<RideEnt>>> response) {
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    setRecentPlacesData(response.body().getResult());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<ArrayList<RideEnt>>> call, Throwable t) {
+                Log.e(TAG, t.toString());
+
+            }
+        });
+    }
+
+    private void setRecentPlacesData(ArrayList<RideEnt> recentData) {
 
         userCollection = new ArrayList<>();
 
-        userCollection.add(new LocationEnt("Iqra University, Karachi 75500, Pakistan", new LatLng(24.837734199999996, 67.0812502)));
+        for (RideEnt ent:recentData
+             ) {
+            userCollection.add(new LocationEnt(ent.getPickupAddress(),new LatLng(Double.parseDouble(ent.getPickupLatitude()),Double.parseDouble(ent.getPickupLongitude()))));
+        }
+       /* userCollection.add(new LocationEnt("Iqra University, Karachi 75500, Pakistan", new LatLng(24.837734199999996, 67.0812502)));
         userCollection.add(new LocationEnt("Axact House,82B Khayban-e-Ittehad Rd, Karachi 75500, Pakistan", new LatLng(24.8276911, 67.0742583)));
-        userCollection.add(new LocationEnt("Ocean Mall,Khayaban-e-Iqbal, Karachi 75500, Pakistan", new LatLng(24.823853300000003, 67.0358956)));
+        userCollection.add(new LocationEnt("Ocean Mall,Khayaban-e-Iqbal, Karachi 75500, Pakistan", new LatLng(24.823853300000003, 67.0358956)));*/
 
         bindRecentPlacesData(userCollection);
     }
@@ -369,12 +401,9 @@ public class PickupSelectionactivity extends DockActivity implements
         newPlaces.setOnTouchListener(null);
         newPlaces.setScrollContainer(false);
         newPlaces.setExpanded(true);
-        if(madapter.getCount()>0)
-        {
+        if (madapter.getCount() > 0) {
             dividerView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             dividerView.setVisibility(View.GONE);
         }
 
