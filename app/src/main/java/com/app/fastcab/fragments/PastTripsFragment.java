@@ -78,7 +78,7 @@ public class PastTripsFragment extends BaseFragment implements View.OnClickListe
 
     private void getPastTrips() {
         getDockActivity().onLoadingStarted();
-        Call<ResponseWrapper<ArrayList<ProgressEnt>>> call = webService.getUserRideComplete(10 + "");
+        Call<ResponseWrapper<ArrayList<ProgressEnt>>> call = webService.getUserRideComplete(prefHelper.getUserId() + "");
         call.enqueue(new Callback<ResponseWrapper<ArrayList<ProgressEnt>>>() {
             @Override
             public void onResponse(Call<ResponseWrapper<ArrayList<ProgressEnt>>> call, Response<ResponseWrapper<ArrayList<ProgressEnt>>> response) {
@@ -100,7 +100,7 @@ public class PastTripsFragment extends BaseFragment implements View.OnClickListe
 
     private void getPastTripsData(ArrayList<ProgressEnt> result) {
 
-   /*     if(result.size()<=0)
+        if(result.size()<=0)
         {
             txtNoData.setVisibility(View.VISIBLE);
             PastTripsListView.setVisibility(View.GONE);
@@ -108,7 +108,7 @@ public class PastTripsFragment extends BaseFragment implements View.OnClickListe
         else{
             txtNoData.setVisibility(View.GONE);
             PastTripsListView.setVisibility(View.GONE);
-        }*/
+        }
 
         userCollection = new ArrayList<>();
        /* userCollection.add(new PastTripsEnt("055082595","AED 15.00","13-6-17 1:36PM","AED 2.00","drawable://" + R.drawable.trip));

@@ -62,7 +62,6 @@ import com.app.fastcab.helpers.DateHelper;
 import com.app.fastcab.helpers.DatePickerHelper;
 import com.app.fastcab.helpers.DialogHelper;
 import com.app.fastcab.helpers.HomeServiceHelper;
-import com.app.fastcab.helpers.TimePickerHelper;
 import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.OnSettingActivateListener;
 import com.app.fastcab.interfaces.webServiceResponseLisener;
@@ -110,6 +109,9 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.app.fastcab.R.drawable.location;
+import static com.app.fastcab.global.AppConstants.CURRENT_RATING;
+import static com.app.fastcab.global.AppConstants.LAST_RATING;
+import static com.app.fastcab.global.AppConstants.RATING_TYPE;
 import static com.app.fastcab.global.WebServiceConstants.APPROVE_DRIVER;
 import static com.app.fastcab.global.WebServiceConstants.CANCELREASON;
 import static com.app.fastcab.global.WebServiceConstants.CANCEL_RIDE;
@@ -117,7 +119,9 @@ import static com.app.fastcab.global.WebServiceConstants.CREATE;
 import static com.app.fastcab.global.WebServiceConstants.ESTIMATEFARE;
 import static com.app.fastcab.global.WebServiceConstants.NEARBY;
 import static com.app.fastcab.global.WebServiceConstants.PROMOCODE;
+import static com.app.fastcab.global.WebServiceConstants.RIDE_LAST_RATING;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_LATER;
+import static com.app.fastcab.global.WebServiceConstants.RIDE_RATING;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_cancel;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_default_;
 import static com.app.fastcab.global.WebServiceConstants.STATUS_RIDELATER;
@@ -175,26 +179,34 @@ public class HomeMapFragment extends BaseFragment implements
     View viewParent;
     @BindView(R.id.ll_source_destination)
     LinearLayout llSourceDestination;
+
     GoogleMap googleMap;
     GoogleApiClient googleApiClient;
     SupportMapFragment map;
+
     private double latitude;
     private double longitude;
     private Location Mylocation;
     private LocationEnt origin;
     private LocationEnt destination;
     private int distance = 1;
+
     private Date DateSelected;
     private Date TimeSelected;
+
     private TitleBar titleBar;
     private boolean mIsTitleBarChanged = false;
+
     private boolean isCurrentLocationMove;
     private ArrayList<SelectCarEnt> carTypeList;
+
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private LocationListener listener;
+
     private HomeServiceHelper serviceHelper;
+
     private PromoCodeEnt promoCodeEnt;
     private SelectCarEnt selectCarEnt;
     private CreateRideEnt rideEnt;
@@ -320,6 +332,41 @@ public class HomeMapFragment extends BaseFragment implements
         return returnedBitmap;
     }
 
+    private void onNotificationReceived() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // checking for type intent filter
+                if (intent.getAction().equals(AppConstants.REGISTRATION_COMPLETE)) {
+                    System.out.println("registration complete");
+                    System.out.println(prefHelper.getFirebase_TOKEN());
+
+                } else if (intent.getAction().equals(AppConstants.PUSH_NOTIFICATION)) {
+                    Bundle bundle = intent.getExtras();
+                    if (bundle != null) {
+                        String rideID = bundle.getString("rideID");
+                        serviceHelper.enqueueCall(webService.getApproveDriver(rideID + ""), APPROVE_DRIVER);
+                    } else {
+                        UIHelper.showShortToastInCenter(getDockActivity(), "Notification Data is Empty");
+                    }
+                } else if (intent.getAction().equals(AppConstants.LOCATION_RECIEVED)) {
+                    Bundle bundle = intent.getExtras();
+                    if (bundle != null) {
+                        String lat = bundle.getString("lat");
+                        String lon = bundle.getString("lon");
+                        LatLng latLng = new LatLng(Double.parseDouble(lat + ""), Double.parseDouble(lon + ""));
+                        /*if (origin!=null&&!origin.getLatlng().equals(new LatLng(0,0))) {
+                            animateMarker(origin.getLatlng(), latLng, false);
+                            origin.setLatlng(latLng);
+                        }*/
+                    } else {
+                        //UIHelper.showShortToastInCenter(getDockActivity(), "Notification Data is Empty");
+                    }
+                }
+            }
+        };
+    }
+
     @Override
     public void onStart() {
         googleApiClient.connect();
@@ -340,28 +387,6 @@ public class HomeMapFragment extends BaseFragment implements
                 .getWindow().getDecorView());
     }
 
-    private void onNotificationReceived() {
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                // checking for type intent filter
-                if (intent.getAction().equals(AppConstants.REGISTRATION_COMPLETE)) {
-                    System.out.println("registration complete");
-                    System.out.println(prefHelper.getFirebase_TOKEN());
-
-                } else if (intent.getAction().equals(AppConstants.PUSH_NOTIFICATION)) {
-                    Bundle bundle = intent.getExtras();
-                    if (bundle != null) {
-                        String rideID = bundle.getString("rideID");
-                        serviceHelper.enqueueCall(webService.getApproveDriver(rideID + ""), APPROVE_DRIVER);
-                    } else {
-                        UIHelper.showShortToastInCenter(getDockActivity(), "Notification Data is Empty");
-                    }
-                }
-            }
-        };
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -378,7 +403,8 @@ public class HomeMapFragment extends BaseFragment implements
 
         LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
                 new IntentFilter(AppConstants.PUSH_NOTIFICATION));
-
+        LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
+                new IntentFilter(AppConstants.LOCATION_RECIEVED));
 
     }
 
@@ -492,7 +518,7 @@ public class HomeMapFragment extends BaseFragment implements
                 polylineOptions.add(routesingle.points.get(i));
             //moveMap(null);
             polylinePaths.add(googleMap.addPolyline(polylineOptions));
-            distance = routesingle.distance.value;
+            distance = (int)routesingle.distance.value/1000;
 
         }
     }
@@ -697,12 +723,11 @@ public class HomeMapFragment extends BaseFragment implements
                 break;
             case R.id.btn_ridenow:
                 movemap(origin.getLatlng());
-                setupRatingDialog();
+                serviceHelper.enqueueCall(webService.getLastFeedback(prefHelper.getUserId()), RIDE_LAST_RATING);
                 break;
             case R.id.btn_ridelater:
                 movemap(origin.getLatlng());
                 setupScheduleDialog();
-
                 break;
             case R.id.btn_cancel_ride:
                 setcanceldialog();
@@ -723,23 +748,44 @@ public class HomeMapFragment extends BaseFragment implements
         }
     }
 
-    private void setupRatingDialog() {
+    private void setupRatingDialog(final RideDriverEnt result) {
 
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.GONE);
+        showRatingBottomSheet(result, LAST_RATING, null);
+
+
+    }
+
+    private void showRatingBottomSheet(final RideDriverEnt result, final int RatingType, final BottomSheetDialogHelper dialogHelper) {
         final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_submit_rating);
         ratingDialog.initRatingDialog(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ratingDialog.hideDialog();
-                setupRideNowDialog();
+                if (RatingType == LAST_RATING) {
+                    ratingDialog.hideDialog();
+                    setupRideNowDialog();
+                } else if (RatingType == CURRENT_RATING) {
+                    dialogHelper.hideDialog();
+                    ratingDialog.hideDialog();
+                    getDockActivity().popBackStackTillEntry(0);
+                    getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
+                }
+                serviceHelper.enqueueCall(webService.submitRideFeedback(prefHelper.getUserId(),
+                        result.getDriverDetail().getId() + "",
+                        result.getRideDetail().getId() + "",
+                        ratingDialog.getRatingScore() + ""
+                        , RATING_TYPE), RIDE_RATING);
             }
-        });
+        }, result);
         ratingDialog.showDialog();
         titleBar.hideButtons();
-        titleBar.setSubHeading(getResources().getString(R.string.submit_rating_last));
-
+        if (RatingType == LAST_RATING) {
+            titleBar.setSubHeading(getResources().getString(R.string.submit_rating_last));
+        } else if (RatingType == CURRENT_RATING) {
+            titleBar.setSubHeading(getResources().getString(R.string.rate_title));
+        }
     }
 
     private void setupRideNowDialog() {
@@ -938,12 +984,11 @@ public class HomeMapFragment extends BaseFragment implements
                     public void onClick(View v) {
                         rideReaching.hideDialog();
                         ratingDialog.hideDialog();
-                        getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
+
                     }
                 });
                 ratingDialog.showDialog();
-                titleBar.hideButtons();
-                titleBar.setSubHeading(getResources().getString(R.string.rate_title));
+
             }
         }, 10000);*/
     }
@@ -1024,7 +1069,9 @@ public class HomeMapFragment extends BaseFragment implements
                         destination.getAddress(), destination.getAddress(), selectCarEnt.getId() + "", percentage + "", "", "", RIDE_default_, STATUS_RIDENOW, result.getEstimateFare(), distance + ""), CREATE);
 
             }
-        }, selectCarEnt.getType(), selectCarEnt.getCapacity() + "", selectCarEnt.getVehicleImageTwo() + "", result.getEstimateFare());
+        }, selectCarEnt.getType(),
+                selectCarEnt.getCapacity() + "",
+                selectCarEnt.getVehicleImageTwo() + "",Integer.parseInt(result.getEstimateFare()+""));
         estimateFareDialog.showDialog();
         titleBar.hideButtons();
         titleBar.setSubHeading(getResources().getString(R.string.home));
@@ -1228,6 +1275,17 @@ public class HomeMapFragment extends BaseFragment implements
                 getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
                 break;
+            case RIDE_RATING:
+                break;
+            case RIDE_LAST_RATING:
+                RideDriverEnt ent = (RideDriverEnt) result;
+                if (ent == null) {
+                    setupRideNowDialog();
+                } else {
+                    setupRatingDialog(ent);
+                }
+
+                break;
 
         }
     }
@@ -1238,8 +1296,6 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void initTimePicker(final TextView textView) {
-        final Calendar calendar = Calendar.getInstance();
-        final TimePickerHelper timePicker = new TimePickerHelper();
         if (DateSelected != null) {
             TimePickerDialog dialog = new TimePickerDialog(getDockActivity(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
@@ -1263,35 +1319,8 @@ public class HomeMapFragment extends BaseFragment implements
                     }
                 }
             }, DateSelected.getHours(), DateSelected.getMinutes(), false);
-            Date date = new Date();
-            //if (DateHelper.isSameDay(DateSelected, date))
-            //   dialog.setMinTime(DateSelected.getHours(), DateSelected.getMinutes(), 0);
-            //dialog.show(getMainActivity().getSupportFragmentManager(), "TimePicker");
-            dialog.show();
 
-           /* timePicker.initTimeDialog(getDockActivity(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    Date date = new Date();
-                    if (DateHelper.isSameDay(DateSelected, date) && !DateHelper.isTimeAfter(date.getHours(), date.getMinutes(), hourOfDay, minute)) {
-                        UIHelper.showShortToastInCenter(getDockActivity(), getString(R.string.less_time_error));
-                    } else {
-                        Calendar c = Calendar.getInstance();
-                        int year = c.get(Calendar.YEAR);
-                        int month = c.get(Calendar.MONTH);
-                        int day = c.get(Calendar.DAY_OF_MONTH);
-                        c.set(year, month, day, hourOfDay, minute);
-                        TimeSelected = c.getTime();
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(year, month, day, hourOfDay, minute + 15);
-                        String preTime = new SimpleDateFormat("HH:mm a").format(c.getTime()) + " - " +
-                                new SimpleDateFormat("HH:mm a").format(cal.getTime());
-                        textView.setText(preTime);
-                        textView.setPaintFlags(Typeface.BOLD);
-                    }
-                }
-            }, DateFormat.is24HourFormat(getMainActivity()));
-            timePicker.showTime();*/
+            dialog.show();
         } else {
             UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.select_pickup_date_first));
         }

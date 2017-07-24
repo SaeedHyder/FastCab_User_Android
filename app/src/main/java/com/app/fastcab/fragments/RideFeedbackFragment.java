@@ -2,6 +2,7 @@ package com.app.fastcab.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,18 +11,27 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.app.fastcab.R;
+import com.app.fastcab.entities.ResponseWrapper;
 import com.app.fastcab.entities.RideFeedbackEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.WebServiceConstants;
+import com.app.fastcab.helpers.InternetHelper;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.adapters.ArrayListAdapter;
 import com.app.fastcab.ui.viewbinder.RideFeedbackBinder;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.CustomRatingBar;
 import com.app.fastcab.ui.views.TitleBar;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -29,7 +39,6 @@ import butterknife.ButterKnife;
  */
 
 public class RideFeedbackFragment extends BaseFragment implements View.OnClickListener {
-
 
 
     @BindView(R.id.gridView)
@@ -41,7 +50,7 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
     @BindView(R.id.SubmitButton)
     Button SubmitButton;
 
-
+    private RideFeedbackBinder binder;
     private ArrayListAdapter<RideFeedbackEnt> adapter;
 
     private ArrayList<RideFeedbackEnt> userCollection = new ArrayList<>();
@@ -53,7 +62,8 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new ArrayListAdapter<RideFeedbackEnt>(getDockActivity(), new RideFeedbackBinder(getDockActivity()));
+        binder = new RideFeedbackBinder(getDockActivity());
+        adapter = new ArrayListAdapter<RideFeedbackEnt>(getDockActivity(), binder);
     }
 
     @Override
@@ -67,18 +77,38 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
+            getAllVehicles();
         setListners();
-        getFeedbackData();
+
     }
 
-    private void getFeedbackData() {
+    private void getAllVehicles() {
+        loadingStarted();
+        Call<ResponseWrapper<ArrayList<RideFeedbackEnt>>> call = webService.getImproveType();
+        call.enqueue(new Callback<ResponseWrapper<ArrayList<RideFeedbackEnt>>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<ArrayList<RideFeedbackEnt>>> call, Response<ResponseWrapper<ArrayList<RideFeedbackEnt>>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    getFeedbackData(response.body().getResult());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<ArrayList<RideFeedbackEnt>>> call, Throwable t) {
+                loadingFinished();
+                Log.e(RideFeedbackFragment.class.getSimpleName(), t.toString());
+            }
+        });
+    }
+
+    private void getFeedbackData(ArrayList<RideFeedbackEnt> result) {
         userCollection = new ArrayList<>();
-        userCollection.add(new RideFeedbackEnt("Driving"));
-        userCollection.add(new RideFeedbackEnt("Navigation"));
-        userCollection.add(new RideFeedbackEnt("Comfort"));
-        userCollection.add(new RideFeedbackEnt("Car Quality"));
-       
+        userCollection.addAll(result);
+
 
         bindData(userCollection);
     }
@@ -119,10 +149,35 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
 
 
             case R.id.SubmitButton:
-                getDockActivity().popBackStackTillEntry(0);
-                getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+                if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
+                    submitRating();
+
                 break;
         }
+    }
+
+    private void submitRating() {
+        loadingStarted();
+        Call<ResponseWrapper> call = webService.submitAppFeedback(prefHelper.getUserId(), rbAddRating.getScore() + "",
+                StringUtils.join(binder.getSelectedReasons(),","),edtComments.getText().toString());
+        call.enqueue(new Callback<ResponseWrapper>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper> call, Response<ResponseWrapper> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    getDockActivity().popBackStackTillEntry(0);
+                    getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper> call, Throwable t) {
+                loadingFinished();
+                Log.e(RideFeedbackFragment.class.getSimpleName(), t.toString());
+            }
+        });
     }
 
 
@@ -132,7 +187,6 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
         titleBar.hideButtons();
         titleBar.setSubHeading(getString(R.string.Ride_Feedback));
     }
-
 
 
 }

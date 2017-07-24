@@ -4,10 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by saeedhyder on 7/18/2017.
+ * Created on 7/21/2017.
  */
 
-public class RideFeedbackEnt {
+public class ImproveEnt {
 
     @SerializedName("id")
     @Expose

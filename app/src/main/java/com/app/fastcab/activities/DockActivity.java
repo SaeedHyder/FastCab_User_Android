@@ -2,6 +2,7 @@ package com.app.fastcab.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.helpers.BasePreferenceHelper;
 import com.app.fastcab.interfaces.LoadingListener;
 import com.app.fastcab.residemenu.ResideMenu;
+import com.app.fastcab.services.CurrentLocationFinder;
 import com.app.fastcab.ui.dialogs.DialogFactory;
 
 
@@ -55,6 +57,7 @@ public abstract class DockActivity extends AppCompatActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefHelper = new BasePreferenceHelper(this);
+        startService(new Intent(getApplicationContext(), CurrentLocationFinder.class));
     }
 
     public String getCountryCode() {

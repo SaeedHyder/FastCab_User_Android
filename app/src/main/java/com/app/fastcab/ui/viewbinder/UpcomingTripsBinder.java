@@ -10,8 +10,9 @@ import com.app.fastcab.entities.ProgressEnt;
 import com.app.fastcab.helpers.DateHelper;
 import com.app.fastcab.ui.viewbinders.abstracts.ViewBinder;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -28,11 +29,11 @@ import butterknife.ButterKnife;
 
 public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements DirectionFinderListener {
 
-    ImageLoader imageLoader;
+
 
     public UpcomingTripsBinder() {
         super(R.layout.upcoming_trips_item);
-        imageLoader = ImageLoader.getInstance();
+
     }
 
     @Override
@@ -43,10 +44,10 @@ public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements Dire
     @Override
     public void bindView(ProgressEnt entity, int position, int grpPosition, View view, Activity activity) {
         view.setVisibility(View.GONE);
-        String origin = "24.839611,67.082231";
-        String destination = "24.829428,67.073822";
-       /* String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
-        String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();*/
+       /* String origin = "24.839611,67.082231";
+        String destination = "24.829428,67.073822";*/
+        String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
+        String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();
         // imageLoader.displayImage(entity.getUpcomingImg(),viewHolder.ivUpcomingTrips);
         try {
             new DirectionFinder(this, origin, destination,view,entity).execute();
@@ -72,10 +73,10 @@ public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements Dire
     public void onDirectionFinderSuccess(List<Route> route, View view, Object object) {
         if (view!=null && object!=null) {
             ProgressEnt entity = (ProgressEnt) object;
-            String origin = "24.839611,67.082231";
-            String destination = "24.829428,67.073822";
-        /* String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
-        String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();*/
+          /*  String origin = "24.839611,67.082231";
+            String destination = "24.829428,67.073822";*/
+         String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
+        String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();
             String CustomMarkerOrigin = "http://35.160.175.165/portfolio/fast_cab/public/images/profile_images/pickup.png";
             String CustomMarkerDestination = "http://35.160.175.165/portfolio/fast_cab/public/images/profile_images/destination.png";
             StringBuilder stringBuilder = new StringBuilder();
@@ -94,9 +95,9 @@ public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements Dire
             viewHolder.txtUpcomingTimeDate.setText(DateHelper.getDesireFormatDate(entity.getDate(), "yyyy-MM-dd", "EEE,MMM d") + " at "
                     + DateHelper.getDesireFormatDate(entity.getTime(), "hh:mm:ss", "HH:mm a"));
             viewHolder.txtUpcomingType.setText(entity.getVechicleDetail().getType() + "");
-            Picasso.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
+            Glide.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
                     CustomMarkerDestination, view.getResources().getString(R.string.API_KEY)))
-                    .fit().into(viewHolder.ivUpcomingTrips);
+                    .fitCenter().into(viewHolder.ivUpcomingTrips);
             view.setVisibility(View.VISIBLE);
         }
     }

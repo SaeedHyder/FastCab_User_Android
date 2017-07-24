@@ -79,12 +79,12 @@ public class InviteAndEarnFragment extends BaseFragment implements View.OnClickL
         }
     }
     private void ShareMyPromoCode(String packageName,String ErrorMessage,String Message){
-        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-        whatsappIntent.setType("text/plain");
-        whatsappIntent.setPackage(packageName);
-        whatsappIntent.putExtra(Intent.EXTRA_TEXT, Message);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.setPackage(packageName);
+        intent.putExtra(Intent.EXTRA_TEXT, Message);
         try {
-            this.startActivity(whatsappIntent);
+            this.startActivity(intent);
         } catch (android.content.ActivityNotFoundException ex) {
             UIHelper.showShortToastInCenter(getDockActivity(),ErrorMessage);
         }

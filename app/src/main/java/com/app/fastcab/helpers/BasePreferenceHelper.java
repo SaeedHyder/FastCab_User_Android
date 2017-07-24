@@ -26,6 +26,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     protected static final String USERID = "userId";
     protected static final String KEY_USER = "key_user";
     protected static final String KEY_CARTYPES = "KEY_CARTYPES";
+    protected static final String DRIVERID = "driverId";
 
 
 
@@ -52,7 +53,13 @@ public class BasePreferenceHelper extends PreferenceHelper {
     public boolean isTermAccepted() {
         return getBooleanPreference(context, FILENAME, KEY_Term_STATUS);
     }
+    public void setDriverId(String userId) {
+        putStringPreference(context, FILENAME, DRIVERID, userId);
+    }
 
+    public String getDriverId() {
+        return getStringPreference(context, FILENAME, DRIVERID);
+    }
     public String getFirebase_TOKEN() {
         return getStringPreference(context, FILENAME, Firebase_TOKEN);
     }

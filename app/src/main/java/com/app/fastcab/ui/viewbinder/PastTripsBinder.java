@@ -6,12 +6,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.fastcab.R;
-import com.app.fastcab.entities.PastTripsEnt;
 import com.app.fastcab.entities.ProgressEnt;
 import com.app.fastcab.ui.viewbinders.abstracts.ViewBinder;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -26,13 +25,13 @@ import butterknife.ButterKnife;
  * Created by saeedhyder on 7/3/2017.
  */
 
-public class PastTripsBinder extends ViewBinder<ProgressEnt>implements DirectionFinderListener {
+public class PastTripsBinder extends ViewBinder<ProgressEnt> implements DirectionFinderListener {
 
-    ImageLoader imageLoader;
+
 
     public PastTripsBinder() {
         super(R.layout.past_trips_item);
-        imageLoader=ImageLoader.getInstance();
+
     }
 
     @Override
@@ -43,13 +42,14 @@ public class PastTripsBinder extends ViewBinder<ProgressEnt>implements Direction
     @Override
     public void bindView(ProgressEnt entity, int position, int grpPosition, View view, Activity activity) {
         view.setVisibility(View.GONE);
+        /*
         String origin = "24.839611,67.082231";
-        String destination = "24.829428,67.073822";
-        /*String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
-        String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();*/
+        String destination = "24.829428,67.073822";*/
+        String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
+        String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();
         // imageLoader.displayImage(entity.getUpcomingImg(),viewHolder.ivUpcomingTrips);
         try {
-            new DirectionFinder(this, origin, destination,view,entity).execute();
+            new DirectionFinder(this, origin, destination, view, entity).execute();
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -70,12 +70,13 @@ public class PastTripsBinder extends ViewBinder<ProgressEnt>implements Direction
 
     @Override
     public void onDirectionFinderSuccess(List<Route> route, View view, Object object) {
-        if (view!=null && object!=null) {
+        if (view != null && object != null) {
             ProgressEnt entity = (ProgressEnt) object;
-            String origin = "24.839611,67.082231";
+    /*        String origin = "24.839611,67.082231";
             String destination = "24.829428,67.073822";
-       /* String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
-        String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();*/
+    */
+            String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
+            String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();
             String CustomMarkerOrigin = "http://35.160.175.165/portfolio/fast_cab/public/images/profile_images/pickup.png";
             String CustomMarkerDestination = "http://35.160.175.165/portfolio/fast_cab/public/images/profile_images/destination.png";
             StringBuilder stringBuilder = new StringBuilder();
@@ -90,20 +91,21 @@ public class PastTripsBinder extends ViewBinder<ProgressEnt>implements Direction
             routesList = routesList.substring(0, routesList.length() - 1);
             final PastTripsBinder.ViewHolder viewHolder = (PastTripsBinder.ViewHolder) view.getTag();
 
-            viewHolder.txtRideNo.setText(entity.getId()+"");
-            viewHolder.txtFare.setText(entity.getEstimateFare()+"");
+            viewHolder.txtRideNo.setText(entity.getId() + "");
+            viewHolder.txtFare.setText(entity.getEstimateFare() + "");
             viewHolder.txtTimeDate.setText(entity.getDate() + " " + entity.getTime());
-            Picasso.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
-                    CustomMarkerDestination, view.getResources().getString(R.string.API_KEY)))
-                    .fit().into(viewHolder.ivPastTrips);
+            Glide.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
+                    CustomMarkerDestination, view.getResources().getString(R.string.API_KEY))).fitCenter().into(viewHolder.ivPastTrips);
             view.setVisibility(View.VISIBLE);
         }
     }
+
     private String getStaticMapURL(String origin, String destination, String routelist, String customMarkerOrigin, String customMarkerDestination, String APIKEY) {
         return "https://maps.googleapis.com/maps/api/staticmap?visible=" + routelist + "&scale=2&size=300x150&maptype=roadmap" +
                 "&markers=icon:" + customMarkerOrigin + "|" + origin + "&markers=icon:" + customMarkerDestination + "|" + destination +
                 "&path=color:0x070707FF|weight:5|" + routelist + "&key=" + APIKEY;
     }
+
     static class ViewHolder extends BaseViewHolder {
         @BindView(R.id.iv_pastTrips)
         ImageView ivPastTrips;

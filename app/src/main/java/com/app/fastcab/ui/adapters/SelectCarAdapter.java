@@ -12,8 +12,9 @@ import com.app.fastcab.R;
 import com.app.fastcab.activities.DockActivity;
 import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class SelectCarAdapter extends RecyclerView.Adapter<SelectCarAdapter.View
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         SelectCarEnt entity = selectCarList.get(position);
-        Picasso.with(context).load(entity.getVehicleImageOne()).into(holder.ivCarImage);
+        Glide.with(context).load(entity.getVehicleImageOne()).into(holder.ivCarImage);
        // imageLoader.displayImage(entity.getVehiclePictureOne(),holder.ivCarImage);
         holder.txtCarTypeName.setText(entity.getType());
         holder.txtCarTypeName.setTextColor(context.getResources().getColor(R.color.gray_dark));
@@ -69,7 +70,7 @@ public class SelectCarAdapter extends RecyclerView.Adapter<SelectCarAdapter.View
         if (position == SelectedItemPosition){
             holder.txtCarTypeName.setTextColor(context.getResources().getColor(R.color.button_color));
             holder.ivCarImage.setBackground(context.getResources().getDrawable(R.drawable.circle_blue));
-            Picasso.with(context).load(entity.getVehicleImageTwo()).into(holder.ivCarImage);
+            Glide.with(context).load(entity.getVehicleImageTwo()).into(holder.ivCarImage);
             //imageLoader.displayImage(entity.getVehicleImageTwo(),holder.ivCarImage);
             holder.ivCarImage.getLayoutParams().width = (int)context.getResources().getDimension(R.dimen.x45);
             holder.ivCarImage.getLayoutParams().height = (int)context.getResources().getDimension(R.dimen.x45);

@@ -75,7 +75,7 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
 
     private void getUpcomingTrips() {
         getDockActivity().onLoadingStarted();
-        Call<ResponseWrapper<ArrayList<ProgressEnt>>> call = webService.getUserRideInProgress(16 + "");
+        Call<ResponseWrapper<ArrayList<ProgressEnt>>> call = webService.getUserRideInProgress(prefHelper.getUserId() + "");
         call.enqueue(new Callback<ResponseWrapper<ArrayList<ProgressEnt>>>() {
             @Override
             public void onResponse(Call<ResponseWrapper<ArrayList<ProgressEnt>>> call, Response<ResponseWrapper<ArrayList<ProgressEnt>>> response) {
@@ -97,7 +97,7 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
 
     private void getUpcomingTripsData(ArrayList<ProgressEnt> result) {
 
-   /*      if(result.size()<=0)
+        if(result.size()<=0)
         {
             txtNoData.setVisibility(View.VISIBLE);
             UpcomingRidesListView.setVisibility(View.GONE);
@@ -105,7 +105,7 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
         else{
             txtNoData.setVisibility(View.GONE);
             UpcomingRidesListView.setVisibility(View.GONE);
-        }*/
+        }
 
         userCollection = new ArrayList<>();
         /*userCollection.add(new UpcomingTripsEnt("055082595", "AED 15.00", "Wed, June 15 at 4:30 Am - 4:45 Am", "Business", "drawable://" + R.drawable.trip));

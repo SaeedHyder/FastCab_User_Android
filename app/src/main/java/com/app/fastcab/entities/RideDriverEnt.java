@@ -29,6 +29,9 @@ public class RideDriverEnt {
     @SerializedName("ride_detail")
     @Expose
     private RideEnt rideDetail;
+    @SerializedName("vehicle_detail")
+    @Expose
+    private VehicleDetail vehicleDetail;
 
     public Integer getId() {
         return id;
@@ -86,4 +89,11 @@ public class RideDriverEnt {
         this.rideDetail = rideDetail;
     }
 
+    public VehicleDetail getVehicleDetail() {
+        return vehicleDetail;
+    }
+
+    public void setVehicleDetail(VehicleDetail vehicleDetail) {
+        this.vehicleDetail = vehicleDetail;
+    }
 }

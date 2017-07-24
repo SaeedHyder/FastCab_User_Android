@@ -40,10 +40,11 @@ import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
+import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
-import com.squareup.picasso.Picasso;
+
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -518,7 +519,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             //profilePic = new File(imagePath);
             profilePic = new File(imagePath);
             profilePath = imagePath;
-            Picasso.with(getDockActivity())
+            Glide.with(getDockActivity())
                     .load("file:///" + imagePath)
                     .into(CircularImageSharePop);
             //  ImageLoader.getInstance().displayImage(
@@ -531,7 +532,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             //profilePic = new File(imagePath);
             profilePic = new File(imagePath);
             profilePath = imagePath;
-            Picasso.with(getDockActivity())
+            Glide.with(getDockActivity())
                     .load(imagePath)
                     .into(CircularImageSharePop);
             //  ImageLoader.getInstance().displayImage(
