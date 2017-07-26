@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:src="@drawable/cash"/>
+            android:src="@drawable/cash"
+            tools:ignore="ContentDescription" />
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_cashOnDilevery"
@@ -45,7 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/x5"
-            android:src="@drawable/tick"/>
+            android:src="@drawable/tick"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
@@ -71,7 +74,8 @@
             android:layout_width="@dimen/x20"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/credit_card"/>
+            android:src="@drawable/credit_card"
+            tools:ignore="ContentDescription" />
 
         <com.app.fastcab.ui.views.AnyTextView
             android:id="@+id/txt_creditCard"
@@ -93,7 +97,8 @@
             android:layout_marginRight="@dimen/x5"
             android:layout_gravity="center"
             android:src="@drawable/tick"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 

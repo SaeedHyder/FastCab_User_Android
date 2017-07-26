@@ -26,11 +26,10 @@
             android:id="@+id/txt_drivername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/img_driver"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/x10"
             android:gravity="start"
-            android:text="James Cameron"
+
             android:textColor="@color/white"
             android:textSize="@dimen/x16"
             app:typeface="Roboto-Regular.ttf" />
@@ -57,7 +56,6 @@
         android:id="@+id/line_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x1"
-        android:layout_below="@+id/ll_driver"
         android:alpha="0.4"
         android:background="@drawable/line" />
 

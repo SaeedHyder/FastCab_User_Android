@@ -19,7 +19,7 @@ import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.CustomRatingBar;
 import com.app.fastcab.ui.views.TitleBar;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -70,7 +70,7 @@ public class ProfileFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
             getUserProfile();
-        else{
+        else {
             BindData(prefHelper.getUser());
         }
         setListners();
@@ -106,10 +106,11 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void BindData(UserEnt user) {
-        Picasso.with(getDockActivity()).load(user.getProfileImage()).into(CircularImageSharePop);
+        Glide.with(getDockActivity()).load(user.getProfileImage()).into(CircularImageSharePop);
         txtAddress.setText(user.getAddress() + "");
         txtGender.setText(WordUtils.capitalize(user.getGender()) + "");
-        txtMilesName.setText(user.getTotalDistance() + "");
+        if (user.getTotalDistance() != null && !user.getTotalDistance().equals(""))
+            txtMilesName.setText(((int) Double.parseDouble(user.getTotalDistance())) + "");
         txtphone.setText(user.getPhoneNo() + "");
         txtProfileName.setText(user.getFullName() + "");
         txtRidesName.setText(user.getTotalRide() + "");

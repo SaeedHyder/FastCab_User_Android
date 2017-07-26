@@ -29,7 +29,8 @@ import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.interfaces.ImageSetter;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.TitleBar;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -166,7 +167,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void BindData(UserEnt user) {
-        Picasso.with(getDockActivity()).load(user.getProfileImage()).into(CircularImageSharePop);
+        Glide.with(getDockActivity()).load(user.getProfileImage()).into(CircularImageSharePop);
         edtllCurrentAddress.setText(user.getAddress() + "");
         if (genderList.contains(WordUtils.capitalize(user.getGender()) + ""))
             spGender.setSelection(genderList.indexOf(WordUtils.capitalize(user.getGender()) + ""));
@@ -356,7 +357,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             //profilePic = new File(imagePath);
             profilePic = new File(imagePath);
             profilePath = imagePath;
-            Picasso.with(getDockActivity())
+            Glide.with(getDockActivity())
                     .load("file:///" + imagePath)
                     .into(CircularImageSharePop);
             //  ImageLoader.getInstance().displayImage(

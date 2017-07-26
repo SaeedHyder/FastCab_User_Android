@@ -36,7 +36,7 @@
             app:typeface="Roboto-Regular.ttf" />
        <com.app.fastcab.ui.views.PinEntryEditText
             android:id="@+id/txt_pin_entry"
-            android:layout_width="@dimen/x300"
+            android:layout_width="@dimen/x200"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
@@ -46,7 +46,7 @@
             android:inputType="number"
            android:textColor="@color/white"
             android:layout_below="@+id/txtverify_message"
-            android:maxLength="6"
+            android:maxLength="4"
             android:padding="10dp"
             android:layout_marginTop="@dimen/x20"
             android:layout_marginBottom="@dimen/x20"

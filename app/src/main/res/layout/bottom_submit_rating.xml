@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -83,7 +84,8 @@
                             android:layout_marginLeft="@dimen/x15"
                             android:layout_marginRight="@dimen/x15"
                             android:scaleType="centerInside"
-                            android:src="@drawable/point_where_to" />
+                            android:src="@drawable/point_where_to"
+                            tools:ignore="ContentDescription" />
 
                         <com.app.fastcab.ui.views.AnyTextView
                             android:id="@+id/txt_pickup"
@@ -124,7 +126,8 @@
                             android:layout_alignParentBottom="true"
                             android:layout_below="@+id/imageView"
                             android:layout_marginLeft="@dimen/x24"
-                            android:src="@drawable/line" />
+                            android:src="@drawable/line"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
                     <View
@@ -150,7 +153,8 @@
                             android:layout_above="@+id/imageView_destination"
                             android:layout_alignParentTop="true"
                             android:layout_marginLeft="@dimen/x24"
-                            android:src="@drawable/line" />
+                            android:src="@drawable/line"
+                            tools:ignore="ContentDescription" />
 
                         <ImageView
                             android:id="@+id/imageView_destination"
@@ -160,7 +164,8 @@
                             android:layout_marginLeft="@dimen/x15"
                             android:layout_marginRight="@dimen/x15"
                             android:scaleType="centerInside"
-                            android:src="@drawable/destination" />
+                            android:src="@drawable/destination"
+                            tools:ignore="ContentDescription" />
 
                         <com.app.fastcab.ui.views.AnyTextView
                             android:id="@+id/txt_destination"
@@ -278,7 +283,7 @@
                     app:starOff="@drawable/star_unfilled"
                     app:starOn="@drawable/star_filled"
                     app:starPadding="@dimen/x8"
-                    app:stars="4" />
+                    app:stars="0" />
 
                 <Button
                     android:id="@+id/SubmitButton"

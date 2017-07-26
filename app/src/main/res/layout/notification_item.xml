@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -18,14 +19,14 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/x50"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/logo_a" />
+        android:src="@drawable/logo_a"
+        tools:ignore="ContentDescription" />
 
     <com.app.fastcab.ui.views.AnyTextView
         android:id="@+id/txt_Notification"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/x10"
-        android:layout_alignBottom="@+id/iv_Notificationlogo"
         android:gravity="center_vertical"
         android:text="Dummy Data Dummy Data"
         android:textColor="@color/light_grey"
@@ -39,7 +40,6 @@
         android:layout_height="@dimen/x2"
         android:layout_marginTop="@dimen/x7"
         android:alpha="0.3"
-        android:layout_below="@+id/txt_Notification"
         android:background="@drawable/line" />
 
 </LinearLayout>

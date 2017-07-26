@@ -76,7 +76,7 @@ public class UserEnt {
     private String code;
     @SerializedName("social_media_id")
     @Expose
-    private Integer socialMediaId;
+    private String socialMediaId;
     @SerializedName("social_media_platform")
     @Expose
     private String socialMediaPlatform;
@@ -103,7 +103,10 @@ public class UserEnt {
     private Integer totalRide;
     @SerializedName("total_distance")
     @Expose
-    private Integer totalDistance;
+    private String totalDistance;
+    @SerializedName("promo_code")
+    @Expose
+    private String promoCode;
 
     public Integer getId() {
         return id;
@@ -281,11 +284,11 @@ public class UserEnt {
         this.code = code;
     }
 
-    public Integer getSocialMediaId() {
+    public String getSocialMediaId() {
         return socialMediaId;
     }
 
-    public void setSocialMediaId(Integer socialMediaId) {
+    public void setSocialMediaId(String socialMediaId) {
         this.socialMediaId = socialMediaId;
     }
 
@@ -353,11 +356,19 @@ public class UserEnt {
         this.totalRide = totalRide;
     }
 
-    public Integer getTotalDistance() {
+    public String getTotalDistance() {
         return totalDistance;
     }
 
-    public void setTotalDistance(Integer totalDistance) {
+    public void setTotalDistance(String totalDistance) {
         this.totalDistance = totalDistance;
+    }
+
+    public String getPromoCode() {
+        return promoCode;
+    }
+
+    public void setPromoCode(String promoCode) {
+        this.promoCode = promoCode;
     }
 }

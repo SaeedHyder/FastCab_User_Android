@@ -1,6 +1,7 @@
 package DirectionModule;
 
 import android.os.AsyncTask;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -28,11 +29,20 @@ public class DirectionFinder {
     private DirectionFinderListener listener;
     private String origin;
     private String destination;
+    private View view;
+    private Object object;
 
     public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
         this.listener = listener;
         this.origin = origin;
         this.destination = destination;
+    }
+    public DirectionFinder(DirectionFinderListener listener, String origin, String destination,View view,Object object) {
+        this.listener = listener;
+        this.origin = origin;
+        this.destination = destination;
+        this.view = view;
+        this.object = object;
     }
 
     public void execute() throws UnsupportedEncodingException {
@@ -114,6 +124,7 @@ public class DirectionFinder {
         }
 
         listener.onDirectionFinderSuccess(routes);
+        listener.onDirectionFinderSuccess(routes,view,object);
     }
 
     private List<LatLng> decodePolyLine(final String poly) {

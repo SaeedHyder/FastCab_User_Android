@@ -24,6 +24,7 @@ import com.app.fastcab.ui.adapters.ArrayListAdapter;
 import com.app.fastcab.ui.viewbinders.abstracts.NavigationItemBinder;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -100,6 +101,10 @@ public class SideMenuFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         BindData();
+        if (prefHelper.getUser()!=null) {
+            Glide.with(this).load(prefHelper.getUser().getProfileImage() + "").into(imgDriver);
+            txtDrivername.setText(prefHelper.getUser().getFullName() + "");
+        }
         setGooglePlayShortcut(getResources().getString(R.string.drive_with_fastcab),
                 getResources().getString(R.string.fastcab), txtDriveoption);
 
@@ -161,7 +166,7 @@ public class SideMenuFragment extends BaseFragment {
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.about_us))) {
                     getMainActivity().getResideMenu().closeMenu();
                     getDockActivity().popBackStackTillEntry(0);
-                    getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
+                    getDockActivity().replaceDockableFragment(AboutUsFragment.newInstance(), AboutUsFragment.class.getSimpleName());
                 } else if (navigationEnts.get(position).getTitle().equals(getString(R.string.invite_earn))) {
                     getMainActivity().getResideMenu().closeMenu();
                     getDockActivity().popBackStackTillEntry(0);

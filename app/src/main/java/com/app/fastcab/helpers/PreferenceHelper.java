@@ -65,8 +65,7 @@ public class PreferenceHelper {
 	 * Get a integer under a particular key and filename
 	 * 
 	 * @param context
-	 * @param the
-	 *            filename of preferences
+	 * @param *the filename of preferences
 	 * @param key
 	 *            name of preference
 	 * @return -1 if key is not found

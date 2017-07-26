@@ -544,7 +544,7 @@ public class DateHelper {
 		//"Fri Mar 07 16:34:38 GMT+05:00 2014"
 		DateFormat sdfNew = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy" , Locale.US);
 		
-		String systemTime = sdf.format( new Date() ).toString();
+		String systemTime = sdf.format(new Date());
 		String finalTime = "";
 		try {
 
@@ -602,7 +602,7 @@ public class DateHelper {
 
 		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" , Locale.US);
 		
-		String systemTime = sdf.format( new Date() ).toString();
+		String systemTime = sdf.format(new Date());
 		String finalTime = "";
 		try {
 
@@ -649,7 +649,7 @@ public class DateHelper {
 
 		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" , Locale.US);
 
-		String systemTime = sdf.format( new Date() ).toString();
+		String systemTime = sdf.format(new Date());
 		String finalTime = "";
 		if(!TextUtils.isEmpty(sDate)) {
 			
@@ -704,6 +704,20 @@ public class DateHelper {
 
 		SimpleDateFormat timeFormat = new SimpleDateFormat( "h:mm a" , Locale.US );
 		return timeFormat.format( mDate );
+	}
+	public static String getDesireFormatDate(String OurDate,String inFormat,String toFormat) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat(inFormat);
+			Date value = formatter.parse(OurDate);
+
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(toFormat);//this format changeable
+			OurDate = dateFormatter.format(value);
+
+			//Log.d("OurDate", OurDate);
+		} catch (Exception e) {
+			OurDate = "00-00-0000 00:00";
+		}
+		return OurDate;
 	}
 
 	public static String getFormattedTime24Hrs( Date mDate ) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -18,14 +19,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/car1" />
+            android:src="@drawable/car1"
+            tools:ignore="ContentDescription" />
 
         <com.app.fastcab.ui.views.PinEntryEditText
             android:id="@+id/txt_pin_entry"
             android:layout_width="@dimen/x300"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtverify_message"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/x20"
             android:layout_marginBottom="@dimen/x20"
@@ -77,7 +77,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/x15"
-                android:src="@drawable/messenger_icon" />
+                android:src="@drawable/messenger_icon"
+                tools:ignore="ContentDescription" />
 
             <View
                 android:layout_width="@dimen/x1"
@@ -90,7 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x15"
-                android:src="@drawable/whatsapp" />
+                android:src="@drawable/whatsapp"
+                tools:ignore="ContentDescription" />
 
         </LinearLayout>
 

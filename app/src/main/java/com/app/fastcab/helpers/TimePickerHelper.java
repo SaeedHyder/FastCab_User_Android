@@ -3,10 +3,11 @@ package com.app.fastcab.helpers;
 import android.app.Dialog;
 
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,8 +23,8 @@ public class TimePickerHelper {
 
     }
     public TimePickerDialog initTimeDialog(Context context, int hour, int minute, TimePickerDialog.OnTimeSetListener onTimeSetListener, boolean is24Hour){
-       // this.dialog = new TimePickerDialog(context, onTimeSetListener,hour,minute,is24Hour );
-        this.dialog = new TimePickerDialog();
+        this.dialog = new TimePickerDialog(context, onTimeSetListener,hour,minute,is24Hour );
+        // this.dialog = new TimePickerDialog();
         dialog.setTitle("Select Pickup Time");
         return dialog;
     }
@@ -32,7 +33,8 @@ public class TimePickerHelper {
         if (this.dialog == null){
             throw  new NullPointerException("Initialize Dialog First");
         }else {
-            this.dialog.show(fm,tag);
+            //this.dialog.show(fm,tag);
+            this.dialog.show();
         }
 
     }

@@ -40,7 +40,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x2"
-                android:layout_centerInParent="true"
                 android:background="@drawable/line" />
 
             <com.app.fastcab.ui.views.AnyTextView
@@ -59,7 +58,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x2"
-                android:layout_centerInParent="true"
                 android:background="@drawable/line" />
 
             <com.app.fastcab.ui.views.AnyTextView
@@ -77,7 +75,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x2"
-                android:layout_centerInParent="true"
                 android:background="@drawable/line" />
         </LinearLayout>
 

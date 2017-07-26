@@ -2,6 +2,7 @@ package com.app.fastcab.services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.app.fastcab.R;
@@ -27,86 +28,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage == null)
             return;
-
-        // Check if message contains a notification payload.
-        /*if (remoteMessage.getNotification() != null) {
-            Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
-            //handleNotification(remoteMessage.getNotification().getBody());
-            getNotificationCount();
-        }*/
-
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
-              /*  JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                Log.e(TAG, "DATA: " + json);*/
-            getNotificationCount();
             buildNotification(remoteMessage);
 
 
         }
     }
 
-   /* private void handleNotification(String message) {
-        if (!NotificationHelper.getInstance().isAppIsInBackground(getApplicationContext())) {
-            // app is in foreground, broadcast the push message
-            Intent pushNotification = new Intent(AppConstants.PUSH_NOTIFICATION);
-            pushNotification.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-
-            // play notification sound
-            NotificationHelper.getInstance().playNotificationSound(getApplicationContext());
-        } else {
-
-            // If the app is in background, firebase itself handles the notification
-        }
-    }*/
-
-    private void getNotificationCount() {
-
-
-      /*  webservice = WebServiceFactory.getWebServiceInstanceWithCustomInterceptor(getApplicationContext(),
-                WebServiceConstants.SERVICE_URL);
-        preferenceHelper = new BasePreferenceHelper(getApplicationContext());
-        Call<ResponseWrapper<countEnt>> callback = webservice.getNotificationCount(preferenceHelper.getUserId());
-        callback.enqueue(new Callback<ResponseWrapper<countEnt>>() {
-            @Override
-            public void onResponse(Call<ResponseWrapper<countEnt>> call, Response<ResponseWrapper<countEnt>> response) {
-
-                preferenceHelper.setBadgeCount(response.body().getResult().getCount());
-                Intent pushNotification = new Intent(AppConstants.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", "");
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
-
-                Log.e(TAG, "aasd" + preferenceHelper.getUserId() + response.body().getResult().getCount());
-                //  SendNotification(response.body().getResult().getCount(), json);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseWrapper<countEnt>> call, Throwable t) {
-                Log.e(TAG, t.toString());
-                System.out.println(t.toString());
-            }
-        });*/
-
-
-    }
-
     private void buildNotification(RemoteMessage messageBody) {
         String title = getString(R.string.app_name);
         String message = messageBody.getData().get("message");
-
-
+        String rideID = messageBody.getData().get("ride_id");
         Log.e(TAG, "message: " + message);
-
         Intent resultIntent = new Intent(MyFirebaseMessagingService.this, MainActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         resultIntent.putExtra("message", message);
         resultIntent.putExtra("tapped", true);
+        resultIntent.putExtra("rideID", rideID);
         Intent pushNotification = new Intent(AppConstants.PUSH_NOTIFICATION);
         pushNotification.putExtra("message", message);
-
-        //LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
+        pushNotification.putExtra("rideID", rideID);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
 
         showNotificationMessage(MyFirebaseMessagingService.this, title, message, "", resultIntent);
     }

@@ -1,5 +1,6 @@
 package com.app.fastcab.helpers;
 
+import android.content.Context;
 import android.net.ConnectivityManager;
 
 import com.app.fastcab.R;
@@ -14,7 +15,7 @@ public class InternetHelper {
 
     public static boolean CheckInternetConectivityandShowToast(DockActivity activity) {
 
-        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(activity.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (cm.getActiveNetworkInfo() != null) {
             return true;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,7 +10,8 @@
         android:id="@+id/iv_pastTrips"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x150"
-        android:src="@drawable/trip"/>
+        android:src="@drawable/trip"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:id="@+id/ll_pastTripDetail"
@@ -23,6 +25,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x10"
             android:orientation="horizontal">
 
             <com.app.fastcab.ui.views.AnyTextView
@@ -88,7 +91,7 @@
                 android:text="13-06-17  1:36PM"
                 android:textColor="@color/black"
                 app:typeface="Roboto-Regular.ttf" />
-
+<!--
             <com.app.fastcab.ui.views.AnyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -107,7 +110,7 @@
                 android:layout_marginLeft="@dimen/x3"
                 android:text="AED 2.00"
                 android:textColor="@color/black"
-                app:typeface="Roboto-Regular.ttf" />
+                app:typeface="Roboto-Regular.ttf" />-->
 
 
         </LinearLayout>

@@ -12,7 +12,6 @@
         android:layout_width="@dimen/x340"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/x10"
-        android:layout_centerInParent="true"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -67,10 +66,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBottom="@+id/textLayout"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_No"

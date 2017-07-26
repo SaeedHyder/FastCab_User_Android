@@ -334,7 +334,7 @@ public class ResideMenu extends FrameLayout {
      * <p/>
      * WARNING: It will be removed from v2.0.
      *
-     * @param menuItem
+     * @param *menuItem
      */
 
     public void addMenuItem(android.support.v4.app.Fragment sideMenuView, String tag, String direction) {

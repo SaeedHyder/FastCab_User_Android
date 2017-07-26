@@ -117,7 +117,7 @@ public class EntryCodeFragment extends BaseFragment implements View.OnClickListe
     }
 
     private boolean validater() {
-        if (txtPinEntry.getText().toString().trim().equals("") || txtPinEntry.getText().toString().length() > 6) {
+        if (txtPinEntry.getText().toString().trim().equals("") || txtPinEntry.getText().toString().length() > 4) {
             UIHelper.showShortToastInCenter(getDockActivity(), getResources().getString(R.string.entrycode_error));
             return false;
         } else

@@ -54,7 +54,7 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
-        toggleNotifications.setChecked(prefHelper.getUser().getPushStatus() == PUSH_ON);
+
         ButterKnife.bind(this, view);
         return view;
     }
@@ -62,7 +62,7 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        toggleNotifications.setChecked(prefHelper.getUser().getPushStatus() == PUSH_ON);
         setListners();
     }
 

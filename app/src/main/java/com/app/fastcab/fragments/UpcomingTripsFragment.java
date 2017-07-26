@@ -2,15 +2,19 @@ package com.app.fastcab.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.app.fastcab.R;
-import com.app.fastcab.entities.PastTripsEnt;
-import com.app.fastcab.entities.UpcomingTripsEnt;
+import com.app.fastcab.entities.ProgressEnt;
+import com.app.fastcab.entities.ResponseWrapper;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.WebServiceConstants;
+import com.app.fastcab.helpers.InternetHelper;
+import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.adapters.ArrayListAdapter;
 import com.app.fastcab.ui.viewbinder.UpcomingTripsBinder;
 import com.app.fastcab.ui.views.AnyTextView;
@@ -20,6 +24,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by saeedhyder on 7/3/2017.
@@ -32,10 +39,10 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
     AnyTextView txtNoData;
     @BindView(R.id.UpcomingRides_ListView)
     ListView UpcomingRidesListView;
-    
-    private ArrayListAdapter<UpcomingTripsEnt> adapter;
 
-    private ArrayList<UpcomingTripsEnt> userCollection = new ArrayList<>();
+    private ArrayListAdapter<ProgressEnt> adapter;
+
+    private ArrayList<ProgressEnt> userCollection = new ArrayList<>();
 
     public static UpcomingTripsFragment newInstance() {
         return new UpcomingTripsFragment();
@@ -45,7 +52,7 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new ArrayListAdapter<UpcomingTripsEnt>(getDockActivity(), new UpcomingTripsBinder());
+        adapter = new ArrayListAdapter<ProgressEnt>(getDockActivity(), new UpcomingTripsBinder());
     }
 
     @Override
@@ -59,14 +66,38 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
+            getUpcomingTrips();
 
         setListners();
-        getUpcomingTripsData();
+
     }
 
-    private void getUpcomingTripsData() {
+    private void getUpcomingTrips() {
+        getDockActivity().onLoadingStarted();
+        Call<ResponseWrapper<ArrayList<ProgressEnt>>> call = webService.getUserRideInProgress(prefHelper.getUserId() + "");
+        call.enqueue(new Callback<ResponseWrapper<ArrayList<ProgressEnt>>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<ArrayList<ProgressEnt>>> call, Response<ResponseWrapper<ArrayList<ProgressEnt>>> response) {
+                getDockActivity().onLoadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    getUpcomingTripsData(response.body().getResult());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
 
-        /* if(result.size()<0)
+            @Override
+            public void onFailure(Call<ResponseWrapper<ArrayList<ProgressEnt>>> call, Throwable t) {
+                getDockActivity().onLoadingFinished();
+                Log.e(UpcomingTripsFragment.class.getSimpleName(), t.toString());
+            }
+        });
+    }
+
+    private void getUpcomingTripsData(ArrayList<ProgressEnt> result) {
+
+        if(result.size()<=0)
         {
             txtNoData.setVisibility(View.VISIBLE);
             UpcomingRidesListView.setVisibility(View.GONE);
@@ -74,20 +105,21 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
         else{
             txtNoData.setVisibility(View.GONE);
             UpcomingRidesListView.setVisibility(View.GONE);
-        }*/
+        }
 
         userCollection = new ArrayList<>();
+        /*userCollection.add(new UpcomingTripsEnt("055082595", "AED 15.00", "Wed, June 15 at 4:30 Am - 4:45 Am", "Business", "drawable://" + R.drawable.trip));
         userCollection.add(new UpcomingTripsEnt("055082595", "AED 15.00", "Wed, June 15 at 4:30 Am - 4:45 Am", "Business", "drawable://" + R.drawable.trip));
         userCollection.add(new UpcomingTripsEnt("055082595", "AED 15.00", "Wed, June 15 at 4:30 Am - 4:45 Am", "Business", "drawable://" + R.drawable.trip));
-        userCollection.add(new UpcomingTripsEnt("055082595", "AED 15.00", "Wed, June 15 at 4:30 Am - 4:45 Am", "Business", "drawable://" + R.drawable.trip));
-
+*/
+        userCollection.addAll(result);
         bindData(userCollection);
     }
 
-    private void bindData(ArrayList<UpcomingTripsEnt> userCollection) {
+    private void bindData(ArrayList<ProgressEnt> userCollection) {
 
         adapter.clearList();
-        if (UpcomingRidesListView!=null)
+        if (UpcomingRidesListView != null)
             UpcomingRidesListView.setAdapter(adapter);
         adapter.addAll(userCollection);
         adapter.notifyDataSetChanged();
@@ -112,5 +144,5 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
         titleBar.setSubHeading(getString(R.string.Your_Trips));
     }
 
-   
+
 }

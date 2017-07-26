@@ -449,7 +449,7 @@ public class Funcs {
     }
 
     public static boolean checkInternetConnection(Context context) {
-        if (isInternetReachable(context.getSystemService(context.CONNECTIVITY_SERVICE))) {
+        if (isInternetReachable(context.getSystemService(Context.CONNECTIVITY_SERVICE))) {
             return true;
         } else {
             Funcs.showShortToast("Internet Connection not available", context);

@@ -1,5 +1,7 @@
 package DirectionModule;
 
+import android.view.View;
+
 import java.util.List;
 
 /**
@@ -8,4 +10,5 @@ import java.util.List;
 public interface DirectionFinderListener {
     void onDirectionFinderStart();
     void onDirectionFinderSuccess(List<Route> route);
+    void onDirectionFinderSuccess(List<Route> route,View view,Object object);
 }

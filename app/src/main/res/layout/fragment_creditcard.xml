@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,7 +30,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/x10"
         android:contentDescription=""
-        android:src="@drawable/credit" />
+        android:src="@drawable/credit"
+        tools:ignore="ContentDescription" />
 
     <com.app.fastcab.ui.views.AnyEditTextView
         android:id="@+id/edtCreditCardNum"
@@ -66,7 +68,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/x10"
         android:contentDescription=""
-        android:src="@drawable/expiration" />
+        android:src="@drawable/expiration"
+        tools:ignore="ContentDescription" />
 
     <com.app.fastcab.ui.views.AnyTextView
         android:id="@+id/edtExpirationDate"
@@ -105,7 +108,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/x10"
         android:contentDescription=""
-        android:src="@drawable/cvv" />
+        android:src="@drawable/cvv"
+        tools:ignore="ContentDescription" />
 
     <com.app.fastcab.ui.views.AnyEditTextView
         android:id="@+id/edt_CVV"
@@ -141,7 +145,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/x10"
         android:contentDescription=""
-        android:src="@drawable/name" />
+        android:src="@drawable/name"
+        tools:ignore="ContentDescription" />
 
     <com.app.fastcab.ui.views.AnyEditTextView
         android:id="@+id/edtNameOnCard"

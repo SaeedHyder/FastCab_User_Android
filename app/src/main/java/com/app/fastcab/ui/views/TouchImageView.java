@@ -1184,15 +1184,9 @@ public class TouchImageView extends ImageView {
     	boolean isPreGingerbread;
     	
     	public CompatScroller(Context context) {
-    		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
-    			isPreGingerbread = true;
-    			scroller = new Scroller(context);
-    			
-    		} else {
-    			isPreGingerbread = false;
-    			overScroller = new OverScroller(context);
-    		}
-    	}
+            isPreGingerbread = false;
+            overScroller = new OverScroller(context);
+        }
     	
     	public void fling(int startX, int startY, int velocityX, int velocityY, int minX, int maxX, int minY, int maxY) {
     		if (isPreGingerbread) {
@@ -1246,12 +1240,8 @@ public class TouchImageView extends ImageView {
     
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private void compatPostOnAnimation(Runnable runnable) {
-    	if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-            postOnAnimation(runnable);
-            
-        } else {
-            postDelayed(runnable, 1000/60);
-        }
+        postOnAnimation(runnable);
+
     }
     
     private class ZoomVariables {

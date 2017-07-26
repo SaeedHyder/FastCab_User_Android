@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sv_signup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -47,7 +48,8 @@
             android:background="@drawable/circle_blue"
             android:layout_marginTop="@dimen/x69"
             android:layout_marginLeft="@dimen/x5"
-            android:layout_alignEnd="@+id/CircularImageSharePop" />
+            android:layout_alignEnd="@+id/CircularImageSharePop"
+            tools:ignore="ContentDescription" />
 
 
     </RelativeLayout>
@@ -75,7 +77,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/name" />
+                android:src="@drawable/name"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyEditTextView
                 android:id="@+id/edtUserName"
@@ -113,7 +116,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/email" />
+                android:src="@drawable/email"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyEditTextView
                 android:id="@+id/edtemail"
@@ -151,7 +155,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/address" />
+                android:src="@drawable/address"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyEditTextView
                 android:id="@+id/edtll_currentAddress"
@@ -189,7 +194,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/mobilenumber" />
+                android:src="@drawable/mobilenumber"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyEditTextView
                 android:id="@+id/edtMobileNumber"
@@ -227,7 +233,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/zip_code" />
+                android:src="@drawable/zip_code"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyEditTextView
                 android:id="@+id/edtzipCode"
@@ -265,7 +272,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/birthday" />
+                android:src="@drawable/birthday"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/edtDateOfBirth"
@@ -302,18 +310,17 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/gender" />
+                android:src="@drawable/gender"
+                tools:ignore="ContentDescription" />
 
             <Spinner
                 android:id="@+id/sp_Gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 style="@style/spinner_style"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x12"
                 android:layout_marginRight="@dimen/x10"
-                android:layout_toRightOf="@+id/iv_Gender"
                 android:alpha="0.6"
                 android:hint="@string/gender"
                 android:imeOptions="actionNext"
@@ -337,7 +344,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/pwd" />
+                android:src="@drawable/pwd"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyEditTextView
                 android:id="@+id/edtPassword"
@@ -374,7 +382,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/x10"
                 android:contentDescription=""
-                android:src="@drawable/pwd" />
+                android:src="@drawable/pwd"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyEditTextView
                 android:id="@+id/edt_ConfirmPassword"
@@ -456,7 +465,6 @@
             android:id="@+id/ll_loginfacebook"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x60"
-            android:layout_alignParentBottom="true"
             android:background="@color/facebook_button_color"
             android:orientation="horizontal">
 

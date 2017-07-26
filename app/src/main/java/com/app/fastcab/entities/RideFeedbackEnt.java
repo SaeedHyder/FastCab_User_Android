@@ -1,22 +1,34 @@
 package com.app.fastcab.entities;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by saeedhyder on 7/18/2017.
  */
 
 public class RideFeedbackEnt {
 
-    String reasons;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("type")
+    @Expose
+    private String type;
 
-    public RideFeedbackEnt(String reasons) {
-        this.reasons = reasons;
+    public Integer getId() {
+        return id;
     }
 
-    public String getReasons() {
-        return reasons;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setReasons(String reasons) {
-        this.reasons = reasons;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

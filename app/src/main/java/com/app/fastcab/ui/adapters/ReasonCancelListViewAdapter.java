@@ -65,6 +65,7 @@ public class ReasonCancelListViewAdapter extends BaseAdapter {
 
         viewHolder.label.setText(arrayList.get(i).getTitle());
         if (selectedPosition == -1 && i == 0) {
+            selectedPosition = 0;
             viewHolder.radioButton.setChecked(true);
 
         } else {
@@ -117,8 +118,8 @@ public class ReasonCancelListViewAdapter extends BaseAdapter {
     public String getSelectedItem() {
         if (selectedPosition != -1) {
             // Toast.makeText(context, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
-            item = arrayList.get(selectedPosition).getTitle();
-            return arrayList.get(selectedPosition).getTitle();
+            item = arrayList.get(selectedPosition).getId()+"";
+            return item;
         }
 
         return "";

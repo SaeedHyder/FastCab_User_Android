@@ -63,8 +63,7 @@ public class OSHelper {
 	
 	@TargetApi(11)
 	private void disableHardwareAcceleration( Application app, WebView webView ) {
-		if ( (!webView.isHardwareAccelerated())
-				&& android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB ) {
+		if (!webView.isHardwareAccelerated()) {
 			Log.e( "HardwareAcceleration", "disable HardwareAcceleration" );
 			webView.setLayerType( View.LAYER_TYPE_SOFTWARE, null );
 		}
@@ -141,7 +140,7 @@ public class OSHelper {
 	 * Gingerbread or later.
 	 */
 	public static boolean hasGingerbread() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+		return true;
 	}
 	
 	/**
@@ -149,7 +148,7 @@ public class OSHelper {
 	 * Honeycomb or later.
 	 */
 	public static boolean hasHoneycomb() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+		return true;
 	}
 	
 	/**
@@ -157,7 +156,7 @@ public class OSHelper {
 	 * Honeycomb MR1 or later.
 	 */
 	public static boolean hasHoneycombMR1() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+		return true;
 	}
 	
 	/**
@@ -165,7 +164,7 @@ public class OSHelper {
 	 * Honeycomb MR1 or later.
 	 */
 	public static boolean hasHoneycombMR2() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2;
+		return true;
 	}
 	
 	/**
@@ -173,6 +172,6 @@ public class OSHelper {
 	 * ICS or later.
 	 */
 	public static boolean hasICS() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+		return true;
 	}
 }

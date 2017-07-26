@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -19,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x55"
-            android:text="James Cameron"
             android:textColor="@color/black"
             android:textSize="@dimen/x18"
             android:gravity="center"
@@ -60,7 +60,7 @@
                 app:starOff="@drawable/star_unfilled"
                 app:starOn="@drawable/star_filled"
                 app:starPadding="@dimen/x2"
-                app:stars="3" />
+                app:stars="0" />
 
                 <com.app.fastcab.ui.views.AnyTextView
                     android:id="@+id/txt_ratingName"
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/x15"
                 android:layout_marginBottom="@dimen/x10"
-                android:text="12"
+
                 android:gravity="center"
                 android:textColor="@color/button_color"
                 android:textSize="@dimen/x25"
@@ -135,7 +135,9 @@
                     android:id="@+id/txt_miles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="22.5"
+                    android:singleLine="true"
+                    android:maxLength="9"
+                    android:maxLines="1"
                     android:layout_marginTop="@dimen/x15"
                     android:layout_marginBottom="@dimen/x10"
                     android:gravity="center"
@@ -179,14 +181,15 @@
                 android:layout_width="@dimen/x20"
                 android:layout_height="@dimen/x20"
                 android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/male"/>
+                android:src="@drawable/male"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txtGender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x20"
-                android:text="@string/male"
+
                 android:textColor="@color/light_grey"
                 android:textSize="@dimen/x15"
                 android:gravity="left"
@@ -200,7 +203,6 @@
             android:layout_height="@dimen/x2"
             android:layout_marginTop="@dimen/x7"
             android:alpha="0.3"
-            android:layout_below="@+id/txt_Notification"
             android:background="@drawable/line" />
 
         <LinearLayout
@@ -218,14 +220,15 @@
                 android:layout_width="@dimen/x20"
                 android:layout_height="@dimen/x20"
                 android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/phone"/>
+                android:src="@drawable/phone"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txtphone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x20"
-                android:text="+123-456-789"
+
                 android:textColor="@color/light_grey"
                 android:textSize="@dimen/x15"
                 android:gravity="left"
@@ -239,7 +242,6 @@
             android:layout_height="@dimen/x2"
             android:layout_marginTop="@dimen/x7"
             android:alpha="0.3"
-            android:layout_below="@+id/txt_Notification"
             android:background="@drawable/line" />
 
         <LinearLayout
@@ -257,14 +259,15 @@
                 android:layout_width="@dimen/x20"
                 android:layout_height="@dimen/x20"
                 android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/address1"/>
+                android:src="@drawable/address1"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txtAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x20"
-                android:text="Olaya St, Al Olaya,Riyadh 12214,\nSaudi Arabia"
+
                 android:textColor="@color/light_grey"
                 android:textSize="@dimen/x15"
                 android:gravity="left"

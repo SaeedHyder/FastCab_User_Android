@@ -9,17 +9,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.activities.DockActivity;
+import com.app.fastcab.entities.RideDriverEnt;
 import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.ui.adapters.SelectCarAdapter;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.app.fastcab.ui.views.CustomRatingBar;
 import com.app.fastcab.ui.views.ExpandedBottomSheetBehavior;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -59,13 +65,48 @@ public class BottomSheetDialogHelper {
         bottomSheetBehavior.setPeekHeight(0);
     }
 
-    public void initRatingDialog(View.OnClickListener onClickListener) {
+    public void initRatingDialog(View.OnClickListener onClickListener, RideDriverEnt result) {
+        CircleImageView driver_image = (CircleImageView) dialog.findViewById(R.id.CircularImageSharePop);
+        Glide.with(context).load(result.getDriverDetail().getProfileImage()).into(driver_image);
+        AnyTextView carplate = (AnyTextView) dialog.findViewById(R.id.txtCarNo);
+        carplate.setText(result.getVehicleDetail().getVehicleNumber() + "");
+        AnyTextView drivername = (AnyTextView) dialog.findViewById(R.id.txtDriverName);
+        drivername.setText(result.getDriverDetail().getFullName() + "");
+        AnyTextView pickup = (AnyTextView) dialog.findViewById(R.id.txt_pick_text);
+        pickup.setText(result.getRideDetail().getPickupAddress() + "");
+        AnyTextView Destination = (AnyTextView) dialog.findViewById(R.id.txt_destination_text);
+        Destination.setText(result.getRideDetail().getDestinationAddress() + "");
+        AnyTextView fare = (AnyTextView) dialog.findViewById(R.id.txtFareAmount);
+        fare.setText(result.getRideDetail().getTotalAmount() + "");
         bottomSheetBehavior.setPeekHeight((int) context.getResources().getDimension(R.dimen.x150));
         Button submit = (Button) dialog.findViewById(R.id.SubmitButton);
         submit.setOnClickListener(onClickListener);
     }
 
-    public void initRideDetailBottomSheet(View.OnClickListener oncancelclicklistener) {
+    public int getRatingScore() {
+        CustomRatingBar submit = (CustomRatingBar) dialog.findViewById(R.id.rbAddRating);
+        return (int) submit.getScore();
+    }
+
+    public void initRideDetailBottomSheet(View.OnClickListener oncancelclicklistener, RideDriverEnt result) {
+        AnyTextView pickup = (AnyTextView) dialog.findViewById(R.id.txt_pick_text);
+        pickup.setText(result.getRideDetail().getPickupAddress() + "");
+        AnyTextView drivername = (AnyTextView) dialog.findViewById(R.id.txt_drivername);
+        drivername.setText(result.getDriverDetail().getFullName() + "");
+        AnyTextView carname = (AnyTextView) dialog.findViewById(R.id.txt_car_model);
+        carname.setText(result.getVehicleDetail().getVehicleName() + "");
+        AnyTextView carcolor = (AnyTextView) dialog.findViewById(R.id.txt_car_color);
+        carcolor.setText(result.getVehicleDetail().getVehicleColor() + "");
+        AnyTextView carplate = (AnyTextView) dialog.findViewById(R.id.txt_car_number);
+        carplate.setText(result.getVehicleDetail().getVehicleNumber() + "");
+        ImageView driverimage = (ImageView) dialog.findViewById(R.id.img_driver);
+        Glide.with(context).load(result.getDriverDetail().getProfileImage() + "").into(driverimage);
+        CustomRatingBar driverrating = (CustomRatingBar) dialog.findViewById(R.id.rb_rating);
+        if (result.getDriverDetail()!=null&&result.getDriverDetail().getAverageRate()!=null)
+        driverrating.setScore(result.getDriverDetail().getAverageRate());
+        else{
+            driverrating.setScore(0);
+        }
         bottomSheetBehavior.setAllowUserDragging(false);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel_ride);
         cancelbutton.setOnClickListener(oncancelclicklistener);
@@ -76,17 +117,7 @@ public class BottomSheetDialogHelper {
         // this.dialog.setContentView(layoutID);
         recyclerView = (RecyclerView) dialog.findViewById(R.id.recycler_view);
 
-        mAdapter = new SelectCarAdapter(carTypes, context);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mAdapter);
+        setSelectAdapter(carTypes);
 
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
         AnyTextView promocode = (AnyTextView) dialog.findViewById(R.id.txt_promoCode);
@@ -103,17 +134,7 @@ public class BottomSheetDialogHelper {
 
         recyclerView = (RecyclerView) dialog.findViewById(R.id.recycler_view);
 
-        mAdapter = new SelectCarAdapter(carTypes, context);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mAdapter);
+        setSelectAdapter(carTypes);
 
         Button cancelbutton = (Button) dialog.findViewById(R.id.SubmitButton);
         AnyTextView promocode = (AnyTextView) dialog.findViewById(R.id.txt_promoCode);
@@ -126,8 +147,36 @@ public class BottomSheetDialogHelper {
         // return this.dialog;
     }
 
-    public void initEstimateFareBottomSheet(View.OnClickListener requestclicklistener) {
+    private void setSelectAdapter(ArrayList<SelectCarEnt> carTypes) {
+        mAdapter = new SelectCarAdapter(carTypes, context);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    public SelectCarEnt getSelectedType() {
+        return mAdapter.getSelectedItemPosition();
+    }
+
+    public void initEstimateFareBottomSheet(View.OnClickListener requestclicklistener, String Type,
+                                            String numberOfPeople, String ImageUrl, int fare) {
         //this.dialog.setContentView(layoutID);
+        ImageView imageView = (ImageView) dialog.findViewById(R.id.img_selected_ride);
+        Glide.with(context).load(ImageUrl).into(imageView);
+        AnyTextView textView = (AnyTextView) dialog.findViewById(R.id.txt_no_people);
+        textView.setText(numberOfPeople);
+        AnyTextView name = (AnyTextView) dialog.findViewById(R.id.txt_type);
+        name.setText(Type);
+        AnyTextView faretextView = (AnyTextView) dialog.findViewById(R.id.txt_fare_ammount);
+        int fare_increse = fare + 100;
+        faretextView.setText("AED "+fare+" - "+fare_increse);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_done);
         cancelbutton.setOnClickListener(requestclicklistener);
         // dialog.setCanceledOnTouchOutside(false);

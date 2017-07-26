@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Main_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -120,7 +121,8 @@
                     android:layout_marginRight="@dimen/x15"
 
                     android:scaleType="centerInside"
-                    android:src="@drawable/adress_recent" />
+                    android:src="@drawable/adress_recent"
+                    tools:ignore="ContentDescription" />
 
                 <com.app.fastcab.ui.views.AnyTextView
                     android:id="@+id/txt_schedule"
@@ -160,7 +162,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_below="@+id/txt_schedule"
                     android:layout_marginLeft="@dimen/x24"
-                    android:src="@drawable/line_verticle" />
+                    android:src="@drawable/line_verticle"
+                    tools:ignore="ContentDescription" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -179,7 +182,8 @@
                     android:layout_marginRight="@dimen/x15"
 
                     android:scaleType="centerInside"
-                    android:src="@drawable/pick_locatio" />
+                    android:src="@drawable/pick_locatio"
+                    tools:ignore="ContentDescription" />
 
                 <com.app.fastcab.ui.views.AnyTextView
                     android:id="@+id/txt_pickup"
@@ -219,7 +223,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_below="@+id/imageView"
                     android:layout_marginLeft="@dimen/x24"
-                    android:src="@drawable/line_verticle" />
+                    android:src="@drawable/line_verticle"
+                    tools:ignore="ContentDescription" />
             </RelativeLayout>
 
 
@@ -237,7 +242,8 @@
                     android:layout_above="@+id/imageView_destination"
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="@dimen/x24"
-                    android:src="@drawable/line_verticle" />
+                    android:src="@drawable/line_verticle"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/imageView_destination"
@@ -247,7 +253,8 @@
                     android:layout_marginLeft="@dimen/x15"
                     android:layout_marginRight="@dimen/x15"
                     android:scaleType="centerInside"
-                    android:src="@drawable/destination" />
+                    android:src="@drawable/destination"
+                    tools:ignore="ContentDescription" />
 
                 <com.app.fastcab.ui.views.AnyTextView
                     android:id="@+id/txt_destination"
@@ -287,7 +294,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x60"
                 android:layout_below="@+id/ll_pickup"
-                android:layout_centerHorizontal="true"
                 android:background="@drawable/blue_border_rect"
                 android:orientation="horizontal"
                >
@@ -300,7 +306,8 @@
                     android:layout_marginLeft="@dimen/x15"
                     android:contentDescription=""
                     android:scaleType="centerInside"
-                    android:src="@drawable/pick_location" />
+                    android:src="@drawable/pick_location"
+                    tools:ignore="ContentDescription" />
 
                 <com.app.fastcab.ui.views.AnyTextView
                     android:id="@+id/txt_destination_where"

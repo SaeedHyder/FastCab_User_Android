@@ -12,7 +12,9 @@ import com.app.fastcab.R;
 import com.app.fastcab.activities.DockActivity;
 import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.ui.views.AnyTextView;
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 
 import java.util.ArrayList;
 
@@ -51,10 +53,11 @@ public class SelectCarAdapter extends RecyclerView.Adapter<SelectCarAdapter.View
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         SelectCarEnt entity = selectCarList.get(position);
-        imageLoader.displayImage(entity.getUnselectedCarImage(),holder.ivCarImage);
-        holder.txtCarTypeName.setText(entity.getCarName());
-        holder.txtCarTypeName.setTextColor(context.getResources().getColor(entity.getUnseelectedTextColor()));
-        holder.ivCarImage.setBackground(context.getResources().getDrawable(entity.getUnselectedCarBackground()));
+        Glide.with(context).load(entity.getVehicleImageOne()).into(holder.ivCarImage);
+       // imageLoader.displayImage(entity.getVehiclePictureOne(),holder.ivCarImage);
+        holder.txtCarTypeName.setText(entity.getType());
+        holder.txtCarTypeName.setTextColor(context.getResources().getColor(R.color.gray_dark));
+        holder.ivCarImage.setBackground(context.getResources().getDrawable(R.drawable.circle_unactive));
         holder.ivCarImage.getLayoutParams().width = (int)context.getResources().getDimension(R.dimen.x40);
         holder.ivCarImage.getLayoutParams().height = (int)context.getResources().getDimension(R.dimen.x40);
 
@@ -65,9 +68,10 @@ public class SelectCarAdapter extends RecyclerView.Adapter<SelectCarAdapter.View
             holder.ivLeftLine.setVisibility(View.INVISIBLE);
         }
         if (position == SelectedItemPosition){
-            holder.txtCarTypeName.setTextColor(context.getResources().getColor(entity.getSelectedTextColor()));
-            holder.ivCarImage.setBackground(context.getResources().getDrawable(entity.getSelectedCarBackground()));
-            imageLoader.displayImage(entity.getSelectedCarImage(),holder.ivCarImage);
+            holder.txtCarTypeName.setTextColor(context.getResources().getColor(R.color.button_color));
+            holder.ivCarImage.setBackground(context.getResources().getDrawable(R.drawable.circle_blue));
+            Glide.with(context).load(entity.getVehicleImageTwo()).into(holder.ivCarImage);
+            //imageLoader.displayImage(entity.getVehicleImageTwo(),holder.ivCarImage);
             holder.ivCarImage.getLayoutParams().width = (int)context.getResources().getDimension(R.dimen.x45);
             holder.ivCarImage.getLayoutParams().height = (int)context.getResources().getDimension(R.dimen.x45);
 
@@ -92,6 +96,9 @@ public class SelectCarAdapter extends RecyclerView.Adapter<SelectCarAdapter.View
 
 
 
+    }
+    public SelectCarEnt getSelectedItemPosition(){
+        return selectCarList.get(SelectedItemPosition);
     }
 
     @Override
