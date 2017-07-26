@@ -51,7 +51,7 @@ public class CurrentLocationFinder extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG,"Started");
         handler.removeCallbacks(sendUpdatesToUI);
-        handler.postDelayed(sendUpdatesToUI, 2000); // 1 second
+        handler.postDelayed(sendUpdatesToUI, 15000); // 1 second
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -60,7 +60,7 @@ public class CurrentLocationFinder extends Service {
     private Runnable sendUpdatesToUI = new Runnable() {
         public void run() {
             broadcastUpdateInfo();
-            handler.postDelayed(this, 7000); // broadcast in every 10 seconds
+            handler.postDelayed(this, 20000); // broadcast in every 10 seconds
         }
     };
 

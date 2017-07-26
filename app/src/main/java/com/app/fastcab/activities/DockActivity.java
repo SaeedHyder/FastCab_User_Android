@@ -57,7 +57,14 @@ public abstract class DockActivity extends AppCompatActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefHelper = new BasePreferenceHelper(this);
+
+    }
+
+    public void StartDriverLocationService(){
         startService(new Intent(getApplicationContext(), CurrentLocationFinder.class));
+    }
+    public void StopDriverLocationService(){
+        stopService(new Intent(getApplicationContext(), CurrentLocationFinder.class));
     }
 
     public String getCountryCode() {
@@ -112,7 +119,7 @@ public abstract class DockActivity extends AppCompatActivity implements
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
 
-        transaction.replace(getDockFrameLayoutId(), frag);
+        transaction.replace(getDockFrameLayoutId(), frag,Tag);
         transaction
                 .addToBackStack(
                         getSupportFragmentManager().getBackStackEntryCount() == 0 ? KEY_FRAG_FIRST

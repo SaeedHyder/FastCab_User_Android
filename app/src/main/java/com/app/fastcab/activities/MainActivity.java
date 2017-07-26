@@ -267,8 +267,20 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
       }*/
 
     public boolean isConnected(Context context) {
-
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfoMob = cm.getNetworkInfo(cm.TYPE_MOBILE);
+        NetworkInfo netInfoWifi = cm.getNetworkInfo(cm.TYPE_WIFI);
+        if (netInfoMob != null && netInfoMob.isConnectedOrConnecting()) {
+            Log.v("TAG", "Mobile Internet connected");
+            return true;
+        }
+        if (netInfoWifi != null && netInfoWifi.isConnectedOrConnecting()) {
+            Log.v("TAG", "Wifi Internet connected");
+            return true;
+        }
+        buildAlertMessageNoGps(R.string.wifi_question, Settings.ACTION_WIFI_SETTINGS, WifiResultCode);
+        return false;
+      /*  ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = cm.getActiveNetworkInfo();
 
         if (netinfo != null && netinfo.isConnectedOrConnecting()) {
@@ -284,7 +296,7 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
         } else {
             buildAlertMessageNoGps(R.string.wifi_question, Settings.ACTION_WIFI_SETTINGS, WifiResultCode);
             return false;
-        }
+        }*/
     }
 
     @Override
@@ -367,7 +379,21 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
 
         }
     }
+    public void refreshSideMenu(){
 
+        sideMenuFragment = SideMenuFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+        transaction.remove(sideMenuFragment).commit();
+
+      /*  resideMenu = new ResideMenu(this);
+        resideMenu.attachToActivity(this);
+        resideMenu.setMenuListener(getMenuListener());
+        resideMenu.setScaleValue(0.52f);
+        resideMenu.setPadding(0,0,0,0);
+*/
+        setMenuItemDirection(sideMenuDirection);
+    }
     public ResideMenu getResideMenu() {
         return resideMenu;
     }

@@ -23,6 +23,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +38,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -124,6 +128,7 @@ import static com.app.fastcab.global.WebServiceConstants.RIDE_LATER;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_RATING;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_cancel;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_default_;
+import static com.app.fastcab.global.WebServiceConstants.RIDE_done;
 import static com.app.fastcab.global.WebServiceConstants.STATUS_RIDELATER;
 import static com.app.fastcab.global.WebServiceConstants.STATUS_RIDENOW;
 
@@ -212,6 +217,10 @@ public class HomeMapFragment extends BaseFragment implements
     private CreateRideEnt rideEnt;
     private DriverEnt driverDetail;
 
+    private Marker pickupMarker;
+    private Marker DriverMarker;
+    private boolean isRideinSession;
+
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
     }
@@ -249,7 +258,7 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getMainActivity().refreshSideMenu();
         onNotificationReceived();
         if (map == null)
             initMap();
@@ -355,10 +364,10 @@ public class HomeMapFragment extends BaseFragment implements
                         String lat = bundle.getString("lat");
                         String lon = bundle.getString("lon");
                         LatLng latLng = new LatLng(Double.parseDouble(lat + ""), Double.parseDouble(lon + ""));
-                        /*if (origin!=null&&!origin.getLatlng().equals(new LatLng(0,0))) {
-                            animateMarker(origin.getLatlng(), latLng, false);
-                            origin.setLatlng(latLng);
-                        }*/
+                        if (DriverMarker!=null)
+                            animateMarker(DriverMarker.getPosition(), latLng, false);
+
+
                     } else {
                         //UIHelper.showShortToastInCenter(getDockActivity(), "Notification Data is Empty");
                     }
@@ -508,7 +517,7 @@ public class HomeMapFragment extends BaseFragment implements
                     color(Color.BLACK).
                     width(15);
 
-            googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
+           pickupMarker =  googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
                     .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location,
                             routesingle.duration.text, R.color.black))));
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destination_icon);
@@ -518,7 +527,7 @@ public class HomeMapFragment extends BaseFragment implements
                 polylineOptions.add(routesingle.points.get(i));
             //moveMap(null);
             polylinePaths.add(googleMap.addPolyline(polylineOptions));
-            distance = (int)routesingle.distance.value/1000;
+            distance = (int) routesingle.distance.value / 1000;
 
         }
     }
@@ -609,7 +618,59 @@ public class HomeMapFragment extends BaseFragment implements
         // }
         //googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
+    public void animateMarker(final LatLng startPosition, final LatLng toPosition,
+                              final boolean hideMarker) {
 
+
+        /*final Marker marker = googleMap.addMarker(new MarkerOptions()
+                .position(startPosition)
+                .title(mCarParcelableListCurrentLation.get(position).mCarName)
+                .snippet(mCarParcelableListCurrentLation.get(position).mAddress)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));*/
+        if (DriverMarker!=null) {
+
+            final Handler handler = new Handler();
+            final long start = SystemClock.uptimeMillis();
+
+            final long duration = 2500;
+            final Interpolator interpolator = new LinearInterpolator();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    long elapsed = SystemClock.uptimeMillis() - start;
+                    float t = interpolator.getInterpolation((float) elapsed
+                            / duration);
+                    double lng = t * toPosition.longitude + (1 - t)
+                            * startPosition.longitude;
+                    double lat = t * toPosition.latitude + (1 - t)
+                            * startPosition.latitude;
+
+
+                    double dLon = (toPosition.longitude - startPosition.longitude);
+                    double y = Math.sin(dLon) * Math.cos(toPosition.latitude);
+                    double x = Math.cos(startPosition.latitude) * Math.sin(toPosition.latitude) -
+                            Math.sin(startPosition.latitude) * Math.cos(toPosition.latitude) * Math.cos(dLon);
+                    double brng = Math.toDegrees((Math.atan2(y, x)));
+                    brng = (360 - ((brng + 360) % 360));
+                    DriverMarker.setPosition(new LatLng(lat, lng));
+                    // carMarker.setRotation((float) brng);
+
+                    if (t < 1.0) {
+                        // Post again 16ms later.
+                        handler.postDelayed(this, 16);
+                    } else {
+                        if (hideMarker) {
+                            DriverMarker.setVisible(false);
+                        } else {
+                            DriverMarker.setVisible(true);
+                        }
+                    }
+                }
+            });
+            movemap(toPosition);
+        }
+    }
     private void getCurrentLocation() {
 
 
@@ -631,7 +692,7 @@ public class HomeMapFragment extends BaseFragment implements
             public void onLocationChanged(Location mlocation) {
                 if (mlocation != null) {
                     Mylocation = mlocation;
-                    listener = null;
+                    LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, listener);
                     if (Mylocation != null) {
                         //Getting longitude and latitude
                         longitude = Mylocation.getLongitude();
@@ -667,7 +728,7 @@ public class HomeMapFragment extends BaseFragment implements
         try {
             Geocoder geocoder;
             List<Address> addresses;
-            geocoder = new Geocoder(getContext());
+            geocoder = new Geocoder(getDockActivity(),Locale.ENGLISH);
             addresses = geocoder.getFromLocation(lat, lng, 1);
             if (addresses.size() > 0) {
                 String address = addresses.get(0).getAddressLine(0);
@@ -753,6 +814,7 @@ public class HomeMapFragment extends BaseFragment implements
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.GONE);
+
         showRatingBottomSheet(result, LAST_RATING, null);
 
 
@@ -784,6 +846,7 @@ public class HomeMapFragment extends BaseFragment implements
         if (RatingType == LAST_RATING) {
             titleBar.setSubHeading(getResources().getString(R.string.submit_rating_last));
         } else if (RatingType == CURRENT_RATING) {
+            getDockActivity().StopDriverLocationService();
             titleBar.setSubHeading(getResources().getString(R.string.rate_title));
         }
     }
@@ -812,7 +875,8 @@ public class HomeMapFragment extends BaseFragment implements
                 String percentage = "";
                 if (promoCodeEnt != null)
                     percentage = promoCodeEnt.getPercentage();
-                serviceHelper.enqueueCall(webService.getRideEstimate(String.valueOf(selectCarEnt.getId()), checkForNullOREmpty(percentage), distance + ""), ESTIMATEFARE);
+                serviceHelper.enqueueCall(webService.getRideEstimate(String.valueOf(selectCarEnt.getId()),
+                        checkForNullOREmpty(percentage), distance + ""), ESTIMATEFARE);
                 dialogHelper.hideDialog();
 
             }
@@ -912,7 +976,7 @@ public class HomeMapFragment extends BaseFragment implements
 
                 serviceHelper.enqueueCall(webService.createNewRide(prefHelper.getUserId(), String.valueOf(origin.getLatlng().latitude), String.valueOf(origin.getLatlng().longitude),
                         origin.getAddress(), origin.getAddress(), String.valueOf(destination.getLatlng().latitude), String.valueOf(destination.getLatlng().longitude),
-                        destination.getAddress(), destination.getAddress(), selectCarEnt.getId() + "", percentage + "", SelectedDate, SelectedTime, RIDE_default_, STATUS_RIDELATER, "", distance + ""), RIDE_LATER);
+                        destination.getAddress(), destination.getAddress(), selectCarEnt.getId() + "", percentage + "", SelectedDate, SelectedTime, RIDE_done, STATUS_RIDELATER, "", distance + ""), RIDE_LATER);
 
                 scheduleDialog.hideDialog();
             }
@@ -963,6 +1027,12 @@ public class HomeMapFragment extends BaseFragment implements
         googleMap.clear();
         findingRide.setVisibility(View.GONE);
         btnCancelRide.setVisibility(View.GONE);
+        prefHelper.setDriverId(result.getDriverDetail().getId()+"");
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.car);
+        DriverMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(
+                result.getDriverDetail().getLatitude()),
+                Double.parseDouble(result.getDriverDetail().getLongitude()))).icon(icon));
+       getDockActivity().StartDriverLocationService();
         setRoute();
         final BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
         rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
@@ -1058,20 +1128,22 @@ public class HomeMapFragment extends BaseFragment implements
     private void initEstimateFareBottomSheet(final EstimateFareEnt result) {
         final BottomSheetDialogHelper estimateFareDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_estimate_fare);
         estimateFareDialog.initEstimateFareBottomSheet(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                estimateFareDialog.hideDialog();
-                String percentage = "";
-                if (promoCodeEnt != null)
-                    percentage = promoCodeEnt.getPercentage();
-                serviceHelper.enqueueCall(webService.createNewRide(prefHelper.getUserId(), String.valueOf(origin.getLatlng().latitude), String.valueOf(origin.getLatlng().longitude),
-                        origin.getAddress(), origin.getAddress(), String.valueOf(destination.getLatlng().latitude), String.valueOf(destination.getLatlng().longitude),
-                        destination.getAddress(), destination.getAddress(), selectCarEnt.getId() + "", percentage + "", "", "", RIDE_default_, STATUS_RIDENOW, result.getEstimateFare(), distance + ""), CREATE);
+                                                           @Override
+                                                           public void onClick(View v) {
+                                                               estimateFareDialog.hideDialog();
+                                                               String percentage = "";
+                                                               if (promoCodeEnt != null)
+                                                                   percentage = promoCodeEnt.getPercentage();
 
-            }
-        }, selectCarEnt.getType(),
+                                                               isRideinSession = true;
+                                                               serviceHelper.enqueueCall(webService.createNewRide(prefHelper.getUserId(), String.valueOf(origin.getLatlng().latitude), String.valueOf(origin.getLatlng().longitude),
+                                                                       origin.getAddress(), origin.getAddress(), String.valueOf(destination.getLatlng().latitude), String.valueOf(destination.getLatlng().longitude),
+                                                                       destination.getAddress(), destination.getAddress(), selectCarEnt.getId() + "", percentage + "", "", "", RIDE_done, STATUS_RIDENOW, result.getEstimateFare(), distance + ""), CREATE);
+
+                                                           }
+                                                       }, selectCarEnt.getType(),
                 selectCarEnt.getCapacity() + "",
-                selectCarEnt.getVehicleImageTwo() + "",Integer.parseInt(result.getEstimateFare()+""));
+                selectCarEnt.getVehicleImageTwo() + "", Integer.parseInt(result.getEstimateFare() + ""));
         estimateFareDialog.showDialog();
         titleBar.hideButtons();
         titleBar.setSubHeading(getResources().getString(R.string.home));

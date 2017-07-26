@@ -77,7 +77,7 @@ public class BottomSheetDialogHelper {
         AnyTextView Destination = (AnyTextView) dialog.findViewById(R.id.txt_destination_text);
         Destination.setText(result.getRideDetail().getDestinationAddress() + "");
         AnyTextView fare = (AnyTextView) dialog.findViewById(R.id.txtFareAmount);
-        Destination.setText(result.getRideDetail().getTotalAmount() + "");
+        fare.setText(result.getRideDetail().getTotalAmount() + "");
         bottomSheetBehavior.setPeekHeight((int) context.getResources().getDimension(R.dimen.x150));
         Button submit = (Button) dialog.findViewById(R.id.SubmitButton);
         submit.setOnClickListener(onClickListener);
@@ -102,7 +102,11 @@ public class BottomSheetDialogHelper {
         ImageView driverimage = (ImageView) dialog.findViewById(R.id.img_driver);
         Glide.with(context).load(result.getDriverDetail().getProfileImage() + "").into(driverimage);
         CustomRatingBar driverrating = (CustomRatingBar) dialog.findViewById(R.id.rb_rating);
+        if (result.getDriverDetail()!=null&&result.getDriverDetail().getAverageRate()!=null)
         driverrating.setScore(result.getDriverDetail().getAverageRate());
+        else{
+            driverrating.setScore(0);
+        }
         bottomSheetBehavior.setAllowUserDragging(false);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel_ride);
         cancelbutton.setOnClickListener(oncancelclicklistener);

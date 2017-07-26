@@ -192,7 +192,7 @@ public interface WebService {
     Call<ResponseWrapper<ArrayList<RideFeedbackEnt>>> getImproveType();
 
     @FormUrlEncoded
-    @POST("POST /cms/appfeedback")
+    @POST("cms/appfeedback")
     Call<ResponseWrapper> submitAppFeedback(@Field("user_id") String user_id,
                                             @Field("rate") String rate,
                                             @Field("type_id") String type_id,

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -180,7 +181,8 @@
                 android:layout_width="@dimen/x20"
                 android:layout_height="@dimen/x20"
                 android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/male"/>
+                android:src="@drawable/male"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txtGender"
@@ -201,7 +203,6 @@
             android:layout_height="@dimen/x2"
             android:layout_marginTop="@dimen/x7"
             android:alpha="0.3"
-            android:layout_below="@+id/txt_Notification"
             android:background="@drawable/line" />
 
         <LinearLayout
@@ -219,7 +220,8 @@
                 android:layout_width="@dimen/x20"
                 android:layout_height="@dimen/x20"
                 android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/phone"/>
+                android:src="@drawable/phone"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txtphone"
@@ -240,7 +242,6 @@
             android:layout_height="@dimen/x2"
             android:layout_marginTop="@dimen/x7"
             android:alpha="0.3"
-            android:layout_below="@+id/txt_Notification"
             android:background="@drawable/line" />
 
         <LinearLayout
@@ -258,7 +259,8 @@
                 android:layout_width="@dimen/x20"
                 android:layout_height="@dimen/x20"
                 android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/address1"/>
+                android:src="@drawable/address1"
+                tools:ignore="ContentDescription" />
 
             <com.app.fastcab.ui.views.AnyTextView
                 android:id="@+id/txtAddress"

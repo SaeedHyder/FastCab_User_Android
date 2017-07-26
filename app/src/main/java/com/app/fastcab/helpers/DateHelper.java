@@ -544,7 +544,7 @@ public class DateHelper {
 		//"Fri Mar 07 16:34:38 GMT+05:00 2014"
 		DateFormat sdfNew = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy" , Locale.US);
 		
-		String systemTime = sdf.format( new Date() ).toString();
+		String systemTime = sdf.format(new Date());
 		String finalTime = "";
 		try {
 
@@ -602,7 +602,7 @@ public class DateHelper {
 
 		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" , Locale.US);
 		
-		String systemTime = sdf.format( new Date() ).toString();
+		String systemTime = sdf.format(new Date());
 		String finalTime = "";
 		try {
 
@@ -649,7 +649,7 @@ public class DateHelper {
 
 		DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" , Locale.US);
 
-		String systemTime = sdf.format( new Date() ).toString();
+		String systemTime = sdf.format(new Date());
 		String finalTime = "";
 		if(!TextUtils.isEmpty(sDate)) {
 			

@@ -78,12 +78,12 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity()))
-            getAllVehicles();
+            getAllImproveType();
         setListners();
 
     }
 
-    private void getAllVehicles() {
+    private void getAllImproveType() {
         loadingStarted();
         Call<ResponseWrapper<ArrayList<RideFeedbackEnt>>> call = webService.getImproveType();
         call.enqueue(new Callback<ResponseWrapper<ArrayList<RideFeedbackEnt>>>() {

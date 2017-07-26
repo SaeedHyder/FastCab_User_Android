@@ -45,7 +45,7 @@ import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -376,7 +376,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         datePickerHelper.showDate();
     }
 
-    void ShowDateDialog(final AnyTextView txtView) {
+    /*void ShowDateDialog(final AnyTextView txtView) {
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 new DatePickerDialog.OnDateSetListener() {
@@ -406,7 +406,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         dpd.show(getFragmentManager(), "Datepickerdialog");
 
 
-    }
+    }*/
 
     @Override
     public void setTitleBar(TitleBar titleBar) {

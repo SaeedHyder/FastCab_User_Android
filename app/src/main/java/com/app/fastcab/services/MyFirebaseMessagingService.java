@@ -40,7 +40,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void buildNotification(RemoteMessage messageBody) {
         String title = getString(R.string.app_name);
         String message = messageBody.getData().get("message");
-        String rideID = messageBody.getData().get("subtitle");
+        String rideID = messageBody.getData().get("ride_id");
         Log.e(TAG, "message: " + message);
         Intent resultIntent = new Intent(MyFirebaseMessagingService.this, MainActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

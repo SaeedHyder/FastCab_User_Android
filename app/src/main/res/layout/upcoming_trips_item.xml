@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,7 +11,8 @@
         android:id="@+id/iv_upcomingTrips"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x150"
-        android:src="@drawable/trip"/>
+        android:src="@drawable/trip"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:id="@+id/ll_upcomingTripDetail"
@@ -50,6 +52,7 @@
                 android:alpha="0.5"
                 android:gravity="right"
                 android:paddingRight="@dimen/x3"
+                android:paddingLeft="@dimen/x3"
                 android:text="@string/estimated_fare"
                 android:textColor="@color/black"
                 app:typeface="Roboto-Regular.ttf" />

@@ -78,7 +78,9 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
+        <service
+            android:name=".services.CurrentLocationFinder"
+            android:enabled="true" />
         <!-- ./Firebase Notifications -->
         <activity android:name=".activities.PickupSelectionactivity"></activity>
     </application>
