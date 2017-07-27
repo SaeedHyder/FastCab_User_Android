@@ -131,7 +131,7 @@
                 android:layout_marginTop="@dimen/x10"
                 android:alpha="0.8"
                 android:gravity="center_horizontal"
-                android:text="Black"
+
                 android:textColor="@color/black"
                 android:textSize="@dimen/x14"
                 app:typeface="Roboto-Regular.ttf" />
@@ -145,7 +145,7 @@
                 android:layout_gravity="right"
                 android:alpha="0.8"
                 android:gravity="center_horizontal"
-                android:text="Mercedes Benz"
+
                 android:textColor="@color/black"
                 android:textSize="@dimen/x14"
                 app:typeface="Roboto-Regular.ttf" />
@@ -161,7 +161,7 @@
                 android:alpha="0.8"
                 android:background="@drawable/plate_background"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="xxx-1017"
+
                 android:textColor="@color/black"
                 android:textSize="@dimen/x14"
                 app:typeface="Roboto-Regular.ttf" />

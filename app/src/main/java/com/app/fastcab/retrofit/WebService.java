@@ -211,4 +211,8 @@ public interface WebService {
 
     @GET("driver/getdriverlocation")
     Call<ResponseWrapper<UpdatedLocationEnt>> getUpdatedLocation(@Query("driver_id") String driver_id);
+
+    @FormUrlEncoded
+    @POST("user/userlogout")
+    Call<ResponseWrapper> LogoutUser(@Field("user_id") int user_id);
 }

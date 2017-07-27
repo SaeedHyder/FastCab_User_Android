@@ -59,6 +59,7 @@ import com.app.fastcab.entities.LocationEnt;
 import com.app.fastcab.entities.PromoCodeEnt;
 import com.app.fastcab.entities.RideDriverEnt;
 import com.app.fastcab.entities.SelectCarEnt;
+import com.app.fastcab.entities.UserHomeEnt;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
 import com.app.fastcab.global.AppConstants;
 import com.app.fastcab.helpers.BottomSheetDialogHelper;
@@ -127,7 +128,6 @@ import static com.app.fastcab.global.WebServiceConstants.RIDE_LAST_RATING;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_LATER;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_RATING;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_cancel;
-import static com.app.fastcab.global.WebServiceConstants.RIDE_default_;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_done;
 import static com.app.fastcab.global.WebServiceConstants.STATUS_RIDELATER;
 import static com.app.fastcab.global.WebServiceConstants.STATUS_RIDENOW;
@@ -220,6 +220,8 @@ public class HomeMapFragment extends BaseFragment implements
     private Marker pickupMarker;
     private Marker DriverMarker;
     private boolean isRideinSession;
+    private RideDriverEnt rideDriverEnt;
+
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
@@ -259,6 +261,8 @@ public class HomeMapFragment extends BaseFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getMainActivity().refreshSideMenu();
+
+
         onNotificationReceived();
         if (map == null)
             initMap();
@@ -287,19 +291,26 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onMapReady(GoogleMap googlemap) {
         googleMap = googlemap;
-        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                String address = getCurrentAddress(cameraPosition.target.latitude, cameraPosition.target.longitude);
-                if (address != null) {
-                    origin = new LocationEnt(address,
-                            cameraPosition.target);
-                } else {
-                    //  origin = new LocationEnt("Un Named Street",cameraPosition.target);
+        if (!prefHelper.getRideInSession()){
+            googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                @Override
+                public void onCameraChange(CameraPosition cameraPosition) {
+                    String address = getCurrentAddress(cameraPosition.target.latitude, cameraPosition.target.longitude);
+                    if (address != null) {
+                        if (!prefHelper.getRideInSession()) {
+                            origin = new LocationEnt(address,
+                                    cameraPosition.target);
+                        }
+                    } else {
+                        //  origin = new LocationEnt("Un Named Street",cameraPosition.target);
+                    }
+                    //UIHelper.showShortToastInCenter(getDockActivity(), cameraPosition.target.toString());
                 }
-                //UIHelper.showShortToastInCenter(getDockActivity(), cameraPosition.target.toString());
-            }
-        });
+            });
+        }
+
+        RestoreState();
+
     }
 
     @Override
@@ -364,7 +375,7 @@ public class HomeMapFragment extends BaseFragment implements
                         String lat = bundle.getString("lat");
                         String lon = bundle.getString("lon");
                         LatLng latLng = new LatLng(Double.parseDouble(lat + ""), Double.parseDouble(lon + ""));
-                        if (DriverMarker!=null)
+                        if (DriverMarker != null)
                             animateMarker(DriverMarker.getPosition(), latLng, false);
 
 
@@ -391,6 +402,7 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void onPause() {
         LocalBroadcastManager.getInstance(getDockActivity()).unregisterReceiver(broadcastReceiver);
+        SaveCurrentState();
         super.onPause();
         UIHelper.hideSoftKeyboard(getDockActivity(), getMainActivity()
                 .getWindow().getDecorView());
@@ -407,6 +419,7 @@ public class HomeMapFragment extends BaseFragment implements
             getMainActivity().statusCheck();
             //getCurrentLocation();
         }
+
         LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
                 new IntentFilter(AppConstants.REGISTRATION_COMPLETE));
 
@@ -414,6 +427,7 @@ public class HomeMapFragment extends BaseFragment implements
                 new IntentFilter(AppConstants.PUSH_NOTIFICATION));
         LocalBroadcastManager.getInstance(getDockActivity()).registerReceiver(broadcastReceiver,
                 new IntentFilter(AppConstants.LOCATION_RECIEVED));
+
 
     }
 
@@ -517,7 +531,7 @@ public class HomeMapFragment extends BaseFragment implements
                     color(Color.BLACK).
                     width(15);
 
-           pickupMarker =  googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
+            pickupMarker = googleMap.addMarker(new MarkerOptions().position(origin.getLatlng())
                     .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.set_pickup_location,
                             routesingle.duration.text, R.color.black))));
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.destination_icon);
@@ -618,6 +632,7 @@ public class HomeMapFragment extends BaseFragment implements
         // }
         //googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
+
     public void animateMarker(final LatLng startPosition, final LatLng toPosition,
                               final boolean hideMarker) {
 
@@ -627,7 +642,7 @@ public class HomeMapFragment extends BaseFragment implements
                 .title(mCarParcelableListCurrentLation.get(position).mCarName)
                 .snippet(mCarParcelableListCurrentLation.get(position).mAddress)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));*/
-        if (DriverMarker!=null) {
+        if (DriverMarker != null) {
 
             final Handler handler = new Handler();
             final long start = SystemClock.uptimeMillis();
@@ -671,10 +686,11 @@ public class HomeMapFragment extends BaseFragment implements
             movemap(toPosition);
         }
     }
+
     private void getCurrentLocation() {
 
 
-        if (googleMap != null) {
+        if (googleMap != null && !prefHelper.getRideInSession()) {
             googleMap.clear();
         }
         if (ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getMainActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -699,8 +715,10 @@ public class HomeMapFragment extends BaseFragment implements
                         latitude = Mylocation.getLatitude();
                         // origin = new LatLng(latitude, longitude);
                         String Address = getCurrentAddress(latitude, longitude);
-                        customMarkerView.setVisibility(View.VISIBLE);
-                        llDestination.setVisibility(View.VISIBLE);
+                        if (!prefHelper.getRideInSession()) {
+                            customMarkerView.setVisibility(View.VISIBLE);
+                            llDestination.setVisibility(View.VISIBLE);
+                        }
                         if (Address != null) {
 
                             origin = new LocationEnt(Address, new LatLng(latitude, longitude));
@@ -728,7 +746,7 @@ public class HomeMapFragment extends BaseFragment implements
         try {
             Geocoder geocoder;
             List<Address> addresses;
-            geocoder = new Geocoder(getDockActivity(),Locale.ENGLISH);
+            geocoder = new Geocoder(getDockActivity(), Locale.ENGLISH);
             addresses = geocoder.getFromLocation(lat, lng, 1);
             if (addresses.size() > 0) {
                 String address = addresses.get(0).getAddressLine(0);
@@ -1024,27 +1042,40 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void ShowrideReachingDialog(RideDriverEnt result) {
-        googleMap.clear();
-        findingRide.setVisibility(View.GONE);
-        btnCancelRide.setVisibility(View.GONE);
-        prefHelper.setDriverId(result.getDriverDetail().getId()+"");
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.car);
-        DriverMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(
-                result.getDriverDetail().getLatitude()),
-                Double.parseDouble(result.getDriverDetail().getLongitude()))).icon(icon));
-       getDockActivity().StartDriverLocationService();
-        setRoute();
-        final BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
-        rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setcanceldialog();
-            }
-        }, result);
 
-        rideReaching.showDialog();
-        mIsTitleBarChanged = true;
-        adjustTitleBar();
+        //rideDriverEnt = result;
+
+        if (result != null) {
+
+            googleMap.clear();
+            customMarkerView.setVisibility(View.GONE);
+            findingRide.setVisibility(View.GONE);
+            btnCancelRide.setVisibility(View.GONE);
+            llDestination.setVisibility(View.GONE);
+            btndoneselection.setVisibility(View.GONE);
+            layoutdestination.setVisibility(View.GONE);
+            layoutpick.setVisibility(View.GONE);
+            btnRidenow.setVisibility(View.GONE);
+            btnRidelater.setVisibility(View.GONE);
+            prefHelper.setDriverId(result.getDriverDetail().getId() + "");
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.car);
+            DriverMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(
+                    result.getDriverDetail().getLatitude()),
+                    Double.parseDouble(result.getDriverDetail().getLongitude()))).icon(icon));
+            getDockActivity().StartDriverLocationService();
+            setRoute();
+            final BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
+            rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setcanceldialog();
+                }
+            }, result);
+
+            rideReaching.showDialog();
+            mIsTitleBarChanged = true;
+            adjustTitleBar();
+        }
         /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1109,7 +1140,8 @@ public class HomeMapFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                serviceHelper.enqueueCall(webService.ChangeRideStatus(prefHelper.getUserId(), String.valueOf(rideEnt.getId()), RIDE_cancel, adapter.getSelectedItem()), CANCEL_RIDE);
+                serviceHelper.enqueueCall(webService.ChangeRideStatus(prefHelper.getUserId(), String.valueOf(rideEnt.getId()),
+                        RIDE_cancel, adapter.getSelectedItem()), CANCEL_RIDE);
             }
         });
 
@@ -1135,7 +1167,6 @@ public class HomeMapFragment extends BaseFragment implements
                                                                if (promoCodeEnt != null)
                                                                    percentage = promoCodeEnt.getPercentage();
 
-                                                               isRideinSession = true;
                                                                serviceHelper.enqueueCall(webService.createNewRide(prefHelper.getUserId(), String.valueOf(origin.getLatlng().latitude), String.valueOf(origin.getLatlng().longitude),
                                                                        origin.getAddress(), origin.getAddress(), String.valueOf(destination.getLatlng().latitude), String.valueOf(destination.getLatlng().longitude),
                                                                        destination.getAddress(), destination.getAddress(), selectCarEnt.getId() + "", percentage + "", "", "", RIDE_done, STATUS_RIDENOW, result.getEstimateFare(), distance + ""), CREATE);
@@ -1157,6 +1188,7 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void hideRideSelectionViews() {
+
         googleMap.clear();
         customMarkerView.setVisibility(View.GONE);
         llDestination.setVisibility(View.GONE);
@@ -1315,6 +1347,7 @@ public class HomeMapFragment extends BaseFragment implements
     @Override
     public void ResponseSuccess(Object result, String Tag) throws ClassCastException {
 
+
         switch (Tag) {
             case CANCELREASON:
                 setRequestCancelDialog((ArrayList<CancelReasonEnt>) result);
@@ -1323,31 +1356,40 @@ public class HomeMapFragment extends BaseFragment implements
                 promoCodeEnt = (PromoCodeEnt) result;
                 break;
             case ESTIMATEFARE:
+
+
                 initEstimateFareBottomSheet((EstimateFareEnt) result);
                 break;
             case CREATE:
                 rideEnt = (CreateRideEnt) result;
                 serviceHelper.enqueueCall(webService.getNearbyDrivers(prefHelper.getUserId(), rideEnt.getId()
                         , String.valueOf(origin.getLatlng().latitude), String.valueOf(origin.getLatlng().longitude)), NEARBY);
+
                 break;
             case NEARBY:
                 hideRideSelectionViews();
                 showFindRideViews((ArrayList<DriverEnt>) result);
                 break;
             case APPROVE_DRIVER:
+                prefHelper.setRideInSession(true);
                 driverDetail = ((RideDriverEnt) result).getDriverDetail();
+                rideDriverEnt = (RideDriverEnt) result;
                 ShowrideReachingDialog((RideDriverEnt) result);
                 break;
             case CANCEL_RIDE:
                 getDockActivity().popBackStackTillEntry(0);
                 getMainActivity().initFragment();
-                ;
+                prefHelper.setRideInSession(false);
+                prefHelper.removeRideSessionPreferences();
                 break;
             case RIDE_LATER:
                 getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
                 break;
             case RIDE_RATING:
+                prefHelper.setRideInSession(false);
+                prefHelper.removeRideSessionPreferences();
+
                 break;
             case RIDE_LAST_RATING:
                 RideDriverEnt ent = (RideDriverEnt) result;
@@ -1431,6 +1473,48 @@ public class HomeMapFragment extends BaseFragment implements
                 }, "PreferredDate");
 
         datePickerHelper.showDate();
+    }
+
+    private void SaveCurrentState() {
+        if (prefHelper.getRideInSession()) {
+            UserHomeEnt home = new UserHomeEnt();
+            home.setLatitude(latitude);
+            home.setLongitude(longitude);
+            home.setMylocation(Mylocation);
+            home.setOrigin(origin);
+            home.setDestination(destination);
+            home.setDistance(distance);
+            home.setPromoCodeEnt(promoCodeEnt);
+            home.setSelectCarEnt(selectCarEnt);
+            home.setRideEnt(rideEnt);
+            home.setDriverDetail(driverDetail);
+            home.setRideinSession(isRideinSession);
+            home.setRideDriverEnt(rideDriverEnt);
+
+            prefHelper.putUserHome(home);
+        }
+
+    }
+
+    private void RestoreState() {
+        if (prefHelper.getUserHome() != null) {
+            latitude = prefHelper.getUserHome().getLatitude();
+            longitude = prefHelper.getUserHome().getLongitude();
+            Mylocation = prefHelper.getUserHome().getMylocation();
+            destination = prefHelper.getUserHome().getDestination();
+            distance = prefHelper.getUserHome().getDistance();
+            promoCodeEnt = prefHelper.getUserHome().getPromoCodeEnt();
+            selectCarEnt = prefHelper.getUserHome().getSelectCarEnt();
+            rideEnt = prefHelper.getUserHome().getRideEnt();
+            driverDetail = prefHelper.getUserHome().getDriverDetail();
+            isRideinSession = prefHelper.getRideInSession();
+            rideDriverEnt = prefHelper.getUserHome().getRideDriverEnt();
+            origin = prefHelper.getUserHome().getOrigin();
+            if (prefHelper.getRideInSession()) {
+                ShowrideReachingDialog(rideDriverEnt);
+
+            }
+        }
     }
 
 

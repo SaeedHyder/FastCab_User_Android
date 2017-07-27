@@ -107,7 +107,7 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
 
     private void getFeedbackData(ArrayList<RideFeedbackEnt> result) {
         userCollection = new ArrayList<>();
-        
+
         userCollection.addAll(result);
 
 

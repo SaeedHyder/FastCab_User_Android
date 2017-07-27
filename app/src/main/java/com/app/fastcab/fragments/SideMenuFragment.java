@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import android.widget.ListView;
 
 import com.app.fastcab.R;
 import com.app.fastcab.entities.NavigationEnt;
+import com.app.fastcab.entities.ResponseWrapper;
 import com.app.fastcab.fragments.abstracts.BaseFragment;
+import com.app.fastcab.global.WebServiceConstants;
 import com.app.fastcab.helpers.ClickableSpanHelper;
 import com.app.fastcab.helpers.DialogHelper;
 import com.app.fastcab.helpers.UIHelper;
@@ -31,6 +34,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SideMenuFragment extends BaseFragment {
 
@@ -186,11 +192,9 @@ public class SideMenuFragment extends BaseFragment {
                         public void onClick(View v) {
                             getMainActivity().getResideMenu().closeMenu();
                             logoutdialog.hideDialog();
+                            logoutUser();
 
-                            prefHelper.setLoginStatus(false);
-                            getDockActivity().popBackStackTillEntry(0);
-                            getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), LoginFragment.class.getSimpleName());
-                        }
+                                 }
                     }, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -203,6 +207,37 @@ public class SideMenuFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private void logoutUser() {
+
+        loadingStarted();
+        Call<ResponseWrapper> call = webService.LogoutUser(Integer.parseInt(prefHelper.getUserId()));
+
+        call.enqueue(new Callback<ResponseWrapper>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper> call, Response<ResponseWrapper> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    getMainActivity().getResideMenu().closeMenu();
+                    prefHelper.setLoginStatus(false);
+                    getDockActivity().popBackStackTillEntry(0);
+                    getDockActivity().replaceDockableFragment(LoginFragment.newInstance(), LoginFragment.class.getSimpleName());
+
+                }
+                else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper> call, Throwable t) {
+                loadingFinished();
+                Log.e(SideMenuFragment.class.getSimpleName(), t.toString());
+            }
+        });
+
+
     }
 
     private void BindData() {

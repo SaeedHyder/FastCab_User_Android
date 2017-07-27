@@ -180,7 +180,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/x15"
                     android:layout_marginRight="@dimen/x15"
-
                     android:scaleType="centerInside"
                     android:src="@drawable/pick_locatio"
                     tools:ignore="ContentDescription" />
@@ -218,7 +217,6 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_below="@+id/imageView"
