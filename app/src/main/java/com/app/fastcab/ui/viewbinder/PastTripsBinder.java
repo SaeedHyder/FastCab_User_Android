@@ -11,6 +11,7 @@ import com.app.fastcab.ui.viewbinders.abstracts.ViewBinder;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -94,8 +95,9 @@ public class PastTripsBinder extends ViewBinder<ProgressEnt> implements Directio
             viewHolder.txtRideNo.setText(entity.getId() + "");
             viewHolder.txtFare.setText(entity.getEstimateFare() + "");
             viewHolder.txtTimeDate.setText(entity.getDate() + " " + entity.getTime());
-            Glide.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
-                    CustomMarkerDestination, view.getResources().getString(R.string.API_KEY))).fitCenter().into(viewHolder.ivPastTrips);
+
+            Picasso.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
+                    CustomMarkerDestination, view.getResources().getString(R.string.API_KEY))).fit().into(viewHolder.ivPastTrips);
             view.setVisibility(View.VISIBLE);
         }
     }

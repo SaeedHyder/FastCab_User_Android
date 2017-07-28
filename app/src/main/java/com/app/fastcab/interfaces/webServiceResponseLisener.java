@@ -5,6 +5,6 @@ package com.app.fastcab.interfaces;
  */
 
 public interface webServiceResponseLisener<T> {
-    public void ResponseSuccess(T result,String Tag);
+    public void ResponseSuccess(T result, String Tag);
     public void  ResponseFailure(String tag);
 }

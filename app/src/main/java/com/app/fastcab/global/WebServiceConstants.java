@@ -18,7 +18,8 @@ public class WebServiceConstants {
     public static final String APPROVE_DRIVER = "APPROVE_DRIVER";
     public static final String CANCEL_RIDE = "CANCEL_RIDE";
     public static final String RIDE_LATER = "RIDE_LATER";
-    public static final String RIDE_RATING = "RIDE_RATING";
+    public static final String RIDE_RATING_current = "RIDE_RATING_CURRENT";
+    public static final String RIDE_RATING_last = "RIDE_RATING_LAST";
     public static final String RIDE_LAST_RATING = "RIDE_LAST_RATING";
 
 

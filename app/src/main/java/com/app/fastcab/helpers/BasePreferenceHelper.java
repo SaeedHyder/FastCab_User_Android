@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 import com.app.fastcab.entities.SelectCarEnt;
 import com.app.fastcab.entities.UserEnt;
+import com.app.fastcab.entities.UserHomeEnt;
 import com.app.fastcab.retrofit.GsonFactory;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,9 +25,10 @@ public class BasePreferenceHelper extends PreferenceHelper {
     protected static final String USERNAME = "userName";
     protected static final String USERID = "userId";
     protected static final String KEY_USER = "key_user";
+    protected static final String KEY_HOME = "key_home";
     protected static final String KEY_CARTYPES = "KEY_CARTYPES";
     protected static final String DRIVERID = "driverId";
-
+    protected static final String RIDEINSESSION = "rideinsession";
 
 
     public BasePreferenceHelper(Context c) {
@@ -38,21 +39,22 @@ public class BasePreferenceHelper extends PreferenceHelper {
         return context.getSharedPreferences(FILENAME, Activity.MODE_PRIVATE);
     }
 
-    public void setLoginStatus( boolean isLogin ) {
-        putBooleanPreference( context, FILENAME, KEY_LOGIN_STATUS, isLogin );
+    public void setLoginStatus(boolean isLogin) {
+        putBooleanPreference(context, FILENAME, KEY_LOGIN_STATUS, isLogin);
     }
 
     public boolean isLogin() {
         return getBooleanPreference(context, FILENAME, KEY_LOGIN_STATUS);
     }
 
-    public void setTermStatus( boolean isAgree ) {
-        putBooleanPreference( context, FILENAME, KEY_Term_STATUS, isAgree );
+    public void setTermStatus(boolean isAgree) {
+        putBooleanPreference(context, FILENAME, KEY_Term_STATUS, isAgree);
     }
 
     public boolean isTermAccepted() {
         return getBooleanPreference(context, FILENAME, KEY_Term_STATUS);
     }
+
     public void setDriverId(String userId) {
         putStringPreference(context, FILENAME, DRIVERID, userId);
     }
@@ -60,6 +62,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     public String getDriverId() {
         return getStringPreference(context, FILENAME, DRIVERID);
     }
+
     public String getFirebase_TOKEN() {
         return getStringPreference(context, FILENAME, Firebase_TOKEN);
     }
@@ -94,14 +97,39 @@ public class BasePreferenceHelper extends PreferenceHelper {
         putStringPreference(context, FILENAME, KEY_USER, GsonFactory
                 .getConfiguredGson().toJson(user));
     }
+
     public ArrayList<SelectCarEnt> getCarTypes() {
         return GsonFactory.getConfiguredGson().fromJson(
-                getStringPreference(context, FILENAME, KEY_CARTYPES), new TypeToken<List<SelectCarEnt>>(){}.getType());
+                getStringPreference(context, FILENAME, KEY_CARTYPES), new TypeToken<List<SelectCarEnt>>() {
+                }.getType());
     }
 
     public void putCarTypes(ArrayList<SelectCarEnt> CarTypes) {
         putStringPreference(context, FILENAME, KEY_CARTYPES, GsonFactory
                 .getConfiguredGson().toJson(CarTypes));
     }
+
+    public UserHomeEnt getUserHome() {
+        return GsonFactory.getConfiguredGson().fromJson(
+                getStringPreference(context, FILENAME, KEY_HOME), UserHomeEnt.class);
+    }
+
+    public void putUserHome(UserHomeEnt user) {
+        putStringPreference(context, FILENAME, KEY_HOME, GsonFactory.getConfiguredGson().toJson(user));
+    }
+
+    public void setRideInSession(Boolean RideInSession) {
+        putBooleanPreference(context, FILENAME, RIDEINSESSION, RideInSession);
+    }
+
+    public Boolean getRideInSession() {
+        return getBooleanPreference(context, FILENAME, RIDEINSESSION);
+    }
+
+    public void removeRideSessionPreferences() {
+        removePreference(context, FILENAME, KEY_HOME);
+
+    }
+
 
 }

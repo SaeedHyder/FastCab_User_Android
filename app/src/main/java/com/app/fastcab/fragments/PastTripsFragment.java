@@ -107,7 +107,7 @@ public class PastTripsFragment extends BaseFragment implements View.OnClickListe
         }
         else{
             txtNoData.setVisibility(View.GONE);
-            PastTripsListView.setVisibility(View.GONE);
+            PastTripsListView.setVisibility(View.VISIBLE);
         }
 
         userCollection = new ArrayList<>();

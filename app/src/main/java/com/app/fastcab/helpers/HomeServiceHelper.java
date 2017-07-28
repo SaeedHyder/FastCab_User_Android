@@ -12,6 +12,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.R.id.message;
+
 /**
  * Created on 7/17/2017.
  */
@@ -43,6 +45,7 @@ public class HomeServiceHelper<T> {
                     context.onLoadingFinished();
                     if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
                         result = response.body().getResult();
+
                         serviceResponseLisener.ResponseSuccess(result, tag);
                     } else {
                         UIHelper.showShortToastInCenter(context, response.body().getMessage());

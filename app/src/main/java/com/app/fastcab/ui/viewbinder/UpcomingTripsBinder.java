@@ -12,6 +12,7 @@ import com.app.fastcab.ui.viewbinders.abstracts.ViewBinder;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.UnsupportedEncodingException;
@@ -95,9 +96,9 @@ public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements Dire
             viewHolder.txtUpcomingTimeDate.setText(DateHelper.getDesireFormatDate(entity.getDate(), "yyyy-MM-dd", "EEE,MMM d") + " at "
                     + DateHelper.getDesireFormatDate(entity.getTime(), "hh:mm:ss", "HH:mm a"));
             viewHolder.txtUpcomingType.setText(entity.getVechicleDetail().getType() + "");
-            Glide.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
+            Picasso.with(view.getContext()).load(getStaticMapURL(origin, destination, routesList, CustomMarkerOrigin,
                     CustomMarkerDestination, view.getResources().getString(R.string.API_KEY)))
-                    .fitCenter().into(viewHolder.ivUpcomingTrips);
+                    .fit().into(viewHolder.ivUpcomingTrips);
             view.setVisibility(View.VISIBLE);
         }
     }

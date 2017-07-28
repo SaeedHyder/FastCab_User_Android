@@ -66,18 +66,24 @@ public class BottomSheetDialogHelper {
     }
 
     public void initRatingDialog(View.OnClickListener onClickListener, RideDriverEnt result) {
-        CircleImageView driver_image = (CircleImageView) dialog.findViewById(R.id.CircularImageSharePop);
-        Glide.with(context).load(result.getDriverDetail().getProfileImage()).into(driver_image);
-        AnyTextView carplate = (AnyTextView) dialog.findViewById(R.id.txtCarNo);
-        carplate.setText(result.getVehicleDetail().getVehicleNumber() + "");
-        AnyTextView drivername = (AnyTextView) dialog.findViewById(R.id.txtDriverName);
-        drivername.setText(result.getDriverDetail().getFullName() + "");
-        AnyTextView pickup = (AnyTextView) dialog.findViewById(R.id.txt_pick_text);
-        pickup.setText(result.getRideDetail().getPickupAddress() + "");
-        AnyTextView Destination = (AnyTextView) dialog.findViewById(R.id.txt_destination_text);
-        Destination.setText(result.getRideDetail().getDestinationAddress() + "");
-        AnyTextView fare = (AnyTextView) dialog.findViewById(R.id.txtFareAmount);
-        fare.setText(result.getRideDetail().getTotalAmount() + "");
+        if(result.getDriverDetail()!=null && result.getVehicleDetail()!=null){
+            CircleImageView driver_image = (CircleImageView) dialog.findViewById(R.id.CircularImageSharePop);
+            Glide.with(context).load(result.getDriverDetail().getProfileImage()).into(driver_image);
+            AnyTextView drivername = (AnyTextView) dialog.findViewById(R.id.txtDriverName);
+            drivername.setText(result.getDriverDetail().getFullName() + "");
+            AnyTextView carplate = (AnyTextView) dialog.findViewById(R.id.txtCarNo);
+            carplate.setText(result.getVehicleDetail().getVehicleNumber() + "");
+        }
+        if(result.getRideDetail()!=null){
+            AnyTextView pickup = (AnyTextView) dialog.findViewById(R.id.txt_pick_text);
+            pickup.setText(result.getRideDetail().getPickupAddress() + "");
+            AnyTextView Destination = (AnyTextView) dialog.findViewById(R.id.txt_destination_text);
+            Destination.setText(result.getRideDetail().getDestinationAddress() + "");
+            AnyTextView fare = (AnyTextView) dialog.findViewById(R.id.txtFareAmount);
+            fare.setText(result.getRideDetail().getTotalAmount() + "");
+        }
+
+
         bottomSheetBehavior.setPeekHeight((int) context.getResources().getDimension(R.dimen.x150));
         Button submit = (Button) dialog.findViewById(R.id.SubmitButton);
         submit.setOnClickListener(onClickListener);
@@ -93,12 +99,14 @@ public class BottomSheetDialogHelper {
         pickup.setText(result.getRideDetail().getPickupAddress() + "");
         AnyTextView drivername = (AnyTextView) dialog.findViewById(R.id.txt_drivername);
         drivername.setText(result.getDriverDetail().getFullName() + "");
-        AnyTextView carname = (AnyTextView) dialog.findViewById(R.id.txt_car_model);
-        carname.setText(result.getVehicleDetail().getVehicleName() + "");
-        AnyTextView carcolor = (AnyTextView) dialog.findViewById(R.id.txt_car_color);
-        carcolor.setText(result.getVehicleDetail().getVehicleColor() + "");
-        AnyTextView carplate = (AnyTextView) dialog.findViewById(R.id.txt_car_number);
-        carplate.setText(result.getVehicleDetail().getVehicleNumber() + "");
+        if (result.getVehicleDetail()!=null) {
+            AnyTextView carname = (AnyTextView) dialog.findViewById(R.id.txt_car_model);
+            carname.setText(result.getVehicleDetail().getVehicleName() + "");
+            AnyTextView carcolor = (AnyTextView) dialog.findViewById(R.id.txt_car_color);
+            carcolor.setText(result.getVehicleDetail().getVehicleColor() + "");
+            AnyTextView carplate = (AnyTextView) dialog.findViewById(R.id.txt_car_number);
+            carplate.setText(result.getVehicleDetail().getVehicleNumber() + "");
+        }
         ImageView driverimage = (ImageView) dialog.findViewById(R.id.img_driver);
         Glide.with(context).load(result.getDriverDetail().getProfileImage() + "").into(driverimage);
         CustomRatingBar driverrating = (CustomRatingBar) dialog.findViewById(R.id.rb_rating);
