@@ -269,6 +269,7 @@
     <string name="messenger_share_error">Messenger have not been installed</string>
     <string name="whatsapp_share_error">Whatsapp have not been installed</string>
     <string name="Share_message">Hey this is a test Promo Code  : </string>
+    <string name="driver_app_package_name">com.app.fastcapdriver</string>
     <!--COUNTRY CODE-->
     <string-array name="CountryCodes" >
         <item>93,AF</item>
