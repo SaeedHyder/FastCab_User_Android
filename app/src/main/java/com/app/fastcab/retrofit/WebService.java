@@ -110,9 +110,9 @@ public interface WebService {
     Call<ResponseWrapper<UserEnt>> ChangeNotifiationStatus(@Field("user_id") String user_id,
                                                            @Field("push_status") Integer status);
 
-    @FormUrlEncoded
-    @POST("getnotifications")
-    Call<ResponseWrapper<ArrayList<NotificationListEnt>>> GetNotifiation(@Field("user_id") String user_id);
+
+    @GET("getnotifications")
+    Call<ResponseWrapper<ArrayList<NotificationListEnt>>> GetNotifiation(@Query("user_id") String user_id);
 
     @GET("cms/cancel")
     Call<ResponseWrapper<ArrayList<CancelReasonEnt>>> getCancelReasons();

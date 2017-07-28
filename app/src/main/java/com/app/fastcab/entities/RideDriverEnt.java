@@ -33,6 +33,8 @@ public class RideDriverEnt {
     @Expose
     private VehicleDetail vehicleDetail;
 
+    String message;
+
     public Integer getId() {
         return id;
     }
@@ -95,5 +97,13 @@ public class RideDriverEnt {
 
     public void setVehicleDetail(VehicleDetail vehicleDetail) {
         this.vehicleDetail = vehicleDetail;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

@@ -104,7 +104,7 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
         }
         else{
             txtNoData.setVisibility(View.GONE);
-            UpcomingRidesListView.setVisibility(View.GONE);
+            UpcomingRidesListView.setVisibility(View.VISIBLE);
         }
 
         userCollection = new ArrayList<>();

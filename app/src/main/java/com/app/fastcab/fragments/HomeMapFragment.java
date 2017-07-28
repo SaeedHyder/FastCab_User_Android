@@ -126,7 +126,8 @@ import static com.app.fastcab.global.WebServiceConstants.NEARBY;
 import static com.app.fastcab.global.WebServiceConstants.PROMOCODE;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_LAST_RATING;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_LATER;
-import static com.app.fastcab.global.WebServiceConstants.RIDE_RATING;
+import static com.app.fastcab.global.WebServiceConstants.RIDE_RATING_current;
+import static com.app.fastcab.global.WebServiceConstants.RIDE_RATING_last;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_cancel;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_done;
 import static com.app.fastcab.global.WebServiceConstants.STATUS_RIDELATER;
@@ -845,18 +846,21 @@ public class HomeMapFragment extends BaseFragment implements
             public void onClick(View v) {
                 if (RatingType == LAST_RATING) {
                     ratingDialog.hideDialog();
-                    setupRideNowDialog();
+                    serviceHelper.enqueueCall(webService.submitRideFeedback(prefHelper.getUserId(),
+                            result.getDriverDetail().getId() + "",
+                            result.getRideDetail().getId() + "",
+                            ratingDialog.getRatingScore() + ""
+                            , RATING_TYPE), RIDE_RATING_last);
                 } else if (RatingType == CURRENT_RATING) {
                     dialogHelper.hideDialog();
                     ratingDialog.hideDialog();
-                    getDockActivity().popBackStackTillEntry(0);
-                    getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
-                }
-                serviceHelper.enqueueCall(webService.submitRideFeedback(prefHelper.getUserId(),
-                        result.getDriverDetail().getId() + "",
-                        result.getRideDetail().getId() + "",
-                        ratingDialog.getRatingScore() + ""
-                        , RATING_TYPE), RIDE_RATING);
+                    serviceHelper.enqueueCall(webService.submitRideFeedback(prefHelper.getUserId(),
+                            result.getDriverDetail().getId() + "",
+                            result.getRideDetail().getId() + "",
+                            ratingDialog.getRatingScore() + ""
+                            , RATING_TYPE), RIDE_RATING_current);
+                   }
+
             }
         }, result);
         ratingDialog.showDialog();
@@ -1386,17 +1390,41 @@ public class HomeMapFragment extends BaseFragment implements
                 getDockActivity().popBackStackTillEntry(0);
                 getDockActivity().replaceDockableFragment(TripsFragment.newInstance(), TripsFragment.class.getSimpleName());
                 break;
-            case RIDE_RATING:
+            case RIDE_RATING_current:
                 prefHelper.setRideInSession(false);
                 prefHelper.removeRideSessionPreferences();
+                getDockActivity().popBackStackTillEntry(0);
+                getDockActivity().replaceDockableFragment(RideFeedbackFragment.newInstance(), RideFeedbackFragment.class.getSimpleName());
 
+                break;
+            case RIDE_RATING_last:
+                setupRideNowDialog();
                 break;
             case RIDE_LAST_RATING:
                 RideDriverEnt ent = (RideDriverEnt) result;
+
                 if (ent == null) {
                     setupRideNowDialog();
                 } else {
-                    setupRatingDialog(ent);
+                    if (ent.getMessage().equals("Please first pay last ride charges")) {
+                        final DialogHelper lastRidePayment = new DialogHelper(getDockActivity());
+                        lastRidePayment.LastRidePayment(R.layout.dialog_last_ride_payment, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                lastRidePayment.hideDialog();
+                            }
+                        }, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                lastRidePayment.hideDialog();
+                                getDockActivity().replaceDockableFragment(CreditCardDetailFragment.newInstance(),CreditCardDetailFragment.class.getSimpleName());
+                            }
+                        });
+                        lastRidePayment.showDialog();
+
+                    }
+                    else{
+                    setupRatingDialog(ent);}
                 }
 
                 break;
@@ -1497,7 +1525,7 @@ public class HomeMapFragment extends BaseFragment implements
     }
 
     private void RestoreState() {
-        if (prefHelper.getUserHome() != null) {
+        if (prefHelper.getUserHome() != null&&prefHelper.getRideInSession()) {
             latitude = prefHelper.getUserHome().getLatitude();
             longitude = prefHelper.getUserHome().getLongitude();
             Mylocation = prefHelper.getUserHome().getMylocation();
