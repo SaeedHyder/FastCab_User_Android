@@ -100,8 +100,8 @@ public abstract class BaseFragment extends Fragment {
         if (getMainActivity() != null && getMainActivity().getWindow().getDecorView() != null) {
             UIHelper.hideSoftKeyboard(getMainActivity(), getMainActivity().getWindow().getDecorView());
         }
-        if (getDockActivity().getDrawerLayout() != null) {
-            getDockActivity().lockDrawer();
+        if (getMainActivity().getDrawerLayout() != null) {
+            getMainActivity().lockDrawer();
         }
     }
 

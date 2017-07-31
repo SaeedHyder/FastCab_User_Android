@@ -85,6 +85,7 @@ public class BottomSheetDialogHelper {
 
 
         bottomSheetBehavior.setPeekHeight((int) context.getResources().getDimension(R.dimen.x150));
+        bottomSheetBehavior.setAllowUserDragging(false);
         Button submit = (Button) dialog.findViewById(R.id.SubmitButton);
         submit.setOnClickListener(onClickListener);
     }
@@ -94,7 +95,7 @@ public class BottomSheetDialogHelper {
         return (int) submit.getScore();
     }
 
-    public void initRideDetailBottomSheet(View.OnClickListener oncancelclicklistener, RideDriverEnt result) {
+    public void initRideDetailBottomSheet(View.OnClickListener oncancelclicklistener, RideDriverEnt result,boolean isEnabled) {
         AnyTextView pickup = (AnyTextView) dialog.findViewById(R.id.txt_pick_text);
         pickup.setText(result.getRideDetail().getPickupAddress() + "");
         AnyTextView drivername = (AnyTextView) dialog.findViewById(R.id.txt_drivername);
@@ -111,15 +112,18 @@ public class BottomSheetDialogHelper {
         Glide.with(context).load(result.getDriverDetail().getProfileImage() + "").into(driverimage);
         CustomRatingBar driverrating = (CustomRatingBar) dialog.findViewById(R.id.rb_rating);
         if (result.getDriverDetail()!=null&&result.getDriverDetail().getAverageRate()!=null)
-        driverrating.setScore(result.getDriverDetail().getAverageRate());
+        driverrating.setScore(Float.parseFloat(result.getDriverDetail().getAverageRate()));
         else{
             driverrating.setScore(0);
         }
         bottomSheetBehavior.setAllowUserDragging(false);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_cancel_ride);
         cancelbutton.setOnClickListener(oncancelclicklistener);
+        cancelbutton.setEnabled(!isEnabled);
     }
-
+    public Button getDesiredButton(int ID){
+        return  (Button) dialog.findViewById(ID);
+    }
     public void initSelectRideBottomSheet(View.OnClickListener promoclicklistener,
                                           View.OnClickListener oncancelclicklistener, ArrayList<SelectCarEnt> carTypes) {
         // this.dialog.setContentView(layoutID);

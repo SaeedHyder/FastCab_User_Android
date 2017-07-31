@@ -273,7 +273,7 @@
     <string name="driver_app_package_name">com.app.fastcapdriver</string>
 
     <string name="remaining_payment">Remaining Payment</string>
-    <string name="ride_not_paid_dialog">Your Last ride chargers are not paid you can pay by Credit card do you want to pay it ?</string>
+    <string name="ride_not_paid_dialog">Your last ride charges are not paid you can pay by Credit card do you want to pay it ?</string>
 
     <!--COUNTRY CODE-->
     <string-array name="CountryCodes" >

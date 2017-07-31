@@ -29,6 +29,7 @@ public class BasePreferenceHelper extends PreferenceHelper {
     protected static final String KEY_CARTYPES = "KEY_CARTYPES";
     protected static final String DRIVERID = "driverId";
     protected static final String RIDEINSESSION = "rideinsession";
+    protected static final String Is_TRIP_START = "Is_TRIP_START";
 
 
     public BasePreferenceHelper(Context c) {
@@ -45,6 +46,14 @@ public class BasePreferenceHelper extends PreferenceHelper {
 
     public boolean isLogin() {
         return getBooleanPreference(context, FILENAME, KEY_LOGIN_STATUS);
+    }
+
+    public void settripStatus(boolean isStarted) {
+        putBooleanPreference(context, FILENAME, Is_TRIP_START, isStarted);
+    }
+
+    public boolean isStarted() {
+        return getBooleanPreference(context, FILENAME, Is_TRIP_START);
     }
 
     public void setTermStatus(boolean isAgree) {

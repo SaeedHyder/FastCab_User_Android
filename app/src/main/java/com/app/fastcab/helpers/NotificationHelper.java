@@ -44,10 +44,11 @@ public class NotificationHelper {
         final PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         mContext,
-                        0,
+                        AppConstants.INTENT_ID,
                         intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_ONE_SHOT
                 );
+        AppConstants.INTENT_ID++;
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 mContext);
         //notification sound here
@@ -75,8 +76,9 @@ public class NotificationHelper {
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(AppConstants.NOTIFICATION_ID);
         notificationManager.notify(AppConstants.NOTIFICATION_ID, notification);
-        AppConstants.NOTIFICATION_ID++;
+        //AppConstants.NOTIFICATION_ID++;
 
     }
 
