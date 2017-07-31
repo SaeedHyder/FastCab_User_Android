@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x55"
                     android:gravity="center"
-                    android:text="James Cameron"
+
                     android:textColor="@color/black"
                     android:textSize="@dimen/x18"
                     app:typeface="Roboto-Regular.ttf" />
@@ -47,7 +47,7 @@
                     android:layout_marginTop="@dimen/x5"
                     android:alpha="0.9"
                     android:gravity="center"
-                    android:text="XXX-1317"
+
                     android:textColor="@color/black"
                     android:textSize="@dimen/x13"
                     android:visibility="visible"
@@ -114,7 +114,7 @@
                             android:gravity="start"
                             android:scrollbars="horizontal"
                             android:singleLine="true"
-                            android:text="Al Masaken Al iqtisadeyah,Qesm Masaken Al iqti.."
+
                             android:textColor="@color/black"
                             android:textSize="@dimen/x14"
                             app:typeface="Roboto-Regular.ttf" />
@@ -186,18 +186,18 @@
                             android:id="@+id/txt_destination_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/txt_destination"
                             android:layout_gravity="start"
-                            android:layout_marginTop="@dimen/x5"
-                            android:layout_toEndOf="@+id/imageView_destination"
                             android:alpha="0.8"
                             android:gravity="start"
                             android:scrollbars="horizontal"
                             android:singleLine="true"
-                            android:text="Halwan Ash Sharqeyah ,Qesm Helwan..."
+
                             android:textColor="@color/black"
                             android:textSize="@dimen/x14"
-                            app:typeface="Roboto-Regular.ttf" />
+                            app:typeface="Roboto-Regular.ttf"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_toEndOf="@+id/imageView_destination" />
                     </RelativeLayout>
 
 
@@ -242,7 +242,7 @@
                         android:layout_marginTop="@dimen/x3"
                         android:layout_marginBottom="@dimen/x10"
                         android:gravity="center"
-                        android:text="$48.98"
+
                         android:textColor="@color/button_color"
                         android:textSize="@dimen/x21"
                         app:typeface="Roboto-Regular.ttf" />
@@ -283,7 +283,7 @@
                     app:starOff="@drawable/star_unfilled"
                     app:starOn="@drawable/star_filled"
                     app:starPadding="@dimen/x8"
-                    app:stars="0" />
+                    app:stars="1" />
 
                 <Button
                     android:id="@+id/SubmitButton"

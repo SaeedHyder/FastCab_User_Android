@@ -159,7 +159,7 @@ public class RideFeedbackFragment extends BaseFragment implements View.OnClickLi
 
     private void submitRating() {
         loadingStarted();
-        Call<ResponseWrapper> call = webService.submitAppFeedback(prefHelper.getUserId(), rbAddRating.getScore() + "",
+        Call<ResponseWrapper> call = webService.submitAppFeedback(prefHelper.getUserId(), (int)rbAddRating.getScore() ,
                 StringUtils.join(binder.getSelectedReasons(),","),edtComments.getText().toString());
         call.enqueue(new Callback<ResponseWrapper>() {
             @Override

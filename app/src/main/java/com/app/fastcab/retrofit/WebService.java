@@ -194,7 +194,7 @@ public interface WebService {
     @FormUrlEncoded
     @POST("cms/appfeedback")
     Call<ResponseWrapper> submitAppFeedback(@Field("user_id") String user_id,
-                                            @Field("rate") String rate,
+                                            @Field("rate") Integer rate,
                                             @Field("type_id") String type_id,
                                             @Field("comment") String comment);
 

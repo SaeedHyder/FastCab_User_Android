@@ -1,6 +1,9 @@
 package com.app.fastcab.fragments;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
@@ -129,7 +132,7 @@ public class SideMenuFragment extends BaseFragment {
 
             @Override
             public void onClick(View widget) {
-                UIHelper.showShortToastInCenter(getDockActivity(), "Will be implemented in Beta Version");
+               openAppORPlaystore(getResources().getString(R.string.driver_app_package_name));
             }
         });
 
@@ -256,7 +259,26 @@ public class SideMenuFragment extends BaseFragment {
         bindview();
 
     }
+    private void openAppORPlaystore(String packageName){
+        Intent i;
+        PackageManager manager = getDockActivity().getPackageManager();
+        try {
+            i = manager.getLaunchIntentForPackage(packageName);
+            if (i == null)
+                throw new PackageManager.NameNotFoundException();
+            i.addCategory(Intent.CATEGORY_LAUNCHER);
+            startActivity(i);
+        } catch (PackageManager.NameNotFoundException e) {
 
+//if not found in device then will come here
+            // getPackageName() from Context or Activity object
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
+            }
+        }
+    }
 
     @Override
     public void setTitleBar(TitleBar titleBar) {

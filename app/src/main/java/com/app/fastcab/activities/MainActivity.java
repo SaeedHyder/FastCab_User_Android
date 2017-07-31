@@ -119,12 +119,12 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
         sideMenuType = SideMenuChooser.RESIDE_MENU.getValue();
         sideMenuDirection = SideMenuDirection.LEFT.getValue();
         settingSideMenu(sideMenuType, sideMenuDirection);
-
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         titleBar.setMenuButtonListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (getDrawerLayout() != null) {
+                if (getDrawerLayout() == null) {
                     if (sideMenuDirection.equals(SideMenuDirection.LEFT.getValue())) {
                         drawerLayout.openDrawer(Gravity.LEFT);
                     } else {
@@ -360,14 +360,16 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
                 params.gravity = Gravity.RIGHT;
                 sideMneuFragmentContainer.setLayoutParams(params);
             }
-            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
             sideMenuFragment = SideMenuFragment.newInstance();
             FragmentTransaction transaction = getSupportFragmentManager()
                     .beginTransaction();
             transaction.replace(getSideMenuFrameLayoutId(), sideMenuFragment).commit();
 
             drawerLayout.closeDrawers();
+            lockDrawer();
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         } else {
             resideMenu = new ResideMenu(this);
             resideMenu.attachToActivity(this);
@@ -429,6 +431,16 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
     public void initFragment() {
         getSupportFragmentManager().addOnBackStackChangedListener(getListener());
         if (prefHelper.isLogin()) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                String rideID = bundle.getString("rideID");
+                String Type =bundle.getString("pushtype");
+                // if (!isFragmentVisible(HomeFragment.class.getSimpleName()))
+                if (prefHelper.getRideInSession())
+                replaceDockableFragment(HomeMapFragment.newInstance(Type, rideID, true), HomeMapFragment.class.getSimpleName());
+                else
+                    replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+            } else
             replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
         } else {
             replaceDockableFragment(LoginFragment.newInstance(), "LoginFragment");

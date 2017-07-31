@@ -18,5 +18,10 @@ public class AppConstants {
     public static final String RATING_TYPE = "driver";
     public static final int LAST_RATING = 0;
     public static final int CURRENT_RATING = 1;
+    public static final String PUSH_END_TRIP_TYPE= "tripend";
+    public static final String PUSH_APPROVE_TYPE= "approve";
+    public static final String PUSH_START_TRIP= "tripstart";
+
     public static int NOTIFICATION_ID = 100;
+    public static  int INTENT_ID = 100;
 }

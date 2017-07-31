@@ -32,8 +32,9 @@ public class RideDriverEnt {
     @SerializedName("vehicle_detail")
     @Expose
     private VehicleDetail vehicleDetail;
-
-    String message;
+    @SerializedName("message")
+    @Expose
+    private String message;
 
     public Integer getId() {
         return id;

@@ -24,6 +24,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        preferenceHelper = new BasePreferenceHelper(getApplicationContext());
         Log.e(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage == null)
@@ -41,17 +42,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String title = getString(R.string.app_name);
         String message = messageBody.getData().get("message");
         String rideID = messageBody.getData().get("ride_id");
+        String Type = messageBody.getData().get("type");
+        if (Type!=null&& Type.equals(AppConstants.PUSH_END_TRIP_TYPE)){
+            preferenceHelper.setRideInSession(false);
+            preferenceHelper.removeRideSessionPreferences();
+            preferenceHelper.settripStatus(false);
+        }
+        if (Type!=null&& Type.equals(AppConstants.PUSH_START_TRIP)){
+           preferenceHelper.settripStatus(true);
+        }
         Log.e(TAG, "message: " + message);
         Intent resultIntent = new Intent(MyFirebaseMessagingService.this, MainActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         resultIntent.putExtra("message", message);
         resultIntent.putExtra("tapped", true);
         resultIntent.putExtra("rideID", rideID);
+        resultIntent.putExtra("pushtype", Type);
         Intent pushNotification = new Intent(AppConstants.PUSH_NOTIFICATION);
         pushNotification.putExtra("message", message);
         pushNotification.putExtra("rideID", rideID);
+        pushNotification.putExtra("pushtype", Type);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(pushNotification);
-
+        if (Type!=null&&!Type.equals(AppConstants.PUSH_START_TRIP))
         showNotificationMessage(MyFirebaseMessagingService.this, title, message, "", resultIntent);
     }
 

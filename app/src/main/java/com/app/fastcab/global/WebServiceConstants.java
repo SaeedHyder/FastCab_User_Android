@@ -21,6 +21,7 @@ public class WebServiceConstants {
     public static final String RIDE_RATING_current = "RIDE_RATING_CURRENT";
     public static final String RIDE_RATING_last = "RIDE_RATING_LAST";
     public static final String RIDE_LAST_RATING = "RIDE_LAST_RATING";
+    public static final String RIDE_END_TRIP = "RIDE_END_TRIP";
 
 
 }

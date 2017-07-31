@@ -113,6 +113,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.app.fastcab.R.drawable.abc_item_background_holo_dark;
 import static com.app.fastcab.R.drawable.location;
 import static com.app.fastcab.global.AppConstants.CURRENT_RATING;
 import static com.app.fastcab.global.AppConstants.LAST_RATING;
@@ -124,6 +125,7 @@ import static com.app.fastcab.global.WebServiceConstants.CREATE;
 import static com.app.fastcab.global.WebServiceConstants.ESTIMATEFARE;
 import static com.app.fastcab.global.WebServiceConstants.NEARBY;
 import static com.app.fastcab.global.WebServiceConstants.PROMOCODE;
+import static com.app.fastcab.global.WebServiceConstants.RIDE_END_TRIP;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_LAST_RATING;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_LATER;
 import static com.app.fastcab.global.WebServiceConstants.RIDE_RATING_current;
@@ -146,6 +148,9 @@ public class HomeMapFragment extends BaseFragment implements
         DirectionFinderListener,
         OnSettingActivateListener,
         webServiceResponseLisener {
+
+    public static String Notfication_RIDEID = "Notfication_RIDEID";
+    public static String IS_FROM_NOTIFICATION = "pending_rides_detail";
 
     protected BroadcastReceiver broadcastReceiver;
     @BindView(R.id.txt_locationtype)
@@ -222,16 +227,37 @@ public class HomeMapFragment extends BaseFragment implements
     private Marker DriverMarker;
     private boolean isRideinSession;
     private RideDriverEnt rideDriverEnt;
+    private String rideID;
+    private boolean isFromNotification;
 
+    private BottomSheetDialogHelper rideReaching;
 
     public static HomeMapFragment newInstance() {
         return new HomeMapFragment();
     }
 
+    public static HomeMapFragment newInstance(String type, String rideID, boolean isFromNotification) {
+        if (type!=null&&type.equals(AppConstants.PUSH_END_TRIP_TYPE)){
+            return new HomeMapFragment();
+        }else if (type!=null&&type.equals(AppConstants.PUSH_APPROVE_TYPE)){
+            Bundle args = new Bundle();
+            args.putString(Notfication_RIDEID, rideID);
+            args.putBoolean(IS_FROM_NOTIFICATION, isFromNotification);
+            HomeMapFragment fragment = new HomeMapFragment();
+            fragment.setArguments(args);
+            return fragment;
+        }else {
+            return new HomeMapFragment();
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         serviceHelper = new HomeServiceHelper(this, getDockActivity(), webService);
+        if (getArguments() != null) {
+            rideID = getArguments().getString(Notfication_RIDEID);
+            isFromNotification = getArguments().getBoolean(IS_FROM_NOTIFICATION);
+        }
         //BaseApplication.getBus().register(this);
 
     }
@@ -289,6 +315,7 @@ public class HomeMapFragment extends BaseFragment implements
 
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onMapReady(GoogleMap googlemap) {
         googleMap = googlemap;
@@ -308,6 +335,9 @@ public class HomeMapFragment extends BaseFragment implements
                     //UIHelper.showShortToastInCenter(getDockActivity(), cameraPosition.target.toString());
                 }
             });
+        }
+        if (isFromNotification){
+            serviceHelper.enqueueCall(webService.getApproveDriver(rideID + ""), APPROVE_DRIVER);
         }
 
         RestoreState();
@@ -366,7 +396,20 @@ public class HomeMapFragment extends BaseFragment implements
                     Bundle bundle = intent.getExtras();
                     if (bundle != null) {
                         String rideID = bundle.getString("rideID");
-                        serviceHelper.enqueueCall(webService.getApproveDriver(rideID + ""), APPROVE_DRIVER);
+                        String Type =bundle.getString("pushtype");
+                        if (Type!=null&&Type.equals(AppConstants.PUSH_END_TRIP_TYPE)){
+                            serviceHelper.enqueueCall(webService.getApproveDriver(rideID + ""), RIDE_END_TRIP);
+                        }else if (Type!=null&&Type.equals(AppConstants.PUSH_APPROVE_TYPE)){
+                            serviceHelper.enqueueCall(webService.getApproveDriver(rideID + ""), APPROVE_DRIVER);
+                        }
+                        else if (Type!=null&& Type.equals(AppConstants.PUSH_START_TRIP)){
+                            if (rideReaching!=null){
+                                Button cancelButton =rideReaching.getDesiredButton(R.id.btn_cancel_ride);
+                                if (cancelButton!=null){
+                                    cancelButton.setEnabled(false);
+                                }
+                            }
+                        }
                     } else {
                         UIHelper.showShortToastInCenter(getDockActivity(), "Notification Data is Empty");
                     }
@@ -828,36 +871,39 @@ public class HomeMapFragment extends BaseFragment implements
         }
     }
 
-    private void setupRatingDialog(final RideDriverEnt result) {
-
+    private void setupRatingDialog(final RideDriverEnt result,int RatingType) {
+        if (rideReaching!=null){
+            rideReaching.hideDialog();
+        }
         btnRidenow.setVisibility(View.GONE);
         btnRidelater.setVisibility(View.GONE);
         llSourceDestination.setVisibility(View.GONE);
-
-        showRatingBottomSheet(result, LAST_RATING, null);
+        customMarkerView.setVisibility(View.GONE);
+        showRatingBottomSheet(result, RatingType);
 
 
     }
 
-    private void showRatingBottomSheet(final RideDriverEnt result, final int RatingType, final BottomSheetDialogHelper dialogHelper) {
+    private void showRatingBottomSheet(final RideDriverEnt result, final int RatingType) {
         final BottomSheetDialogHelper ratingDialog = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_submit_rating);
         ratingDialog.initRatingDialog(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int Rating = ratingDialog.getRatingScore();
+                Rating = Rating+0;
                 if (RatingType == LAST_RATING) {
                     ratingDialog.hideDialog();
                     serviceHelper.enqueueCall(webService.submitRideFeedback(prefHelper.getUserId(),
                             result.getDriverDetail().getId() + "",
                             result.getRideDetail().getId() + "",
-                            ratingDialog.getRatingScore() + ""
+                            Rating + ""
                             , RATING_TYPE), RIDE_RATING_last);
                 } else if (RatingType == CURRENT_RATING) {
-                    dialogHelper.hideDialog();
                     ratingDialog.hideDialog();
                     serviceHelper.enqueueCall(webService.submitRideFeedback(prefHelper.getUserId(),
                             result.getDriverDetail().getId() + "",
                             result.getRideDetail().getId() + "",
-                            ratingDialog.getRatingScore() + ""
+                            Rating + ""
                             , RATING_TYPE), RIDE_RATING_current);
                    }
 
@@ -1056,6 +1102,7 @@ public class HomeMapFragment extends BaseFragment implements
             findingRide.setVisibility(View.GONE);
             btnCancelRide.setVisibility(View.GONE);
             llDestination.setVisibility(View.GONE);
+            btnLocation.setVisibility(View.GONE);
             btndoneselection.setVisibility(View.GONE);
             layoutdestination.setVisibility(View.GONE);
             layoutpick.setVisibility(View.GONE);
@@ -1068,13 +1115,14 @@ public class HomeMapFragment extends BaseFragment implements
                     Double.parseDouble(result.getDriverDetail().getLongitude()))).icon(icon));
             getDockActivity().StartDriverLocationService();
             setRoute();
-            final BottomSheetDialogHelper rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
+
+            rideReaching = new BottomSheetDialogHelper(getDockActivity(), Main_frame, R.layout.bottom_dialog_ride_detail);
             rideReaching.initRideDetailBottomSheet(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setcanceldialog();
                 }
-            }, result);
+            }, result,prefHelper.isStarted());
 
             rideReaching.showDialog();
             mIsTitleBarChanged = true;
@@ -1360,8 +1408,6 @@ public class HomeMapFragment extends BaseFragment implements
                 promoCodeEnt = (PromoCodeEnt) result;
                 break;
             case ESTIMATEFARE:
-
-
                 initEstimateFareBottomSheet((EstimateFareEnt) result);
                 break;
             case CREATE:
@@ -1380,11 +1426,19 @@ public class HomeMapFragment extends BaseFragment implements
                 rideDriverEnt = (RideDriverEnt) result;
                 ShowrideReachingDialog((RideDriverEnt) result);
                 break;
-            case CANCEL_RIDE:
-                getDockActivity().popBackStackTillEntry(0);
-                getMainActivity().initFragment();
+            case RIDE_END_TRIP:
                 prefHelper.setRideInSession(false);
                 prefHelper.removeRideSessionPreferences();
+                driverDetail = ((RideDriverEnt) result).getDriverDetail();
+                rideDriverEnt = (RideDriverEnt) result;
+                setupRatingDialog(rideDriverEnt,CURRENT_RATING);
+                break;
+            case CANCEL_RIDE:
+                prefHelper.setRideInSession(false);
+                prefHelper.removeRideSessionPreferences();
+                getDockActivity().popBackStackTillEntry(0);
+                getMainActivity().initFragment();
+
                 break;
             case RIDE_LATER:
                 getDockActivity().popBackStackTillEntry(0);
@@ -1405,28 +1459,27 @@ public class HomeMapFragment extends BaseFragment implements
 
                 if (ent == null) {
                     setupRideNowDialog();
-                } else {
-                    if (ent.getMessage().equals("Please first pay last ride charges")) {
-                        final DialogHelper lastRidePayment = new DialogHelper(getDockActivity());
-                        lastRidePayment.LastRidePayment(R.layout.dialog_last_ride_payment, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                lastRidePayment.hideDialog();
-                            }
-                        }, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                lastRidePayment.hideDialog();
-                                getDockActivity().replaceDockableFragment(CreditCardDetailFragment.newInstance(),CreditCardDetailFragment.class.getSimpleName());
-                            }
-                        });
-                        lastRidePayment.showDialog();
-                    }
-                    else{
-                    setupRatingDialog(ent);}
+                } else if (ent.getMessage()!=null&&ent.getMessage().equals("Please first pay last ride charges")){
+                    final DialogHelper lastRidePayment = new DialogHelper(getDockActivity());
+                    lastRidePayment.LastRidePayment(R.layout.dialog_last_ride_payment, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            lastRidePayment.hideDialog();
+                        }
+                    }, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            lastRidePayment.hideDialog();
+                            getDockActivity().replaceDockableFragment(CreditCardDetailFragment.newInstance(),CreditCardDetailFragment.class.getSimpleName());
+                        }
+                    });
+                    lastRidePayment.showDialog();
+                }else {
+                    setupRatingDialog(ent,LAST_RATING);
                 }
 
                 break;
+
 
         }
     }
@@ -1543,6 +1596,7 @@ public class HomeMapFragment extends BaseFragment implements
             }
         }
     }
+
 
 
 }

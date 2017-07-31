@@ -106,7 +106,6 @@
     <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="okio-1.8.0" level="project" />
-    <orderEntry type="library" exported="" name="facebook-android-sdk-4.24.0" level="project" />
     <orderEntry type="library" exported="" name="transition-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-places-10.2.6" level="project" />
     <orderEntry type="library" exported="" name="play-services-location-10.2.6" level="project" />
@@ -134,6 +133,7 @@
     <orderEntry type="library" exported="" name="support-vector-drawable-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-compat-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
+    <orderEntry type="library" exported="" name="facebook-android-sdk-4.25.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-10.2.6" level="project" />
     <orderEntry type="library" exported="" name="design-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="bolts-tasks-1.4.0" level="project" />
