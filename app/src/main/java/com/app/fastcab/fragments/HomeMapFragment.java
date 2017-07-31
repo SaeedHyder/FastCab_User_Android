@@ -1421,7 +1421,6 @@ public class HomeMapFragment extends BaseFragment implements
                             }
                         });
                         lastRidePayment.showDialog();
-
                     }
                     else{
                     setupRatingDialog(ent);}
