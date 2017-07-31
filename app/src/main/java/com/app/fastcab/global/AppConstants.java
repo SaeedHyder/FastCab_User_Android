@@ -21,7 +21,7 @@ public class AppConstants {
     public static final String PUSH_END_TRIP_TYPE= "tripend";
     public static final String PUSH_APPROVE_TYPE= "approve";
     public static final String PUSH_START_TRIP= "tripstart";
-
+    public static final String PUSH_NOT_FOUND= "notfound";
     public static int NOTIFICATION_ID = 100;
     public static  int INTENT_ID = 100;
 }

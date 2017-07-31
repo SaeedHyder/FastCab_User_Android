@@ -20,6 +20,7 @@ import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.CustomRatingBar;
 import com.app.fastcab.ui.views.TitleBar;
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -114,7 +115,7 @@ public class ProfileFragment extends BaseFragment {
         txtphone.setText(user.getPhoneNo() + "");
         txtProfileName.setText(user.getFullName() + "");
         txtRidesName.setText(user.getTotalRide() + "");
-        rbAddRating.setScore((float) user.getAverageRate());
+        rbAddRating.setScore(Float.parseFloat( user.getAverageRate()));
     }
 
     private void setListners() {

@@ -209,7 +209,7 @@
                 android:id="@+id/recent_places"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <View
                 android:layout_width="match_parent"

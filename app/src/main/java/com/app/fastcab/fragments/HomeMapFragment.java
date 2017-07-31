@@ -409,6 +409,13 @@ public class HomeMapFragment extends BaseFragment implements
                                     cancelButton.setEnabled(false);
                                 }
                             }
+                        }else if (Type!=null&&Type.equals(AppConstants.PUSH_NOT_FOUND)){
+                           UIHelper.showLongToastInCenter(getDockActivity(),getResources().getString(R.string.driver_not_found_error));
+                            prefHelper.setRideInSession(false);
+                            prefHelper.removeRideSessionPreferences();
+                            getMainActivity().getIntent().replaceExtras(bundle);
+                            getDockActivity().popBackStackTillEntry(0);
+                            getMainActivity().initFragment();
                         }
                     } else {
                         UIHelper.showShortToastInCenter(getDockActivity(), "Notification Data is Empty");
@@ -1413,7 +1420,7 @@ public class HomeMapFragment extends BaseFragment implements
             case CREATE:
                 rideEnt = (CreateRideEnt) result;
                 serviceHelper.enqueueCall(webService.getNearbyDrivers(prefHelper.getUserId(), rideEnt.getId()
-                        , String.valueOf(origin.getLatlng().latitude), String.valueOf(origin.getLatlng().longitude)), NEARBY);
+                        , String.valueOf(origin.getLatlng().longitude), String.valueOf(origin.getLatlng().latitude)), NEARBY);
 
                 break;
             case NEARBY:

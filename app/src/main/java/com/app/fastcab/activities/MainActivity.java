@@ -681,6 +681,8 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
 
                     // Toast.makeText(getApplication(),thumbnailFilePath,Toast.LENGTH_LONG).show();
                     imageSetter.setImage(originalFilePath);
+//                    imageSetter.setImage(thumbnailFilePath);
+
 
                     //loadImage(imageViewThumbnail, image.getFileThumbnail());
                 } else {

@@ -77,7 +77,7 @@ public class DriverEnt {
     private String code;
     @SerializedName("social_media_id")
     @Expose
-    private Integer socialMediaId;
+    private String socialMediaId;
     @SerializedName("social_media_platform")
     @Expose
     private String socialMediaPlatform;
@@ -104,10 +104,10 @@ public class DriverEnt {
     private String averageRate;
     @SerializedName("total_ride")
     @Expose
-    private Integer totalRide;
+    private String totalRide;
     @SerializedName("total_distance")
     @Expose
-    private Double totalDistance;
+    private String totalDistance;
 
     public Integer getId() {
         return id;
@@ -285,11 +285,11 @@ public class DriverEnt {
         this.code = code;
     }
 
-    public Integer getSocialMediaId() {
+    public String getSocialMediaId() {
         return socialMediaId;
     }
 
-    public void setSocialMediaId(Integer socialMediaId) {
+    public void setSocialMediaId(String socialMediaId) {
         this.socialMediaId = socialMediaId;
     }
 
@@ -357,19 +357,19 @@ public class DriverEnt {
         this.averageRate = averageRate;
     }
 
-    public Integer getTotalRide() {
+    public String getTotalRide() {
         return totalRide;
     }
 
-    public void setTotalRide(Integer totalRide) {
+    public void setTotalRide(String totalRide) {
         this.totalRide = totalRide;
     }
 
-    public Double getTotalDistance() {
+    public String getTotalDistance() {
         return totalDistance;
     }
 
-    public void setTotalDistance(Double totalDistance) {
+    public void setTotalDistance(String totalDistance) {
         this.totalDistance = totalDistance;
     }
 }

@@ -89,7 +89,14 @@ public class PastTripsBinder extends ViewBinder<ProgressEnt> implements Directio
             }
             String routesList = stringBuilder.toString();
             routesList = routesList.replaceAll("[^\\d.|,]", "");
-            routesList = routesList.substring(0, routesList.length() - 1);
+            try {
+                routesList = routesList.substring(0, routesList.length() - 1);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                routesList = "";
+            }
+//            routesList = routesList.substring(0, routesList.length() - 1);
             final PastTripsBinder.ViewHolder viewHolder = (PastTripsBinder.ViewHolder) view.getTag();
 
             viewHolder.txtRideNo.setText(entity.getId() + "");

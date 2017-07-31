@@ -56,6 +56,7 @@ public class HomeServiceHelper<T> {
                 @Override
                 public void onFailure(Call<ResponseWrapper<T>> call, Throwable t) {
                     context.onLoadingFinished();
+                    t.printStackTrace();
                     Log.e(HomeServiceHelper.class.getSimpleName()+" by tag: " + tag, t.toString());
                 }
             });

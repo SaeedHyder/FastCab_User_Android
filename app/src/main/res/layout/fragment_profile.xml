@@ -280,6 +280,15 @@
 
     </LinearLayout>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/CircularImageSharePop1"
+        android:layout_width="@dimen/x120"
+        android:layout_height="@dimen/x100"
+        android:layout_gravity="center"
+        android:src="@drawable/img_holder"
+        android:layout_marginTop="68dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/CircularImageSharePop"
@@ -290,5 +299,7 @@
         android:layout_marginTop="68dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+
 
 </RelativeLayout>

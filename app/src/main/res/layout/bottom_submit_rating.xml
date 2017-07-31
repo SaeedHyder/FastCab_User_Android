@@ -8,13 +8,15 @@
     android:background="@color/transparent"
     android:clickable="false"
     android:orientation="vertical"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    >
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+       >
 
         <LinearLayout
             android:id="@+id/ll_submitRating"
@@ -22,7 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x100"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,14 +70,16 @@
 
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    >
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/x50"
                         android:layout_gravity="center_vertical"
                         android:background="@color/white"
-                        android:visibility="visible">
+                        android:visibility="visible"
+                        >
 
                         <ImageView
                             android:id="@+id/imageView"
@@ -119,9 +124,9 @@
                             android:textSize="@dimen/x14"
                             app:typeface="Roboto-Regular.ttf" />
 
+
                         <ImageView
                             android:layout_width="wrap_content"
-
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
                             android:layout_below="@+id/imageView"
@@ -130,14 +135,28 @@
                             tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
-                    <View
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/x1"
-                        android:layout_marginTop="@dimen/x10"
-                        android:layout_marginRight="@dimen/x10"
-                        android:layout_marginLeft="@dimen/x45"
-                        android:alpha="0.1"
-                        android:background="@drawable/text"/>
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/x11"
+                            android:layout_alignParentBottom="true"
+                            android:layout_below="@+id/imageView"
+                            android:layout_marginLeft="@dimen/x24"
+                            android:src="@drawable/line" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/x1"
+                            android:layout_marginTop="@dimen/x10"
+                            android:layout_marginLeft="@dimen/x25"
+                            android:layout_marginRight="@dimen/x15"
+                            android:alpha="0.2"
+                            android:background="@drawable/text" />
+
+                    </LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
