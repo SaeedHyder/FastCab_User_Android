@@ -105,7 +105,7 @@
     <string name="dummy_number">9741 4507 600</string>
     <string name="enter_verification_code">Enter Verification Code</string>
     <string name="a_verification_code_has_been_send_to_your_mobile_phone">A verification code has been sent to your mobile phone</string>
-    <string name="reset_code">Reset Code</string>
+    <string name="reset_code">Resend Code</string>
     <string name="where_to">Where to...</string>
     <string name="pickup_location">Pickup Location</string>
     <string name="confirm">Confirm</string>
@@ -117,7 +117,7 @@
     <string name="enter_zipCode">Enter Zip Code</string>
     <string name="enter_dob">Enter Date Of Birth</string>
     <string name="passwordLength">Password should be more than 6</string>
-
+    <string name="samePassword">New password should be changed from previous password</string>
     <string name="numberLength">Number should be more than 11</string>
 
     <string name="enter_email">Enter Valid Email</string>
@@ -201,7 +201,7 @@
     <string name="new_user_text">New User?</string>
     <string name="verufy_number">Verify Number</string>
     <string name="fastcap_com"><u>fastcab.com</u></string>
-    <string name="if_you_cancel_5_minutes_before_requesting_na_fee_may_apply_for_details_visit">If you cancel 5 minutes before requesting. a fee may apply, for details visit</string>
+    <string name="if_you_cancel_5_minutes_after_requesting_na_fee_may_apply_for_details_visit">If you cancel 5 minutes after requesting. a fee may apply, for details visit</string>
     <string name="payment_method">Payment Methods</string>
     <string name="card_detail">Card Details</string>
     <string name="date_before_error">Selected Date is before Current Date</string>

@@ -21,6 +21,7 @@ import com.app.fastcab.helpers.UIHelper;
 import com.app.fastcab.ui.views.AnyEditTextView;
 import com.app.fastcab.ui.views.AnyTextView;
 import com.app.fastcab.ui.views.TitleBar;
+import com.google.gson.Gson;
 
 import java.util.Calendar;
 
@@ -51,8 +52,18 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
     AnyTextView txtResetPass;
 
 
+
+
     public static VerifyNumFragment newInstance() {
         return new VerifyNumFragment();
+    }
+
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -67,6 +78,9 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
         super.onViewCreated(view, savedInstanceState);
         edtphone.setText(getDockActivity().getCountryCode());
         setListners();
+
+
+
     }
 
     private void setListners() {

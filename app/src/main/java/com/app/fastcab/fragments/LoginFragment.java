@@ -152,15 +152,21 @@ public class LoginFragment extends BaseFragment implements FacebookLoginListener
             public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
                 loadingFinished();
                 if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
-                    prefHelper.putUser(response.body().getResult());
-                    prefHelper.setUsrId(response.body().getResult().getId()+"");
-                    prefHelper.setLoginStatus(true);
-                    TokenUpdater.getInstance().UpdateToken(getDockActivity(),
-                            prefHelper.getUserId(),
-                            AppConstants.Device_Type,
-                            prefHelper.getFirebase_TOKEN());
-                    getDockActivity().popBackStackTillEntry(0);
-                    getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+
+                        prefHelper.putUser(response.body().getResult());
+                        prefHelper.setUsrId(response.body().getResult().getId() + "");
+                    if (response.body().getResult().getIsVerified() == 1) {
+                        prefHelper.setLoginStatus(true);
+                        TokenUpdater.getInstance().UpdateToken(getDockActivity(),
+                                prefHelper.getUserId(),
+                                AppConstants.Device_Type,
+                                prefHelper.getFirebase_TOKEN());
+                        getDockActivity().popBackStackTillEntry(0);
+                        getDockActivity().replaceDockableFragment(HomeMapFragment.newInstance(), HomeMapFragment.class.getSimpleName());
+                    } else {
+                        getDockActivity().replaceDockableFragment(VerifyNumFragment.newInstance(), VerifyNumFragment.class.getSimpleName());
+
+                    }
                 } else {
                     UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
                 }

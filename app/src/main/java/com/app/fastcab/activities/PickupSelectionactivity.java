@@ -307,6 +307,9 @@ public class PickupSelectionactivity extends DockActivity implements
 
     @Override
     protected void onPause() {
+        if (getWindow().getDecorView() != null) {
+            UIHelper.hideSoftKeyboard(this, getWindow().getDecorView());
+        }
         super.onPause();
         mGoogleApiClient.disconnect();
     }
@@ -320,6 +323,9 @@ public class PickupSelectionactivity extends DockActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        if (getWindow().getDecorView() != null) {
+            UIHelper.hideSoftKeyboard(this, getWindow().getDecorView());
+        }
         mGoogleApiClient.connect();
 
     }

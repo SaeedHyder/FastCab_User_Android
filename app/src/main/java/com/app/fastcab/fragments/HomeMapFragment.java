@@ -698,7 +698,7 @@ public class HomeMapFragment extends BaseFragment implements
             final Handler handler = new Handler();
             final long start = SystemClock.uptimeMillis();
 
-            final long duration = 2500;
+            final long duration = 3000;
             final Interpolator interpolator = new LinearInterpolator();
 
             handler.post(new Runnable() {
