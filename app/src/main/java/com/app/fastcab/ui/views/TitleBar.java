@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.fastcab.R;
+import com.app.fastcab.activities.DockActivity;
+import com.app.fastcab.helpers.UIHelper;
 
 public class TitleBar extends RelativeLayout {
 
@@ -21,10 +23,10 @@ public class TitleBar extends RelativeLayout {
     private View.OnClickListener menuButtonListener;
     private OnClickListener backButtonListener;
 
-    private Context context;
+    private DockActivity context;
 
 
-    public TitleBar(Context context) {
+    public TitleBar(DockActivity context) {
         super(context);
         this.context = context;
         initLayout(context);

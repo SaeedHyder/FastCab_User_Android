@@ -125,12 +125,14 @@ public class MainActivity extends DockActivity implements OnClickListener, Googl
             @Override
             public void onClick(View v) {
                 if (getDrawerLayout() == null) {
+
                     if (sideMenuDirection.equals(SideMenuDirection.LEFT.getValue())) {
                         drawerLayout.openDrawer(Gravity.LEFT);
                     } else {
                         drawerLayout.openDrawer(Gravity.RIGHT);
                     }
                 } else {
+                    UIHelper.hideSoftKeyboard(getApplicationContext(),v);
                     resideMenu.openMenu(sideMenuDirection);
                 }
 

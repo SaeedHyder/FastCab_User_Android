@@ -99,7 +99,12 @@ public class ChangePasswordFragment extends BaseFragment implements View.OnClick
         } else if (editNewPassword.getText() == null || (editNewPassword.getText().toString().isEmpty())) {
             editNewPassword.setError(getString(R.string.enter_password));
             return false;
-        } else if (editNewPassword.getText().toString().length() < 6) {
+        }
+        else if (editNewPassword.getText().toString().equals(edtcurrentPassword.getText().toString())) {
+            editNewPassword.setError(getString(R.string.samePassword));
+            return false;
+        }
+        else if (editNewPassword.getText().toString().length() < 6) {
             editNewPassword.setError(getString(R.string.passwordLength));
             return false;
         } else if (editConfirmPassword.getText() == null || (editConfirmPassword.getText().toString().isEmpty()) || editConfirmPassword.getText().toString().length() < 6) {

@@ -59,7 +59,7 @@
             android:layout_marginRight="@dimen/x20"
             android:layout_marginBottom="@dimen/x9"
             android:gravity="center_horizontal"
-            android:text="@string/if_you_cancel_5_minutes_before_requesting_na_fee_may_apply_for_details_visit"
+            android:text="@string/if_you_cancel_5_minutes_after_requesting_na_fee_may_apply_for_details_visit"
             android:textColor="@color/black"
             android:textSize="@dimen/x15"
             android:alpha="0.7"

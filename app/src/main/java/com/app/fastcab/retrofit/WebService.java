@@ -173,6 +173,10 @@ public interface WebService {
                                                     @Field("cancel_id") String cancel_id
     );
 
+    @FormUrlEncoded
+    @POST("user/resetcode")
+    Call<ResponseWrapper<UserEnt>> resetVerificationCode(@Field("user_id") String user_id);
+
     @GET("ride/driverSearch")
     Call<ResponseWrapper<ArrayList<DriverEnt>>> getNearbyDrivers(@Query("user_id") String user_id,
                                                                  @Query("ride_id") Integer ride_id,

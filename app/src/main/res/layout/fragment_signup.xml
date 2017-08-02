@@ -393,7 +393,7 @@
                 android:layout_marginLeft="@dimen/x12"
                 android:layout_marginRight="@dimen/x20"
                 android:background="@android:color/transparent"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:hint="@string/confirm_pass"
                 android:inputType="textPassword"
                 android:maxLength="30"

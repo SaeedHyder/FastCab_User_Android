@@ -74,7 +74,9 @@ public class EntryCodeFragment extends BaseFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_reset_code:
-                txtPinEntry.setText("");
+                if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity())){
+                    resendCode();
+                }
                 break;
             case R.id.btn_submit:
                 if (validater())
@@ -84,6 +86,36 @@ public class EntryCodeFragment extends BaseFragment implements View.OnClickListe
 
                 break;
         }
+    }
+
+    private void resendCode() {
+        loadingStarted();
+        Call<ResponseWrapper<UserEnt>> call = webService.resetVerificationCode(prefHelper.getUserId());
+        call.enqueue(new Callback<ResponseWrapper<UserEnt>>() {
+            @Override
+            public void onResponse(Call<ResponseWrapper<UserEnt>> call, Response<ResponseWrapper<UserEnt>> response) {
+                loadingFinished();
+                if (response.body().getResponse().equals(WebServiceConstants.SUCCESS_RESPONSE_CODE)) {
+                    prefHelper.putUser(response.body().getResult());
+                    prefHelper.setUsrId(response.body().getResult().getId() + "");
+
+                    TokenUpdater.getInstance().UpdateToken(getDockActivity(),
+                            prefHelper.getUserId(),
+                            AppConstants.Device_Type,
+                            prefHelper.getFirebase_TOKEN());
+                   UIHelper.showShortToastInCenter(getDockActivity(),response.body().getMessage());
+                } else {
+                    UIHelper.showShortToastInCenter(getDockActivity(), response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseWrapper<UserEnt>> call, Throwable t) {
+                loadingFinished();
+                Log.e(VerifyNumFragment.class.getSimpleName(), t.toString());
+            }
+        });
+
     }
 
     public void sendEntryCodeToServer() {

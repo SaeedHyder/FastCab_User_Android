@@ -183,6 +183,11 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         setListners();
         getMainActivity().setImageSetter(this);
         setupFacebookLogin();
+        if(profilePath!=null){
+            Glide.with(getDockActivity())
+                    .load("file:///" + profilePath)
+                    .into(CircularImageSharePop);
+        }
 
     }
 
