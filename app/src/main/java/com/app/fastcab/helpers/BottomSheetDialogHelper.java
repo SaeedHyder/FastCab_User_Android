@@ -187,7 +187,11 @@ public class BottomSheetDialogHelper {
         AnyTextView name = (AnyTextView) dialog.findViewById(R.id.txt_type);
         name.setText(Type);
         AnyTextView faretextView = (AnyTextView) dialog.findViewById(R.id.txt_fare_ammount);
-        int fare_increse = fare + 100;
+        double percentage = 0.3;
+        if (fare ==0){
+            fare = 1;
+        }
+        int fare_increse = (int)(fare + fare*percentage);
         faretextView.setText("AED "+fare+" - "+fare_increse);
         Button cancelbutton = (Button) dialog.findViewById(R.id.btn_done);
         cancelbutton.setOnClickListener(requestclicklistener);

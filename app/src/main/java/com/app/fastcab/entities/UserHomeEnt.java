@@ -23,7 +23,7 @@ public class UserHomeEnt {
     private Location Mylocation;
     private LocationEnt origin;
     private LocationEnt destination;
-    private int distance ;
+    private double distance ;
     private boolean mIsTitleBarChanged ;
     private boolean isCurrentLocationMove;
     private ArrayList<SelectCarEnt> carTypeList;
@@ -79,11 +79,11 @@ public class UserHomeEnt {
         this.destination = destination;
     }
 
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
