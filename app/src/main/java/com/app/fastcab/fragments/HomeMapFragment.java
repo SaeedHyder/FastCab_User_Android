@@ -590,6 +590,7 @@ public class HomeMapFragment extends BaseFragment implements
             moveRouteMap();
             for (int i = 0; i < routesingle.points.size(); i++)
                 polylineOptions.add(routesingle.points.get(i));
+
             //moveMap(null);
             polylinePaths.add(googleMap.addPolyline(polylineOptions));
             distance = (int) routesingle.distance.value / 1000;
