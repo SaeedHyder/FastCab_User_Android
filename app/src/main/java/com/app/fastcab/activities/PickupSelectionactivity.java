@@ -224,7 +224,11 @@ public class PickupSelectionactivity extends DockActivity implements
     }
 
     private void sendEmptyResult(Boolean setEmpty) {
-
+       /* Intent i = new Intent();
+        Bundle args = new Bundle();
+        args.putBoolean("backPressed", setEmpty);
+        i.putExtra("route", args);
+        setResult(RESULT_OK, i);*/
         finish();
     }
 

@@ -24,8 +24,8 @@ public class BaseApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		Fabric.with(this, new Crashlytics());
 		MultiDex.install(this);
+		Fabric.with(this, new Crashlytics());
 		initImageLoader();
 
 		bus = new Bus(ThreadEnforcer.MAIN);

@@ -200,7 +200,7 @@ public class HomeMapFragment extends BaseFragment implements
     private Location Mylocation;
     private LocationEnt origin;
     private LocationEnt destination;
-    private int distance = 1;
+    private double distance = 1;
 
     private Date DateSelected;
     private Date TimeSelected;
@@ -593,7 +593,7 @@ public class HomeMapFragment extends BaseFragment implements
 
             //moveMap(null);
             polylinePaths.add(googleMap.addPolyline(polylineOptions));
-            distance = (int) routesingle.distance.value / 1000;
+            distance = (double) routesingle.distance.value / 1000;
 
         }
     }
@@ -965,6 +965,8 @@ public class HomeMapFragment extends BaseFragment implements
             public void onClick(View v) {
                 btnRidenow.setVisibility(View.VISIBLE);
                 btnRidelater.setVisibility(View.VISIBLE);
+                titleBar.showMenuButton();
+                llSourceDestination.setVisibility(View.VISIBLE);
                 dialogHelper.hideDialog();
                 StartPickupActivity(10);
 
@@ -1395,11 +1397,14 @@ public class HomeMapFragment extends BaseFragment implements
             if (b != null) {
                 origin = new Gson().fromJson(b.getString("origin"), LocationEnt.class);
                 destination = new Gson().fromJson(b.getString("destination"), LocationEnt.class);
+                boolean setEmpty = b.getBoolean("backPressed");
                 boolean setonMap = b.getBoolean("setonMap");
-                if (setonMap) {
-                    initdestinationLocationSelect();
-                } else
-                    initRideStatus();
+
+                    if (setonMap) {
+                        initdestinationLocationSelect();
+                    } else
+                        initRideStatus();
+
             }
         }
     }
@@ -1429,10 +1434,12 @@ public class HomeMapFragment extends BaseFragment implements
                 showFindRideViews((ArrayList<DriverEnt>) result);
                 break;
             case APPROVE_DRIVER:
-                prefHelper.setRideInSession(true);
-                driverDetail = ((RideDriverEnt) result).getDriverDetail();
-                rideDriverEnt = (RideDriverEnt) result;
-                ShowrideReachingDialog((RideDriverEnt) result);
+                if (result!=null) {
+                    prefHelper.setRideInSession(true);
+                    driverDetail = ((RideDriverEnt) result).getDriverDetail();
+                    rideDriverEnt = (RideDriverEnt) result;
+                    ShowrideReachingDialog((RideDriverEnt) result);
+                }
                 break;
             case RIDE_END_TRIP:
                 prefHelper.setRideInSession(false);

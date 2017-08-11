@@ -103,6 +103,7 @@ public class VerifyNumFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()) {
 
             case R.id.btn_submit:
+                UIHelper.hideSoftKeyboard(getDockActivity(),edtphone);
                 if (validated())
                     if (InternetHelper.CheckInternetConectivityandShowToast(getDockActivity())) {
                         setupVerifyNumber();
