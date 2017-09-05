@@ -52,7 +52,7 @@ public class UpcomingTripsFragment extends BaseFragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new ArrayListAdapter<ProgressEnt>(getDockActivity(), new UpcomingTripsBinder());
+        adapter = new ArrayListAdapter<ProgressEnt>(getDockActivity(), new UpcomingTripsBinder(getDockActivity()));
     }
 
     @Override
