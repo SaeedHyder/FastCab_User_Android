@@ -53,7 +53,7 @@ public class PastTripsFragment extends BaseFragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new ArrayListAdapter<ProgressEnt>(getDockActivity(), new PastTripsBinder());
+        adapter = new ArrayListAdapter<ProgressEnt>(getDockActivity(), new PastTripsBinder(getDockActivity()));
     }
 
     @Override

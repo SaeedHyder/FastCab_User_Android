@@ -1,6 +1,7 @@
 package com.app.fastcab.ui.viewbinder;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,10 +27,11 @@ import butterknife.ButterKnife;
  */
 
 public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements DirectionFinderListener {
+   private Picasso picasso;
 
-
-    public UpcomingTripsBinder() {
+    public UpcomingTripsBinder(Context mContext) {
         super(R.layout.upcoming_trips_item);
+        picasso = Picasso.with(mContext);
 
     }
 
@@ -43,7 +45,7 @@ public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements Dire
         view.setVisibility(View.GONE);
        /* String origin = "24.839611,67.082231";
         String destination = "24.829428,67.073822";*/
-        String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
+       /* String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
         String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();
         // imageLoader.displayImage(entity.getUpcomingImg(),viewHolder.ivUpcomingTrips);
         try {
@@ -52,7 +54,17 @@ public class UpcomingTripsBinder extends ViewBinder<ProgressEnt> implements Dire
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+*/
+        final UpcomingTripsBinder.ViewHolder viewHolder = (UpcomingTripsBinder.ViewHolder) view.getTag();
+        final String image_map = entity.getMap_image();
+        viewHolder.txtRideNo.setText(entity.getId() + "");
+        viewHolder.txtFare.setText("AED " + entity.getEstimateFare());
+        viewHolder.txtUpcomingTimeDate.setText(DateHelper.getDesireFormatDate(entity.getDate(), "yyyy-MM-dd", "EEE,MMM d") + " at "
+                + DateHelper.getDesireFormatDate(entity.getTime(), "hh:mm:ss", "HH:mm a"));
+        viewHolder.txtUpcomingType.setText(entity.getVechicleDetail().getType() + "");
+        picasso.load(image_map==null||image_map.trim().equals("")
+                ?"asd":image_map)
+                .fit().into(viewHolder.ivUpcomingTrips);
     }
 
 

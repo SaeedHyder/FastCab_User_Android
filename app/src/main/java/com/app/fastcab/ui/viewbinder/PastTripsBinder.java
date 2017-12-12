@@ -1,6 +1,7 @@
 package com.app.fastcab.ui.viewbinder;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,11 +29,11 @@ import butterknife.ButterKnife;
 
 public class PastTripsBinder extends ViewBinder<ProgressEnt> implements DirectionFinderListener {
 
+    private Picasso picasso;
 
-
-    public PastTripsBinder() {
+    public PastTripsBinder(Context mContext) {
         super(R.layout.past_trips_item);
-
+        picasso = Picasso.with(mContext);
     }
 
     @Override
@@ -42,19 +43,28 @@ public class PastTripsBinder extends ViewBinder<ProgressEnt> implements Directio
 
     @Override
     public void bindView(ProgressEnt entity, int position, int grpPosition, View view, Activity activity) {
-        view.setVisibility(View.GONE);
-        /*
+
+        /* view.setVisibility(View.GONE);
         String origin = "24.839611,67.082231";
         String destination = "24.829428,67.073822";*/
-        String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
+      /*  String origin = entity.getPickupLatitude() + "," + entity.getPickupLongitude();
         String destination = entity.getDestinationLatitude() + "," + entity.getDestinationLongitude();
         // imageLoader.displayImage(entity.getUpcomingImg(),viewHolder.ivUpcomingTrips);
         try {
             new DirectionFinder(this, origin, destination, view, entity).execute();
-
+ view.setVisibility(View.VISIBLE);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }
+        }*/
+        final PastTripsBinder.ViewHolder viewHolder = (PastTripsBinder.ViewHolder) view.getTag();
+        final String image_map = entity.getMap_image();
+        viewHolder.txtRideNo.setText(entity.getId() + "");
+        viewHolder.txtFare.setText(entity.getEstimateFare() + "");
+        viewHolder.txtTimeDate.setText(entity.getDate() + " " + entity.getTime());
+
+        picasso.load(image_map==null||image_map.trim().equals("")
+                ?"asd":image_map).fit().into(viewHolder.ivPastTrips);
+
 
 
     }
