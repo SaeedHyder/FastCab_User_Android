@@ -26,7 +26,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.app.fastcab"
@@ -51,6 +51,10 @@ allprojects {
     repositories {
         maven {  mavenCentral()
             url 'https://jitpack.io' }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 
 }
